@@ -1,0 +1,60 @@
+{
+  "mod_elements": [
+    {
+      "name": "Overlord",
+      "type": "livingentity",
+      "sortid": 1,
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "overlord"
+    },
+    {
+      "name": "Garmadon",
+      "type": "livingentity",
+      "sortid": 2,
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "garmadon"
+    },
+    {
+      "name": "SweepAttack",
+      "type": "particle",
+      "sortid": 6,
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "sweep_attack"
+    }
+  ],
+  "variable_elements": [],
+  "sound_elements": [],
+  "language_map": {
+    "en_us": {
+      "item.ninjago.overlord_spawn_egg": "Overlord Spawn Egg",
+      "item.ninjago.garmadon_spawn_egg": "Garmadon Spawn Egg",
+      "entity.ninjago.overlord": "Overlord",
+      "entity.ninjago.garmadon": "Garmadon"
+    }
+  },
+  "foldersRoot": {
+    "name": "~",
+    "children": []
+  },
+  "workspaceSettings": {
+    "modid": "ninjago",
+    "modName": "NINJAGO",
+    "version": "1.0.0",
+    "author": "kyohei, MCreator",
+    "websiteURL": "https://mcreator.net",
+    "license": "Academic Free License v3.0",
+    "disableForgeVersionCheck": true,
+    "serverSideOnly": false,
+    "requiredMods": [],
+    "dependencies": [],
+    "dependants": [],
+    "mcreatorDependencies": [],
+    "currentGenerator": "forge-1.19.2",
+    "modElementsPackage": "net.mcreator.ninjago",
+    "lockBaseModFiles": false
+  },
+  "mcreatorVersion": 202200348217
+}
