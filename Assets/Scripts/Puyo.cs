@@ -1,89 +1,65 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Puyo
 {
-    private GameObject gameObject;
     private Vector2 position;
+    public Vector2 GetPosition() { return this.position; }
     private int color;
-    private PuyoPuyo puyoPuyo;
-    readonly private List<Puyo> list;
+    public int GetColor() { return this.color; }
+    private bool freeze;
 
-    public Puyo(int color, Vector2 position, List<Puyo> list)
+
+    public Puyo(int color, Vector2 position, bool freeze)
     {
         this.position = position;
-        this.puyoPuyo = null;
-        this.gameObject = Main.Instantiate(this.position);
         this.color = color;
-        this.gameObject.transform.GetComponent<SpriteRenderer>().color = Color.HSVToRGB(this.color / 5f, 0.5f, 1.0f);
-        this.list = list;
+        this.freeze = freeze;
     }
 
-    public void SetPuyoPuyo(PuyoPuyo puyoPuyo)
+    public void Update(Collision c)
     {
-        this.puyoPuyo = puyoPuyo;
-    }
-    public PuyoPuyo GetPuyoPuyo()
-    {
-        return this.puyoPuyo;
+        this.Move(0.01f * Vector2.down, c);
     }
 
-    public Vector2 Move(Vector2 v)
+    public void Move(Vector2 v, Collision c)
     {
-        Vector2 p = this.position;
+        if (this.freeze) return;
+
+        Vector2 _position = this.position;
         this.position += v;
 
-        for (int i = 0; i < this.list.Count; i++)
+        List<Puyo> list = c.Get(this);
+
+        if (list.Count == 0) return;
+
+        if (list.Count == 1)
         {
-            if (this.list[i] == this) continue;
-
-            if (this.puyoPuyo != null && this.puyoPuyo == this.list[i].GetPuyoPuyo()) continue;
-
-            Vector2 l = this.list[i].GetPosition();
-            if (Vector2.SqrMagnitude(this.position - l) >= 1) continue;
-
+            if (v.y != 0)
+            {
+                this.position.y = list[0].GetPosition().y - Mathf.Sign(v.y);
+                return;
+            }
 
             if (v.x != 0)
             {
-                if (Mathf.Abs(this.position.y - l.y) < 0.25)
+                float y = list[0].GetPosition().y;
+                if (Mathf.Abs(this.position.y - y) > 0.5f)
                 {
-                    this.position = p;
-                    break;
+                    this.position.y = y + Mathf.Sign(this.position.y - y);
+
+                    if (!c.IfCollision(this)) return;
                 }
-                this.position.y = l.y + Mathf.Sign(this.position.y - l.y);
-                if (this.isColliding())
-                {
-                    this.position = p;
-                    break;
-                }
-            }
-            else
-            {
-                this.position.y = l.y - Mathf.Sign(v.y);
             }
         }
 
-        this.gameObject.transform.position = this.position;
-        return this.position - p;
+        this.position = _position;
+    }
 
-    }
-    public Vector2 GetPosition()
-    {
-        return this.position;
-    }
-    public void SetPosition(Vector2 p)
-    {
-        this.position = p;
-        this.gameObject.transform.position = this.position;
-    }
-    public bool isColliding()
-    {
-        for (int i = 0; i < this.list.Count; i++)
-        {
-            if (this.list[i] == this) continue;
-            if (Vector2.SqrMagnitude(this.position - this.list[i].GetPosition()) < 1) return true;
-        }
-        return false;
-    }
+
+
+
 }
 
