@@ -7,8 +7,8 @@ public class Main : MonoBehaviour
     private Factory factory;
     private Input input;
     private Render render;
+    private PuyoPuyo puyoPuyo;
 
-    private Puyo puyo;
 
     void Start()
     {
@@ -42,27 +42,37 @@ public class Main : MonoBehaviour
         // this.factory.NewPuyo(this.color.Get(), new Vector2(5.5f, 6.5f), true);
         // this.factory.NewPuyo(this.color.Get(), new Vector2(5.5f, 7.5f), true);
 
-        this.factory.NewPuyo(this.color.Get(), new Vector2(2.5f, 12.5f), false);
-        this.factory.NewPuyo(this.color.Get(), new Vector2(2.5f, 10.49f), false);
+        this.factory.NewPuyo(this.color.Get(), new Vector2(1.5f, 6.5f), false);
+        this.factory.NewPuyo(this.color.Get(), new Vector2(2.5f, 6.99f), false);
 
-        this.factory.NewPuyo(this.color.Get(), new Vector2(5.5f, 12.5f), false);
-        this.factory.NewPuyo(this.color.Get(), new Vector2(5.5f, 10.51f), false);
+        this.factory.NewPuyo(this.color.Get(), new Vector2(5.5f, 6.99f), false);
+        this.factory.NewPuyo(this.color.Get(), new Vector2(6.5f, 6.5f), false);
 
-
-
-        this.puyo = this.factory.NewPuyo(this.color.Get(), new Vector2(3.5f, 12.5f), false);
         this.factory.ListSort();
 
     }
 
     void Update()
     {
+        if (this.puyoPuyo == null)
+        {
+            this.puyoPuyo = this.factory.NewPuyoPuyo(this.color);
+        }
+
         Vector2 v = this.input.Update();
 
         if (v != Vector2.zero)
         {
-            this.puyo.Move(v, this.collision);
+            this.puyoPuyo.Move(v, this.collision);
         }
+
+        this.puyoPuyo.Update(this.collision);
+
+        if (this.puyoPuyo.GetI() == 30)
+        {
+            this.puyoPuyo = null;
+        }
+
         this.factory.ListSort();
 
         foreach (Puyo p in this.factory.GetList())

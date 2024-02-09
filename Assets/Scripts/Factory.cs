@@ -26,6 +26,14 @@ public class Factory
         this.list.Add(new Puyo(color, p, freeze));
         return this.list[this.list.Count - 1];
     }
+
+    public PuyoPuyo NewPuyoPuyo(Color c)
+    {
+        this.list.Add(new Puyo(c.Get(), new Vector2(3.5f, 12.5f), false));
+        this.list.Add(new Puyo(c.Get(), new Vector2(4.5f, 12.5f), false));
+        return new PuyoPuyo(this.list[this.list.Count - 2], this.list[this.list.Count - 1]);
+
+    }
     public void ListSort()
     {
         this.list.Sort((p0, p1) => p0.GetPosition().y.CompareTo(p1.GetPosition().y));

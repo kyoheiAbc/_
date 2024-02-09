@@ -13,10 +13,11 @@ public class Render
             this.dictionary[p].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(p.GetColor() / 5f, 0.5f, 1.0f);
         }
         Transform t = this.dictionary[p];
-        t.position = p.GetPosition();
 
-        // float f = 1f - puyo.GetI() / 10f;
-        // t.position = puyo.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
-        // t.localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
+        int i = p.GetI();
+        if (i > 10) i = 10;
+        float f = 1f - i / 10f;
+        t.position = p.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
+        t.localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
     }
 }

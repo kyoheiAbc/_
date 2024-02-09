@@ -21,6 +21,14 @@ public class Collision
         }
         return returnList;
     }
+    public Puyo Get(Vector2 p)
+    {
+        foreach (Puyo l in this.list)
+        {
+            if (p == l.GetPosition()) return l;
+        }
+        return null;
+    }
     public bool IfCollision(Puyo p)
     {
         foreach (Puyo l in this.list)
