@@ -6,7 +6,6 @@ public class Factory
 {
     private List<Puyo> list = new List<Puyo>();
     public List<Puyo> GetList() { return this.list; }
-
     public Factory()
     {
         for (int y = 0; y < 16; y++)
@@ -15,24 +14,29 @@ public class Factory
             {
                 if (x == 0 || x == 7 || y == 0 || y == 15)
                 {
-                    this.NewPuyo(-1, new Vector2(x + 0.5f, y + 0.5f), true);
+                    this.NewPuyo(-1, new Vector2(x + 0.5f, y + 0.5f));
                 }
             }
         }
+        // Collision c = new Collision(this.list);
+        // for (int i = 0; i < 8; i++)
+        // {
+        //     Puyo p = this.NewPuyo(-1, new Vector2(Random.Range(1, 7) + 0.5f, Random.Range(1.5f, 12.5f)));
+        //     if (c.Get(p) != null)
+        //     {
+        //         this.list.Remove(p);
+        //         i--;
+        //     }
+        // }
     }
-
-    public Puyo NewPuyo(int color, Vector2 p, bool freeze)
+    private Puyo NewPuyo(int color, Vector2 p)
     {
-        this.list.Add(new Puyo(color, p, freeze));
+        this.list.Add(new Puyo(color, p));
         return this.list[this.list.Count - 1];
     }
-
     public PuyoPuyo NewPuyoPuyo(Color c)
     {
-        this.list.Add(new Puyo(c.Get(), new Vector2(3.5f, 12.5f), false));
-        this.list.Add(new Puyo(c.Get(), new Vector2(4.5f, 12.5f), false));
-        return new PuyoPuyo(this.list[this.list.Count - 2], this.list[this.list.Count - 1]);
-
+        return new PuyoPuyo(this.NewPuyo(c.Get(), new Vector2(3.5f, 12.5f)), this.NewPuyo(c.Get(), new Vector2(4.5f, 12.5f)));
     }
     public void ListSort()
     {

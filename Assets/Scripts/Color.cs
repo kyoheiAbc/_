@@ -7,11 +7,9 @@ public class Color
         0,1,2,3
     };
     private int i = 16;
-
     private void Reset()
     {
         this.i = 0;
-
         for (int I = this.array.Length - 1; I > 0; I--)
         {
             int r = UnityEngine.Random.Range(0, I + 1);
