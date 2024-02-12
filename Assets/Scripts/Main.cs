@@ -8,6 +8,7 @@ public class Main : MonoBehaviour
     private Input input;
     private Render render;
     private PuyoPuyo puyoPuyo;
+    private Remove remove;
 
 
     void Start()
@@ -33,6 +34,7 @@ public class Main : MonoBehaviour
         this.color = new Color();
         this.render = new Render();
         this.factory = new Factory();
+        this.remove = null;
 
         this.collision = new Collision(this.factory.GetList());
 
@@ -45,11 +47,9 @@ public class Main : MonoBehaviour
         this.factory.ListSort();
         float y = this.puyoPuyo.GetPosition().y;
         bool b = false;
-        Puyo[] a = this.puyoPuyo.GetArray();
         foreach (Puyo p in this.factory.GetList())
         {
-            if (a[0] == p) continue;
-            if (a[1] == p) continue;
+            if (p.GetPuyoPuyo() != null) continue;
             if (!b && p.GetPosition().y > y)
             {
                 b = true;
@@ -65,7 +65,25 @@ public class Main : MonoBehaviour
             if (v != Vector2.zero) this.puyoPuyo.Move(v, this.collision);
         }
 
+        if (this.puyoPuyo == null) this.remove = new Remove();
+        if (this.remove != null)
+        {
+            if (this.remove.Ready(this.factory.GetList()))
+            {
+                this.remove.Execute(new Board(this.factory.GetList()));
+                this.remove = null;
+            }
+        }
 
         foreach (Puyo p in this.factory.GetList()) this.render.Puyo(p);
+
+        List<Puyo> l = this.factory.GetList();
+        for (int i = l.Count - 1; i >= 0; i--)
+        {
+            if (l[i].GetRemove() && l[i].GetJ() == 30)
+            {
+                l.RemoveAt(i);
+            }
+        }
     }
 }

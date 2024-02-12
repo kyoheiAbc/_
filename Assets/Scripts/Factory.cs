@@ -18,16 +18,6 @@ public class Factory
                 }
             }
         }
-        // Collision c = new Collision(this.list);
-        // for (int i = 0; i < 8; i++)
-        // {
-        //     Puyo p = this.NewPuyo(-1, new Vector2(Random.Range(1, 7) + 0.5f, Random.Range(1.5f, 12.5f)));
-        //     if (c.Get(p) != null)
-        //     {
-        //         this.list.Remove(p);
-        //         i--;
-        //     }
-        // }
     }
     private Puyo NewPuyo(int color, Vector2 p)
     {
