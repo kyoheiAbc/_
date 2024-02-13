@@ -43,7 +43,14 @@ public class Main : MonoBehaviour
         this.remove = null;
 
         this.collision = new Collision(this.factory.GetList());
-
+        this.Reset();
+    }
+    private void Reset()
+    {
+        this.puyoPuyo = null;
+        this.color.Reset();
+        this.factory.Reset();
+        this.input.Reset();
     }
 
     void Update()
@@ -51,6 +58,14 @@ public class Main : MonoBehaviour
         if (this.puyoPuyo == null)
         {
             this.puyoPuyo = this.factory.NewPuyoPuyo(this.color);
+            foreach (Puyo p in this.puyoPuyo.GetArray())
+            {
+                if (this.collision.Get(p) != null)
+                {
+                    this.Reset();
+                    return;
+                }
+            }
             this.input.SetDown(false);
         }
 

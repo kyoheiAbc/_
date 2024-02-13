@@ -6,8 +6,16 @@ public class Factory
 {
     private List<Puyo> list = new List<Puyo>();
     public List<Puyo> GetList() { return this.list; }
-    public Factory()
+
+    public void Reset()
     {
+        foreach (Puyo p in this.list)
+        {
+            Transform t = p.GetTransform();
+            if (t != null) Main.Destroy(p.GetTransform().gameObject);
+        }
+        this.list.Clear();
+
         for (int y = 0; y < 16; y++)
         {
             for (int x = 0; x < 8; x++)
@@ -18,6 +26,11 @@ public class Factory
                 }
             }
         }
+
+    }
+    public Factory()
+    {
+        this.Reset();
     }
     private Puyo NewPuyo(int color, Vector2 p)
     {

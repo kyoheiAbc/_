@@ -10,6 +10,11 @@ class Input
     public Input(Camera c)
     {
         this.camera = c;
+        this.Reset();
+    }
+
+    public void Reset()
+    {
         this.down = false;
         this.move = false;
     }
