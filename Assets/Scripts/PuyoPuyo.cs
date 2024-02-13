@@ -7,6 +7,7 @@ public class PuyoPuyo
     private Puyo[] array;
     public Puyo[] GetArray() { return this.array; }
     private int i = 0;
+    private int rotate = 0;
 
     public PuyoPuyo(Puyo p0, Puyo p1)
     {
@@ -73,8 +74,56 @@ public class PuyoPuyo
         return this.array[0].GetPosition() - p;
     }
 
+    public void Drop(Collision c)
+    {
+        while (true)
+        {
+            if (Vector2.zero == this.Move(Vector2.down, c))
+            {
+                this.i = Main.BREAK - 1;
+                return;
+            }
+        }
+    }
+
+    public void Rotate(Collision c)
+    {
+        this.rotate++;
+        if (this.rotate == 4) this.rotate = 0;
+
+        Vector2 p = this.array[0].GetPosition();
+        this.array[1].SetPosition(p);
+
+        if (this.rotate == 0)
+            this.array[1].Move(Vector2.right, c);
+        else if (this.rotate == 1)
+            this.array[1].Move(Vector2.down, c);
+        else if (this.rotate == 2)
+            this.array[1].Move(Vector2.left, c);
+        else if (this.rotate == 3)
+            this.array[1].Move(Vector2.up, c);
+
+        this.Sync(1);
+
+        if (c.Get(this.array[0]) != null)
+        {
+            this.rotate++;
+            if (this.rotate == 4) this.rotate = 0;
+
+            this.array[1].SetPosition(p);
+            this.Sync(1);
+        }
+    }
+
     private void Sync(int i)
     {
-        this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.right * (1 - 2 * i));
+        if (this.rotate == 0)
+            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.right * (1 - 2 * i));
+        else if (this.rotate == 1)
+            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.down * (1 - 2 * i));
+        else if (this.rotate == 2)
+            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.left * (1 - 2 * i));
+        else if (this.rotate == 3)
+            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.up * (1 - 2 * i));
     }
 }

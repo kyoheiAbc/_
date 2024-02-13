@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Main : MonoBehaviour
 {
-    static public Vector2 DOWN = Vector2.down * 0.25f;
-    static public Vector2 PUYO_DOWN = Vector2.down * 0.5f;
-    static public int REMOVE = 15;
+    static public Vector2 DOWN = Vector2.down * 0.1f;
+    static public Vector2 PUYO_DOWN = Vector2.down * 0.3f;
+    static public int REMOVE = 20;
     static public int FREEZE = 10;
-    static public int BREAK = 30;
+    static public int BREAK = 15;
 
     private Color color;
     private Collision collision;
@@ -48,7 +48,11 @@ public class Main : MonoBehaviour
 
     void Update()
     {
-        if (this.puyoPuyo == null) this.puyoPuyo = this.factory.NewPuyoPuyo(this.color);
+        if (this.puyoPuyo == null)
+        {
+            this.puyoPuyo = this.factory.NewPuyoPuyo(this.color);
+            this.input.SetDown(false);
+        }
 
         this.factory.Remove();
         this.factory.Sort();
@@ -70,7 +74,15 @@ public class Main : MonoBehaviour
         else
         {
             Vector2 v = this.input.Update();
-            if (v != Vector2.zero) this.puyoPuyo.Move(v, this.collision);
+            if (v == Vector2.up)
+            {
+                this.puyoPuyo.Drop(this.collision);
+            }
+            else if (v == Vector2.right + Vector2.up)
+            {
+                this.puyoPuyo.Rotate(this.collision);
+            }
+            else if (v != Vector2.zero) this.puyoPuyo.Move(v, this.collision);
         }
 
         if (this.puyoPuyo == null) this.remove = new Remove();
