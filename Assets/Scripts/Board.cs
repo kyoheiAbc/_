@@ -7,7 +7,14 @@ public class Board
     {
         foreach (Puyo p in l)
         {
-            if (p.GetPosition().y == 0.5f || this.Get(p.GetPosition() + Vector2.down) != null)
+            if (p.GetPosition().y == 0.5f)
+            {
+                this.Set(p);
+                continue;
+            }
+            if (p.GetPuyoPuyo() != null) continue;
+            if (p.GetI() <= Main.FREEZE) continue;
+            if (this.Get(p.GetPosition() + Vector2.down) != null)
             {
                 this.Set(p);
             }

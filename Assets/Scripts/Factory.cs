@@ -28,8 +28,19 @@ public class Factory
     {
         return new PuyoPuyo(this.NewPuyo(c.Get(), new Vector2(3.5f, 12.5f)), this.NewPuyo(c.Get(), new Vector2(4.5f, 12.5f)));
     }
-    public void ListSort()
+    public void Sort()
     {
         this.list.Sort((p0, p1) => p0.GetPosition().y.CompareTo(p1.GetPosition().y));
+    }
+    public void Remove()
+    {
+        for (int i = this.list.Count - 1; i >= 0; i--)
+        {
+            if (this.list[i].GetRemove() && this.list[i].GetJ() >= Main.REMOVE)
+            {
+                Main.Destroy(this.list[i].GetTransform().gameObject);
+                this.list.RemoveAt(i);
+            }
+        }
     }
 }

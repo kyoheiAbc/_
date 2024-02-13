@@ -23,12 +23,12 @@ public class PuyoPuyo
         if (this.i < 256) this.i++;
 
 
-        if (this.Move(0.15f * Vector2.down, c) != Vector2.zero)
+        if (this.Move(Main.DOWN, c) != Vector2.zero)
         {
             this.i = 0;
         }
 
-        if (this.i == 10)
+        if (this.i == Main.BREAK)
         {
             this.array[0].SetPuyoPuyo(null);
             this.array[1].SetPuyoPuyo(null);

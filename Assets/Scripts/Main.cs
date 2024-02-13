@@ -2,6 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Main : MonoBehaviour
 {
+    static public Vector2 DOWN = Vector2.down * 0.25f;
+    static public Vector2 PUYO_DOWN = Vector2.down * 0.5f;
+    static public int REMOVE = 15;
+    static public int FREEZE = 10;
+    static public int BREAK = 30;
+
     private Color color;
     private Collision collision;
     private Factory factory;
@@ -44,7 +50,9 @@ public class Main : MonoBehaviour
     {
         if (this.puyoPuyo == null) this.puyoPuyo = this.factory.NewPuyoPuyo(this.color);
 
-        this.factory.ListSort();
+        this.factory.Remove();
+        this.factory.Sort();
+
         float y = this.puyoPuyo.GetPosition().y;
         bool b = false;
         foreach (Puyo p in this.factory.GetList())
@@ -70,20 +78,10 @@ public class Main : MonoBehaviour
         {
             if (this.remove.Ready(this.factory.GetList()))
             {
-                this.remove.Execute(new Board(this.factory.GetList()));
-                this.remove = null;
+                if (!this.remove.Execute(new Board(this.factory.GetList()))) this.remove = null;
             }
         }
 
         foreach (Puyo p in this.factory.GetList()) this.render.Puyo(p);
-
-        List<Puyo> l = this.factory.GetList();
-        for (int i = l.Count - 1; i >= 0; i--)
-        {
-            if (l[i].GetRemove() && l[i].GetJ() == 30)
-            {
-                l.RemoveAt(i);
-            }
-        }
     }
 }

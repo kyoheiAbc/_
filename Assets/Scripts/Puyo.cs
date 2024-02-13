@@ -32,7 +32,7 @@ public class Puyo
         if (this.j < 256) this.j++;
         if (!this.remove) this.j = 0;
 
-        if (this.Move(0.15f * Vector2.down, c) != Vector2.zero)
+        if (this.Move(Main.PUYO_DOWN, c) != Vector2.zero)
         {
             this.i = 0;
         }

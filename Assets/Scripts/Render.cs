@@ -13,17 +13,12 @@ public class Render
         if (p.GetRemove())
         {
             p.GetTransform().localScale = new Vector2(1, 1.5f);
-            if (p.GetJ() == 30)
-            {
-                Main.Destroy(p.GetTransform().gameObject);
-                return;
-            }
         }
         else
         {
             int i = p.GetI();
-            if (i >= 10) i = 10;
-            float f = 1f - i / 10f;
+            if (i >= Main.FREEZE) i = Main.FREEZE;
+            float f = 1f - i / (float)Main.FREEZE;
             p.GetTransform().position = p.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
             p.GetTransform().localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
         }

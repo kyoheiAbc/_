@@ -8,8 +8,8 @@ public class Remove
         foreach (Puyo p in l)
         {
             if (p.GetPuyoPuyo() != null) continue;
-            if (p.GetI() < 10) return false;
-            if (p.GetRemove() && p.GetJ() < 10) return false;
+            if (p.GetI() <= Main.FREEZE) return false;
+            if (p.GetRemove() && p.GetJ() <= Main.REMOVE) return false;
         }
         return true;
     }
@@ -35,17 +35,15 @@ public class Remove
 
     private int Count(Puyo p, Board b)
     {
-        bool[,] ba = new bool[16, 8];
-        int i = 0;
-        Count_(p, ba, ref i, b);
-        return i;
+        return Count_(p, new bool[16, 8], 0, b);
     }
 
-    private void Count_(Puyo puyo, bool[,] ba, ref int i, Board b)
+    private int Count_(Puyo puyo, bool[,] ba, int i, Board b)
     {
+        int returnI = i;
         Vector2 p = puyo.GetPosition();
         ba[(int)p.y, (int)p.x] = true;
-        i++;
+        returnI++;
         List<Puyo> rltb = b.GetRlud(p);
         foreach (Puyo l in rltb)
         {
@@ -55,9 +53,10 @@ public class Remove
 
             if (!ba[(int)l.GetPosition().y, (int)l.GetPosition().x])
             {
-                Count_(l, ba, ref i, b);
+                returnI = Count_(l, ba, returnI, b);
             }
         }
+        return returnI;
     }
 
     private void Puyo(Puyo puyo, bool[,] ba, Board b)
