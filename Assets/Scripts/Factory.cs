@@ -39,7 +39,7 @@ public class Factory
     }
     public PuyoPuyo NewPuyoPuyo(Color c)
     {
-        return new PuyoPuyo(this.NewPuyo(c.Get(), new Vector2(3.5f, 12.5f)), this.NewPuyo(c.Get(), new Vector2(4.5f, 12.5f)));
+        return new PuyoPuyo(this.NewPuyo(c.Get(), new Vector2(3.5f, 12.5f)), this.NewPuyo(c.Get(), new Vector2(3.5f, 13.5f)));
     }
     public void Sort()
     {

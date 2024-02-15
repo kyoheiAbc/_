@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Diagnostics;
+
 public class Main : MonoBehaviour
 {
-    static public Vector2 DOWN = Vector2.down * 0.1f;
-    static public Vector2 PUYO_DOWN = Vector2.down * 0.3f;
-    static public int REMOVE = 20;
-    static public int FREEZE = 10;
-    static public int BREAK = 15;
+    static public Vector2 DOWN = Vector2.down * 0.1f * 0.5f;
+    static public Vector2 PUYO_DOWN = Vector2.down * 0.3f * 0.5f;
+    static public int REMOVE = 20 * 2;
+    static public int FREEZE = 10 * 2;
+    static public int BREAK = 15 * 2;
 
     private Color color;
     private Collision collision;
@@ -19,7 +21,7 @@ public class Main : MonoBehaviour
 
     void Start()
     {
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 60;
 
         this.gameObject.transform.position = new Vector3(0, 0, 0);
 
@@ -55,6 +57,8 @@ public class Main : MonoBehaviour
 
     void Update()
     {
+        // Stopwatch stopwatch = new Stopwatch();
+
         if (this.puyoPuyo == null)
         {
             this.puyoPuyo = this.factory.NewPuyoPuyo(this.color);
@@ -110,5 +114,9 @@ public class Main : MonoBehaviour
         }
 
         foreach (Puyo p in this.factory.GetList()) this.render.Puyo(p);
+
+        // stopwatch.Stop();
+        // long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+        // UnityEngine.Debug.Log("処理時間: " + elapsedMilliseconds + "ミリ秒");
     }
 }

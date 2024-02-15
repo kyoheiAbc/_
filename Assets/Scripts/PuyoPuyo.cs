@@ -7,7 +7,7 @@ public class PuyoPuyo
     private Puyo[] array;
     public Puyo[] GetArray() { return this.array; }
     private int i = 0;
-    private int rotate = 0;
+    private int rotate = 3;
 
     public PuyoPuyo(Puyo p0, Puyo p1)
     {
