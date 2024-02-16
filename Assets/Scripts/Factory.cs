@@ -5,6 +5,10 @@ using UnityEngine;
 public class Factory
 {
     private List<Puyo> list = new List<Puyo>();
+    private Color color = new Color();
+    private int[] nextColor = new int[4];
+    public int[] GetNextColor() { return this.nextColor; }
+
     public List<Puyo> GetList() { return this.list; }
 
     public void Reset()
@@ -27,6 +31,8 @@ public class Factory
             }
         }
 
+        this.color.Reset();
+        this.nextColor = new int[] { this.color.Get(), this.color.Get(), this.color.Get(), this.color.Get() };
     }
     public Factory()
     {
@@ -37,9 +43,16 @@ public class Factory
         this.list.Add(new Puyo(color, p));
         return this.list[this.list.Count - 1];
     }
-    public PuyoPuyo NewPuyoPuyo(Color c)
+    public PuyoPuyo NewPuyoPuyo()
     {
-        return new PuyoPuyo(this.NewPuyo(c.Get(), new Vector2(3.5f, 12.5f)), this.NewPuyo(c.Get(), new Vector2(3.5f, 13.5f)));
+        int c0 = this.nextColor[0];
+        int c1 = this.nextColor[1];
+        this.nextColor[0] = this.nextColor[2];
+        this.nextColor[1] = this.nextColor[3];
+        this.nextColor[2] = this.color.Get();
+        this.nextColor[3] = this.color.Get();
+
+        return new PuyoPuyo(this.NewPuyo(c0, new Vector2(3.5f, 12.5f)), this.NewPuyo(c1, new Vector2(3.5f, 13.5f)));
     }
     public void Sort()
     {

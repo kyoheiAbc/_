@@ -1,6 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
-using System.Diagnostics;
+using UnityEngine.UI;
 
 public class Main : MonoBehaviour
 {
@@ -10,13 +9,13 @@ public class Main : MonoBehaviour
     static public int FREEZE = 10 * 2;
     static public int BREAK = 15 * 2;
 
-    private Color color;
     private Collision collision;
     private Factory factory;
     private Input input;
     private Render render;
     private PuyoPuyo puyoPuyo;
     private Remove remove;
+    private Combo combo;
 
 
     void Start()
@@ -39,9 +38,9 @@ public class Main : MonoBehaviour
         s.transform.position = new Vector3(4, 7, 0);
 
         this.input = new Input(this.gameObject.GetComponent<Camera>());
-        this.color = new Color();
         this.render = new Render();
         this.factory = new Factory();
+        this.combo = new Combo();
         this.remove = null;
 
         this.collision = new Collision(this.factory.GetList());
@@ -50,18 +49,17 @@ public class Main : MonoBehaviour
     private void Reset()
     {
         this.puyoPuyo = null;
-        this.color.Reset();
         this.factory.Reset();
         this.input.Reset();
+        this.combo.Reset();
     }
 
     void Update()
     {
-        // Stopwatch stopwatch = new Stopwatch();
 
         if (this.puyoPuyo == null)
         {
-            this.puyoPuyo = this.factory.NewPuyoPuyo(this.color);
+            this.puyoPuyo = this.factory.NewPuyoPuyo();
             foreach (Puyo p in this.puyoPuyo.GetArray())
             {
                 if (this.collision.Get(p) != null)
@@ -74,6 +72,7 @@ public class Main : MonoBehaviour
         }
 
         this.factory.Remove();
+
         this.factory.Sort();
 
         float y = this.puyoPuyo.GetPosition().y;
@@ -104,19 +103,24 @@ public class Main : MonoBehaviour
             else if (v != Vector2.zero) this.puyoPuyo.Move(v, this.collision);
         }
 
-        if (this.puyoPuyo == null) this.remove = new Remove();
+        if (this.puyoPuyo == null && this.remove == null) this.remove = new Remove();
         if (this.remove != null)
         {
             if (this.remove.Ready(this.factory.GetList()))
             {
-                if (!this.remove.Execute(new Board(this.factory.GetList()))) this.remove = null;
+                if (!this.remove.Execute(new Board(this.factory.GetList())))
+                {
+                    this.remove = null;
+                }
             }
         }
 
-        foreach (Puyo p in this.factory.GetList()) this.render.Puyo(p);
+        this.combo.Update(this.remove);
 
-        // stopwatch.Stop();
-        // long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
-        // UnityEngine.Debug.Log("処理時間: " + elapsedMilliseconds + "ミリ秒");
+
+        foreach (Puyo p in this.factory.GetList()) this.render.Puyo(p);
+        this.render.RenderNextPuyoPuyo(this.factory.GetNextColor());
+        this.render.RenderCombo(this.combo);
+
     }
 }

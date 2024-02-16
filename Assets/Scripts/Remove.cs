@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class Remove
 {
+    int i = 0;
+    public int GetI() { return this.i; }
+    public void SetI(int i) { this.i = i; }
+
     public bool Ready(List<Puyo> l)
     {
         foreach (Puyo p in l)
@@ -22,9 +26,12 @@ public class Remove
             for (int x = 1; x < 7; x++)
             {
                 if (board.Get(new Vector2(x, y)) == null) continue;
+                if (board.Get(new Vector2(x, y)).GetRemove()) continue;
+
                 if (this.Count(board.Get(new Vector2(x, y)), board) >= 4)
                 {
                     b = true;
+                    this.i++;
                     bool[,] ba = new bool[16, 8];
                     this.Puyo(board.Get(new Vector2(x, y)), ba, board);
                 }
