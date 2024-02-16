@@ -8,7 +8,19 @@ public class Puyo
     private int color;
     public int GetColor() { return this.color; }
     private int i = 0;
+    private int j = 0;
+    public int GetJ() { return this.j; }
+    private bool remove = false;
+    public void SetRemove(bool b) { this.remove = b; }
+    public bool GetRemove() { return this.remove; }
     public int GetI() { return this.i; }
+    private PuyoPuyo puyoPuyo;
+    public PuyoPuyo GetPuyoPuyo() { return this.puyoPuyo; }
+    public void SetPuyoPuyo(PuyoPuyo p) { this.puyoPuyo = p; }
+    private Transform transform;
+    public void SetTransform(Transform t) { this.transform = t; }
+    public Transform GetTransform() { return this.transform; }
+
     public Puyo(int color, Vector2 position)
     {
         this.position = position;
@@ -17,8 +29,10 @@ public class Puyo
     public void Update(Collision c)
     {
         if (this.i < 256) this.i++;
+        if (this.j < 256) this.j++;
+        if (!this.remove) this.j = 0;
 
-        if (this.Move(0.15f * Vector2.down, c) != Vector2.zero)
+        if (this.Move(Main.PUYO_DOWN, c) != Vector2.zero)
         {
             this.i = 0;
         }
@@ -37,6 +51,12 @@ public class Puyo
         Puyo p = c.Get(this);
 
         if (p == null) return this.position - _position;
+
+        if (this.puyoPuyo != null)
+        {
+            if (this.puyoPuyo == p.GetPuyoPuyo())
+                return this.position - _position;
+        }
 
         if (v.y != 0)
         {

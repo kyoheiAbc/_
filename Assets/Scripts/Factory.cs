@@ -5,9 +5,21 @@ using UnityEngine;
 public class Factory
 {
     private List<Puyo> list = new List<Puyo>();
+    private Color color = new Color();
+    private int[] nextColor = new int[4];
+    public int[] GetNextColor() { return this.nextColor; }
+
     public List<Puyo> GetList() { return this.list; }
-    public Factory()
+
+    public void Reset()
     {
+        foreach (Puyo p in this.list)
+        {
+            Transform t = p.GetTransform();
+            if (t != null) Main.Destroy(p.GetTransform().gameObject);
+        }
+        this.list.Clear();
+
         for (int y = 0; y < 16; y++)
         {
             for (int x = 0; x < 8; x++)
@@ -18,28 +30,43 @@ public class Factory
                 }
             }
         }
-        // Collision c = new Collision(this.list);
-        // for (int i = 0; i < 8; i++)
-        // {
-        //     Puyo p = this.NewPuyo(-1, new Vector2(Random.Range(1, 7) + 0.5f, Random.Range(1.5f, 12.5f)));
-        //     if (c.Get(p) != null)
-        //     {
-        //         this.list.Remove(p);
-        //         i--;
-        //     }
-        // }
+
+        this.color.Reset();
+        this.nextColor = new int[] { this.color.Get(), this.color.Get(), this.color.Get(), this.color.Get() };
+    }
+    public Factory()
+    {
+        this.Reset();
     }
     private Puyo NewPuyo(int color, Vector2 p)
     {
         this.list.Add(new Puyo(color, p));
         return this.list[this.list.Count - 1];
     }
-    public PuyoPuyo NewPuyoPuyo(Color c)
+    public PuyoPuyo NewPuyoPuyo()
     {
-        return new PuyoPuyo(this.NewPuyo(c.Get(), new Vector2(3.5f, 12.5f)), this.NewPuyo(c.Get(), new Vector2(4.5f, 12.5f)));
+        int c0 = this.nextColor[0];
+        int c1 = this.nextColor[1];
+        this.nextColor[0] = this.nextColor[2];
+        this.nextColor[1] = this.nextColor[3];
+        this.nextColor[2] = this.color.Get();
+        this.nextColor[3] = this.color.Get();
+
+        return new PuyoPuyo(this.NewPuyo(c0, new Vector2(3.5f, 12.5f)), this.NewPuyo(c1, new Vector2(3.5f, 13.5f)));
     }
-    public void ListSort()
+    public void Sort()
     {
         this.list.Sort((p0, p1) => p0.GetPosition().y.CompareTo(p1.GetPosition().y));
+    }
+    public void Remove()
+    {
+        for (int i = this.list.Count - 1; i >= 0; i--)
+        {
+            if (this.list[i].GetRemove() && this.list[i].GetJ() >= Main.REMOVE)
+            {
+                Main.Destroy(this.list[i].GetTransform().gameObject);
+                this.list.RemoveAt(i);
+            }
+        }
     }
 }
