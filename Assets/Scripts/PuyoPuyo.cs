@@ -42,18 +42,6 @@ public class PuyoPuyo
     {
         Vector2 p = this.array[0].GetPosition();
 
-        if (v == Vector2.right)
-        {
-            this.array[1].Move(v, c);
-            this.Sync(1);
-            if (c.Get(this.array[0]) != null)
-            {
-                this.array[0].SetPosition(p);
-                this.Sync(0);
-            }
-            return this.array[0].GetPosition() - p;
-        }
-
         for (int i = 0; i < 2; i++)
         {
             if (this.array[i].Move(v, c) != v)

@@ -11,6 +11,7 @@ public class Remove
     {
         foreach (Puyo p in l)
         {
+            // bug
             if (p.GetPuyoPuyo() != null) continue;
             if (p.GetI() <= Main.FREEZE) return false;
             if (p.GetRemove() && p.GetJ() <= Main.REMOVE) return false;
