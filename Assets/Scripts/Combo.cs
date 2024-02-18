@@ -2,8 +2,7 @@ using UnityEngine;
 public class Combo
 {
     private int combo;
-    private int i;
-    private int j;
+    private I end = new I();
 
 
     public Combo()
@@ -13,30 +12,17 @@ public class Combo
 
     public void Update(Remove r)
     {
-        if (-1 < this.i && this.i < 256)
+        this.end.Update();
+
+        if (this.end.i > 180)
         {
-
-            this.i++;
-        }
-
-        if (this.j < 256)
-        {
-
-            this.j++;
-        }
-
-
-
-        if (this.i > 180)
-        {
-
             this.Reset();
             return;
         }
 
-        if (this.combo > 0 && r == null && this.i == -1)
+        if (this.combo > 0 && r == null)
         {
-            this.i = 0;
+            this.end.Start();
         }
 
         if (r != null)
@@ -44,16 +30,14 @@ public class Combo
             this.combo += r.GetI();
             if (r.GetI() > 0)
             {
-                this.j = 0;
-                this.i = -1;
+                this.end.i = 0;
             }
             r.SetI(0);
         }
     }
     public void Reset()
     {
-        this.i = -1;
-        this.j = 0;
+        this.end.i = 0;
         this.combo = 0;
     }
 

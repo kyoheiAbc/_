@@ -7,7 +7,7 @@ public class Render
     private GameObject gameObject = Resources.Load<GameObject>("Puyo");
     private SpriteRenderer[] Next = new SpriteRenderer[4];
     private TextMeshPro combo;
-    private int i;
+    private I comboI = new I();
     private Dictionary<Puyo, Transform> dictionary = new Dictionary<Puyo, Transform>();
     public Camera camera;
 
@@ -56,9 +56,9 @@ public class Render
             this.dictionary[p].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(p.GetColor() / 5f, 0.5f, 1.0f);
         }
 
-        if (p.GetRemove())
+        if (p.fire.i != 0)
         {
-            if (p.GetJ() >= Main.REMOVE)
+            if (p.fire.i >= Main.REMOVE)
             {
                 Main.Destroy(this.dictionary[p].gameObject);
                 this.dictionary.Remove(p);
@@ -71,7 +71,7 @@ public class Render
         }
         else
         {
-            int i = p.GetI();
+            int i = p.freeze.i;
             if (i >= Main.FREEZE) i = Main.FREEZE;
             float f = 1f - i / (float)Main.FREEZE;
             this.dictionary[p].position = p.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
@@ -81,24 +81,23 @@ public class Render
 
     public void RenderCombo(Combo combo)
     {
+        this.comboI.Update();
+
         if (combo.GetCombo() == 0)
         {
-            this.i = -1;
+            this.comboI.i = 0;
             this.combo.text = "";
             return;
         }
 
-        if (0 <= this.i && this.i < 256) this.i++;
-
-
         if (this.combo.text != combo.GetCombo() + " COMBO")
         {
-            if (this.i == -1) this.i = 0;
+            this.comboI.Start();
         }
 
-        if (this.i >= Main.REMOVE)
+        if (this.comboI.i >= Main.REMOVE)
         {
-            this.i = -1;
+            this.comboI.i = 0;
             this.combo.text = combo.GetCombo() + " COMBO";
         }
     }

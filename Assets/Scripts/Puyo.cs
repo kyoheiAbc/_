@@ -7,13 +7,8 @@ public class Puyo
     public void SetPosition(Vector2 p) { this.position = p; }
     private int color;
     public int GetColor() { return this.color; }
-    private int i = 0;
-    private int j = 0;
-    public int GetJ() { return this.j; }
-    private bool remove = false;
-    public void SetRemove(bool b) { this.remove = b; }
-    public bool GetRemove() { return this.remove; }
-    public int GetI() { return this.i; }
+    public I freeze = new I();
+    public I fire = new I();
 
     public Puyo(int color, Vector2 position)
     {
@@ -22,13 +17,16 @@ public class Puyo
     }
     public void Update(Collision c)
     {
-        if (this.i < 256) this.i++;
-        if (this.j < 256) this.j++;
-        if (!this.remove) this.j = 0;
+        freeze.Update();
+        fire.Update();
 
         if (this.Move(Main.PUYO_DOWN, c) != Vector2.zero)
         {
-            this.i = 0;
+            this.freeze.i = 0;
+        }
+        else
+        {
+            this.freeze.Start();
         }
     }
 

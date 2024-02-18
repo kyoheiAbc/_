@@ -58,7 +58,7 @@ public class Factory
     {
         for (int i = this.list.Count - 1; i >= 0; i--)
         {
-            if (this.list[i].GetRemove() && this.list[i].GetJ() >= Main.REMOVE)
+            if (this.list[i].fire.i >= Main.REMOVE)
             {
                 this.list.RemoveAt(i);
             }

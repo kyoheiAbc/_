@@ -6,7 +6,7 @@ public class PuyoPuyo
 {
     private Puyo[] array;
     public Puyo[] GetArray() { return this.array; }
-    private int i = 0;
+    private I disconnect = new I();
     private int rotate = 3;
 
     public PuyoPuyo(Puyo p0, Puyo p1)
@@ -19,15 +19,18 @@ public class PuyoPuyo
     }
     public void Update(Collision c)
     {
-        if (this.i < 256) this.i++;
-
+        this.disconnect.Update();
 
         if (this.Move(Main.DOWN, c) != Vector2.zero)
         {
-            this.i = 0;
+            this.disconnect.i = 0;
+        }
+        else
+        {
+            this.disconnect.Start();
         }
 
-        if (this.i == Main.BREAK)
+        if (this.disconnect.i == Main.BREAK)
         {
             this.array = new Puyo[] { null, null };
         }
@@ -64,7 +67,7 @@ public class PuyoPuyo
         {
             if (Vector2.zero == this.Move(Vector2.down, c))
             {
-                this.i = Main.BREAK - 1;
+                this.disconnect.i = Main.BREAK - 1;
                 return;
             }
         }

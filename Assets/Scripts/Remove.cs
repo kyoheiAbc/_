@@ -12,8 +12,8 @@ public class Remove
         foreach (Puyo p in l)
         {
             // bug
-            if (p.GetI() <= Main.FREEZE) return false;
-            if (p.GetRemove() && p.GetJ() <= Main.REMOVE) return false;
+            if (p.freeze.i <= Main.FREEZE) return false;
+            if (0 < p.fire.i && p.fire.i <= Main.REMOVE) return false;
         }
         return true;
     }
@@ -26,7 +26,7 @@ public class Remove
             for (int x = 1; x < 7; x++)
             {
                 if (board.Get(new Vector2(x, y)) == null) continue;
-                if (board.Get(new Vector2(x, y)).GetRemove()) continue;
+                if (board.Get(new Vector2(x, y)).fire.i != 0) continue;
 
                 if (this.Count(board.Get(new Vector2(x, y)), board) >= 4)
                 {
@@ -75,7 +75,7 @@ public class Remove
         Vector2 p = puyo.GetPosition();
         if (ba[(int)p.y, (int)p.x] == true) return;
         ba[(int)p.y, (int)p.x] = true;
-        puyo.SetRemove(true);
+        puyo.fire.Start();
 
         List<Puyo> list = b.GetRlud(p);
         foreach (Puyo l in list)
