@@ -22,22 +22,9 @@ public class Main : MonoBehaviour
     {
         Application.targetFrameRate = 60;
 
-        this.gameObject.transform.position = new Vector3(0, 0, 0);
+        this.gameObject.transform.position = Vector3.zero;
 
-        Camera c = this.gameObject.AddComponent<Camera>();
-        c.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
-        c.clearFlags = CameraClearFlags.SolidColor;
-        c.orthographic = true;
-        c.orthographicSize = 12;
-        c.transform.position = new Vector3(4, 7, -1);
-
-        SpriteRenderer s = new GameObject("").AddComponent<SpriteRenderer>();
-        s.color = UnityEngine.Color.HSVToRGB(2 / 3f, 1f, 1f);
-        s.sprite = Resources.Load<Sprite>("Square");
-        s.transform.localScale = new Vector3(6, 12, 0);
-        s.transform.position = new Vector3(4, 7, 0);
-
-        this.input = new Input(this.gameObject.GetComponent<Camera>());
+        this.input = new Input();
         this.render = new Render();
         this.factory = new Factory();
         this.combo = new Combo();
@@ -52,6 +39,7 @@ public class Main : MonoBehaviour
         this.factory.Reset();
         this.input.Reset();
         this.combo.Reset();
+        this.render.Reset();
     }
 
     void Update()
@@ -91,7 +79,7 @@ public class Main : MonoBehaviour
         if (this.puyoPuyo.GetArray()[0] == null) this.puyoPuyo = null;
         else
         {
-            Vector2 v = this.input.Update();
+            Vector2 v = this.input.Update(this.render.camera);
             if (v == Vector2.up)
             {
                 this.puyoPuyo.Drop(this.collision);

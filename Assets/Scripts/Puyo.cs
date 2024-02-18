@@ -17,9 +17,6 @@ public class Puyo
     private PuyoPuyo puyoPuyo;
     public PuyoPuyo GetPuyoPuyo() { return this.puyoPuyo; }
     public void SetPuyoPuyo(PuyoPuyo p) { this.puyoPuyo = p; }
-    private Transform transform;
-    public void SetTransform(Transform t) { this.transform = t; }
-    public Transform GetTransform() { return this.transform; }
 
     public Puyo(int color, Vector2 position)
     {

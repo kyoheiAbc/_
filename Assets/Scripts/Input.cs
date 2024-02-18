@@ -1,15 +1,13 @@
 using UnityEngine;
 class Input
 {
-    private Camera camera;
     private Vector2 position;
     private bool down;
     public void SetDown(bool b) { this.down = b; }
     private bool move;
 
-    public Input(Camera c)
+    public Input()
     {
-        this.camera = c;
         this.Reset();
     }
 
@@ -18,11 +16,11 @@ class Input
         this.down = false;
         this.move = false;
     }
-    public Vector2 Update()
+    public Vector2 Update(Camera camera)
     {
         if (UnityEngine.Input.GetMouseButtonDown(0))
         {
-            this.position = this.camera.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
+            this.position = camera.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
             this.down = true;
             this.move = false;
         }
@@ -30,7 +28,7 @@ class Input
 
         if (UnityEngine.Input.GetMouseButton(0))
         {
-            Vector2 v = (Vector2)this.camera.ScreenToWorldPoint(UnityEngine.Input.mousePosition) - this.position;
+            Vector2 v = (Vector2)camera.ScreenToWorldPoint(UnityEngine.Input.mousePosition) - this.position;
             v = Mathf.Abs(v.x) >= Mathf.Abs(v.y) ? new Vector2(v.x, 0) : new Vector2(0, v.y);
             if (v.magnitude >= 1)
             {

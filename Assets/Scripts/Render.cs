@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class Render
 {
@@ -7,10 +8,25 @@ public class Render
     private SpriteRenderer[] Next = new SpriteRenderer[4];
     private TextMeshPro combo;
     private int i;
-
+    private Dictionary<Puyo, Transform> dictionary = new Dictionary<Puyo, Transform>();
+    public Camera camera;
 
     public Render()
     {
+        camera = new GameObject("").AddComponent<Camera>();
+        camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+        camera.clearFlags = CameraClearFlags.SolidColor;
+        camera.orthographic = true;
+        camera.orthographicSize = 12;
+        camera.transform.position = new Vector3(4, 7, -1);
+
+        SpriteRenderer s = new GameObject("").AddComponent<SpriteRenderer>();
+        s.color = UnityEngine.Color.HSVToRGB(2 / 3f, 1f, 1f);
+        s.sprite = Resources.Load<Sprite>("Square");
+        s.transform.localScale = new Vector3(6, 12, 0);
+        s.transform.position = new Vector3(4, 7, 0);
+
+
         combo = new GameObject("").AddComponent<TextMeshPro>();
         combo.fontSize = 16;
         combo.transform.position = new Vector3(4, 7, 0);
@@ -22,25 +38,44 @@ public class Render
         this.Next[2] = Main.Instantiate(this.gameObject, new Vector2(9f, 8.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
         this.Next[3] = Main.Instantiate(this.gameObject, new Vector2(9f, 9.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
     }
+    public void Reset()
+    {
+        foreach (Transform t in this.dictionary.Values)
+        {
+            Main.Destroy(t.gameObject);
+        }
+        this.dictionary.Clear();
+
+    }
     public void Puyo(Puyo p)
     {
-        if (p.GetTransform() == null)
+
+        if (!this.dictionary.ContainsKey(p))
         {
-            Transform t = Main.Instantiate(this.gameObject).transform;
-            p.SetTransform(t);
-            t.gameObject.GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(p.GetColor() / 5f, 0.5f, 1.0f);
+            this.dictionary[p] = Main.Instantiate(this.gameObject).transform;
+            this.dictionary[p].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(p.GetColor() / 5f, 0.5f, 1.0f);
         }
+
         if (p.GetRemove())
         {
-            p.GetTransform().localScale = new Vector2(1, 1.5f);
+            if (p.GetJ() >= Main.REMOVE)
+            {
+                Main.Destroy(this.dictionary[p].gameObject);
+                this.dictionary.Remove(p);
+
+            }
+            else
+            {
+                this.dictionary[p].localScale = new Vector2(1, 1.5f);
+            }
         }
         else
         {
             int i = p.GetI();
             if (i >= Main.FREEZE) i = Main.FREEZE;
             float f = 1f - i / (float)Main.FREEZE;
-            p.GetTransform().position = p.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
-            p.GetTransform().localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
+            this.dictionary[p].position = p.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
+            this.dictionary[p].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
         }
     }
 

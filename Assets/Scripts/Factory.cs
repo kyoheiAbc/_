@@ -13,11 +13,7 @@ public class Factory
 
     public void Reset()
     {
-        foreach (Puyo p in this.list)
-        {
-            Transform t = p.GetTransform();
-            if (t != null) Main.Destroy(p.GetTransform().gameObject);
-        }
+
         this.list.Clear();
 
         for (int y = 0; y < 16; y++)
@@ -64,7 +60,6 @@ public class Factory
         {
             if (this.list[i].GetRemove() && this.list[i].GetJ() >= Main.REMOVE)
             {
-                Main.Destroy(this.list[i].GetTransform().gameObject);
                 this.list.RemoveAt(i);
             }
         }
