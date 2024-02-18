@@ -12,8 +12,6 @@ public class PuyoPuyo
     public PuyoPuyo(Puyo p0, Puyo p1)
     {
         this.array = new Puyo[] { p0, p1 };
-        p0.SetPuyoPuyo(this);
-        p1.SetPuyoPuyo(this);
     }
     public Vector2 GetPosition()
     {
@@ -31,8 +29,6 @@ public class PuyoPuyo
 
         if (this.i == Main.BREAK)
         {
-            this.array[0].SetPuyoPuyo(null);
-            this.array[1].SetPuyoPuyo(null);
             this.array = new Puyo[] { null, null };
         }
 

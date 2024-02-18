@@ -14,9 +14,6 @@ public class Puyo
     public void SetRemove(bool b) { this.remove = b; }
     public bool GetRemove() { return this.remove; }
     public int GetI() { return this.i; }
-    private PuyoPuyo puyoPuyo;
-    public PuyoPuyo GetPuyoPuyo() { return this.puyoPuyo; }
-    public void SetPuyoPuyo(PuyoPuyo p) { this.puyoPuyo = p; }
 
     public Puyo(int color, Vector2 position)
     {
@@ -49,11 +46,7 @@ public class Puyo
 
         if (p == null) return this.position - _position;
 
-        if (this.puyoPuyo != null)
-        {
-            if (this.puyoPuyo == p.GetPuyoPuyo())
-                return this.position - _position;
-        }
+
 
         if (v.y != 0)
         {

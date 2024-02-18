@@ -12,7 +12,6 @@ public class Board
                 this.Set(p);
                 continue;
             }
-            if (p.GetPuyoPuyo() != null) continue;
             if (p.GetI() <= Main.FREEZE) continue;
             if (this.Get(p.GetPosition() + Vector2.down) != null)
             {

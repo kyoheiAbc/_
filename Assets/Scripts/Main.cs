@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,6 +45,17 @@ public class Main : MonoBehaviour
 
     void Update()
     {
+        List<Puyo> l = new List<Puyo>(this.factory.GetList());
+
+
+        if (this.puyoPuyo != null)
+        {
+            Puyo[] ary = this.puyoPuyo.GetArray();
+            l.Remove(ary[0]);
+            l.Remove(ary[1]);
+        }
+        Collision col = new Collision(l);
+
 
         if (this.puyoPuyo == null)
         {
@@ -65,13 +77,16 @@ public class Main : MonoBehaviour
 
         float y = this.puyoPuyo.GetPosition().y;
         bool b = false;
+        Puyo[] a = this.puyoPuyo.GetArray();
         foreach (Puyo p in this.factory.GetList())
         {
-            if (p.GetPuyoPuyo() != null) continue;
+            if (a[0] == p) continue;
+            if (a[1] == p) continue;
+
             if (!b && p.GetPosition().y > y)
             {
                 b = true;
-                this.puyoPuyo.Update(this.collision);
+                this.puyoPuyo.Update(col);
             }
             p.Update(this.collision);
         }
@@ -82,19 +97,27 @@ public class Main : MonoBehaviour
             Vector2 v = this.input.Update(this.render.camera);
             if (v == Vector2.up)
             {
-                this.puyoPuyo.Drop(this.collision);
+                this.puyoPuyo.Drop(col);
             }
             else if (v == Vector2.right + Vector2.up)
             {
-                this.puyoPuyo.Rotate(this.collision);
+                this.puyoPuyo.Rotate(col);
             }
-            else if (v != Vector2.zero) this.puyoPuyo.Move(v, this.collision);
+            else if (v != Vector2.zero) this.puyoPuyo.Move(v, col);
         }
 
         if (this.puyoPuyo == null && this.remove == null) this.remove = new Remove();
         if (this.remove != null)
         {
-            if (this.remove.Ready(this.factory.GetList()))
+            List<Puyo> lst = new List<Puyo>(this.factory.GetList());
+
+            if (this.puyoPuyo != null)
+            {
+                Puyo[] ary = this.puyoPuyo.GetArray();
+                lst.Remove(ary[0]);
+                lst.Remove(ary[1]);
+            }
+            if (this.remove.Ready(lst))
             {
                 if (!this.remove.Execute(new Board(this.factory.GetList())))
                 {
