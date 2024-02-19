@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Render
 {
     private GameObject gameObject = Resources.Load<GameObject>("Puyo");
-    private SpriteRenderer[] Next = new SpriteRenderer[4];
+    private SpriteRenderer[] nextColor = new SpriteRenderer[4];
     private TextMeshPro combo;
     private Count comboI = new Count();
     private Dictionary<Puyo, Transform> dictionary = new Dictionary<Puyo, Transform>();
@@ -33,10 +33,10 @@ public class Render
         combo.alignment = TextAlignmentOptions.Center;
         combo.sortingOrder = 256;
 
-        this.Next[0] = Main.Instantiate(this.gameObject, new Vector2(9f, 11.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.Next[1] = Main.Instantiate(this.gameObject, new Vector2(9f, 12.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.Next[2] = Main.Instantiate(this.gameObject, new Vector2(9f, 8.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.Next[3] = Main.Instantiate(this.gameObject, new Vector2(9f, 9.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[0] = Main.Instantiate(this.gameObject, new Vector2(9f, 11.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[1] = Main.Instantiate(this.gameObject, new Vector2(9f, 12.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[2] = Main.Instantiate(this.gameObject, new Vector2(9f, 8.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[3] = Main.Instantiate(this.gameObject, new Vector2(9f, 9.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
         this.Start();
     }
     public void Start()
@@ -48,35 +48,40 @@ public class Render
         this.dictionary.Clear();
 
     }
-    public void Puyo(Puyo p)
+    public void Puyo(List<Puyo> list)
     {
-
-        if (!this.dictionary.ContainsKey(p))
+        foreach (Puyo p in list)
         {
-            this.dictionary[p] = Main.Instantiate(this.gameObject).transform;
-            this.dictionary[p].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(p.GetColor() / 5f, 0.5f, 1.0f);
-        }
 
-        if (p.fire.i != 0)
-        {
-            // if (p.fire.i >= Main.FIRE)
-            // {
-            //     Main.Destroy(this.dictionary[p].gameObject);
-            //     this.dictionary.Remove(p);
+            if (!this.dictionary.ContainsKey(p))
+            {
+                this.dictionary[p] = Main.Instantiate(this.gameObject).transform;
+                this.dictionary[p].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(p.GetColor() / 5f, 0.5f, 1.0f);
+            }
 
-            // }
-            // else
-            // {
-            //     this.dictionary[p].localScale = new Vector2(1, 1.5f);
-            // }
-        }
-        else
-        {
-            int i = p.freeze.i;
-            // if (i >= Main.FREEZE) i = Main.FREEZE;
-            // float f = 1f - i / (float)Main.FREEZE;
-            // this.dictionary[p].position = p.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
-            // this.dictionary[p].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
+            if (p.fire.i != 0)
+            {
+                // if (p.fire.i >= Main.FIRE)
+                // {
+                //     Main.Destroy(this.dictionary[p].gameObject);
+                //     this.dictionary.Remove(p);
+
+                // }
+                // else
+                // {
+                //     this.dictionary[p].localScale = new Vector2(1, 1.5f);
+                // }
+            }
+            else
+            {
+                int i = p.freeze.i;
+                // if (i >= Main.FREEZE) i = Main.FREEZE;
+                // float f = 1f - i / (float)Main.FREEZE;
+                // this.dictionary[p].position = p.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
+                // this.dictionary[p].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
+                this.dictionary[p].position = p.GetPosition();
+
+            }
         }
     }
 
@@ -103,11 +108,11 @@ public class Render
         }
     }
 
-    public void RenderNextPuyoPuyo(int[] a)
+    public void NextColor(int[] array)
     {
-        this.Next[0].color = UnityEngine.Color.HSVToRGB(a[0] / 5f, 0.5f, 1.0f);
-        this.Next[1].color = UnityEngine.Color.HSVToRGB(a[1] / 5f, 0.5f, 1.0f);
-        this.Next[2].color = UnityEngine.Color.HSVToRGB(a[2] / 5f, 0.5f, 1.0f);
-        this.Next[3].color = UnityEngine.Color.HSVToRGB(a[3] / 5f, 0.5f, 1.0f);
+        this.nextColor[0].color = UnityEngine.Color.HSVToRGB(array[0] / 5f, 0.5f, 1.0f);
+        this.nextColor[1].color = UnityEngine.Color.HSVToRGB(array[1] / 5f, 0.5f, 1.0f);
+        this.nextColor[2].color = UnityEngine.Color.HSVToRGB(array[2] / 5f, 0.5f, 1.0f);
+        this.nextColor[3].color = UnityEngine.Color.HSVToRGB(array[3] / 5f, 0.5f, 1.0f);
     }
 }

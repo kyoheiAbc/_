@@ -3,15 +3,17 @@ using UnityEngine;
 public class Factory
 {
     private PuyoPuyo puyoPuyo = null;
+    public PuyoPuyo GetPuyoPuyo() { return this.puyoPuyo; }
     private List<Puyo> list = new List<Puyo>();
-    private NextColor nextColor = new NextColor();
+    public List<Puyo> GetList() { return this.list; }
+    public NextColor nextColor = new NextColor();
     public Factory()
     {
         this.Start();
     }
     public void Start()
     {
-        this.puyoPuyo = null;
+        this.puyoPuyo = this.NewPuyoPuyo();
 
         this.list.Clear();
         for (int y = 0; y < 16; y++)
@@ -26,6 +28,7 @@ public class Factory
         }
 
         this.nextColor = new NextColor();
+
     }
 
     private Puyo NewPuyo(int color, Vector2 p)

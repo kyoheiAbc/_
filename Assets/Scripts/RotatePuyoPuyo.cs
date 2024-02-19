@@ -1,9 +1,15 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rotate
+public class RotatePuyoPuyo
 {
-    static public int Get(PuyoPuyo puyoPuyo)
+    PuyoPuyo puyoPuyo;
+    public RotatePuyoPuyo(PuyoPuyo puyoPuyo)
+    {
+        this.puyoPuyo = puyoPuyo;
+    }
+    public int Get()
     {
         if (puyoPuyo.array[0].GetPosition() == puyoPuyo.array[1].GetPosition() + Vector2.left) return 0;
         if (puyoPuyo.array[0].GetPosition() == puyoPuyo.array[1].GetPosition() + Vector2.up) return 1;
@@ -12,9 +18,9 @@ public class Rotate
         return -1;
     }
 
-    static public void Execute(PuyoPuyo puyoPuyo, List<Puyo> list)
+    public void Execute(List<Puyo> list)
     {
-        int rotate = Get(puyoPuyo);
+        int rotate = Get();
         rotate++;
         if (rotate == 4) rotate = 0;
 
@@ -22,17 +28,16 @@ public class Rotate
         puyoPuyo.array[1].SetPosition(p);
 
         if (rotate == 0)
-            Move.Puyo(puyoPuyo.array[1], Vector2.right, list);
+            puyoPuyo.array[1].movePuyo.Execute(Vector2.right, list);
         else if (rotate == 1)
-            Move.Puyo(puyoPuyo.array[1], Vector2.down, list);
-
+            puyoPuyo.array[1].movePuyo.Execute(Vector2.down, list);
         else if (rotate == 2)
-            Move.Puyo(puyoPuyo.array[1], Vector2.left, list);
+            puyoPuyo.array[1].movePuyo.Execute(Vector2.left, list);
         else if (rotate == 3)
-            Move.Puyo(puyoPuyo.array[1], Vector2.up, list);
+            puyoPuyo.array[1].movePuyo.Execute(Vector2.up, list);
 
 
-        PuyoPuyo.Sync(puyoPuyo, 1, rotate);
+        puyoPuyo.Sync(1, rotate);
 
         if (Collision.Get(puyoPuyo.array[0], list) != null)
         {
@@ -40,7 +45,7 @@ public class Rotate
             if (rotate == 4) rotate = 0;
 
             puyoPuyo.array[1].SetPosition(p);
-            PuyoPuyo.Sync(puyoPuyo, 1, rotate);
+            puyoPuyo.Sync(1, rotate);
         }
     }
 

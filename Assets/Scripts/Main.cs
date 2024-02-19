@@ -23,5 +23,27 @@ public class Main : MonoBehaviour
     }
     void Update()
     {
+
+        {
+            Vector2 v = this.input.Update();
+            PuyoPuyo puyoPuyo = this.factory.GetPuyoPuyo();
+
+
+        }
+
+
+        // {
+        //     foreach (Puyo p in this.factory.GetList())
+        //     {
+        //         p.Update(this.factory.GetList());
+        //     }
+        // }
+
+
+        {
+            this.render.Puyo(this.factory.GetList());
+            this.render.NextColor(this.factory.nextColor.array);
+        }
+
     }
 }

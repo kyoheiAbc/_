@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PuyoPuyo
@@ -9,11 +10,17 @@ public class PuyoPuyo
     private Count disconnect = new Count();
     private readonly Vector2 DOWN = 0.04f * Vector2.down;
     private readonly int DISCONNECT = 40;
+    public MovePuyoPuyo movePuyoPuyo;
+    public RotatePuyoPuyo rotatePuyoPuyo;
+
 
 
     public PuyoPuyo(Puyo p0, Puyo p1)
     {
         this.array = new Puyo[] { p0, p1 };
+        this.movePuyoPuyo = new MovePuyoPuyo(this);
+        this.rotatePuyoPuyo = new RotatePuyoPuyo(this);
+
     }
     public Vector2 GetPosition()
     {
@@ -23,7 +30,7 @@ public class PuyoPuyo
     {
         this.disconnect.Update();
 
-        if (Move.PuyoPuyo_(this, this.DOWN, list) != Vector2.zero)
+        if (movePuyoPuyo.Execute(this.DOWN, list) != Vector2.zero)
         {
             this.disconnect.i = 0;
         }
@@ -41,11 +48,11 @@ public class PuyoPuyo
 
 
 
-    public static void Drop(PuyoPuyo puyoPuyo, List<Puyo> list)
+    public void Drop(List<Puyo> list)
     {
         while (true)
         {
-            if (Vector2.zero == Move.PuyoPuyo_(puyoPuyo, Vector2.down, list))
+            if (Vector2.zero == movePuyoPuyo.Execute(Vector2.down, list))
             {
                 // puyoPuyo.disconnect.i = Main.DISCONNECT - 1;
                 return;
@@ -55,15 +62,15 @@ public class PuyoPuyo
 
 
 
-    public static void Sync(PuyoPuyo puyoPuyo, int i, int rotate)
+    public void Sync(int i, int rotate)
     {
         if (rotate == 0)
-            puyoPuyo.array[1 - i].SetPosition(puyoPuyo.array[i].GetPosition() + Vector2.right * (1 - 2 * i));
+            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.right * (1 - 2 * i));
         else if (rotate == 1)
-            puyoPuyo.array[1 - i].SetPosition(puyoPuyo.array[i].GetPosition() + Vector2.down * (1 - 2 * i));
+            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.down * (1 - 2 * i));
         else if (rotate == 2)
-            puyoPuyo.array[1 - i].SetPosition(puyoPuyo.array[i].GetPosition() + Vector2.left * (1 - 2 * i));
+            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.left * (1 - 2 * i));
         else if (rotate == 3)
-            puyoPuyo.array[1 - i].SetPosition(puyoPuyo.array[i].GetPosition() + Vector2.up * (1 - 2 * i));
+            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.up * (1 - 2 * i));
     }
 }

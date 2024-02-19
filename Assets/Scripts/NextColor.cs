@@ -1,6 +1,6 @@
 public class NextColor
 {
-    private int[] array;
+    public int[] array;
     private Color color;
     public NextColor()
     {
