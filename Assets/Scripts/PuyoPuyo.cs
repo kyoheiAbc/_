@@ -6,7 +6,10 @@ public class PuyoPuyo
 {
     public Puyo[] array;
     public Puyo[] GetArray() { return this.array; }
-    private I disconnect = new I();
+    private Count disconnect = new Count();
+    private readonly Vector2 DOWN = 0.04f * Vector2.down;
+    private readonly int DISCONNECT = 40;
+
 
     public PuyoPuyo(Puyo p0, Puyo p1)
     {
@@ -20,7 +23,7 @@ public class PuyoPuyo
     {
         this.disconnect.Update();
 
-        if (Move.PuyoPuyo_(this, Main.PUYO_PUYO_DOWN, list) != Vector2.zero)
+        if (Move.PuyoPuyo_(this, this.DOWN, list) != Vector2.zero)
         {
             this.disconnect.i = 0;
         }
@@ -29,7 +32,7 @@ public class PuyoPuyo
             this.disconnect.Start();
         }
 
-        if (this.disconnect.i == Main.BREAK)
+        if (this.disconnect.i == this.DISCONNECT)
         {
             this.array = new Puyo[] { null, null };
         }
@@ -44,7 +47,7 @@ public class PuyoPuyo
         {
             if (Vector2.zero == Move.PuyoPuyo_(puyoPuyo, Vector2.down, list))
             {
-                puyoPuyo.disconnect.i = Main.BREAK - 1;
+                // puyoPuyo.disconnect.i = Main.DISCONNECT - 1;
                 return;
             }
         }

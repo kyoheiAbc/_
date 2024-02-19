@@ -1,22 +1,19 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class Factory
 {
-    private List<Puyo> list = new List<Puyo>();
-    private Color color = new Color();
-    private int[] nextColor = new int[4];
     private PuyoPuyo puyoPuyo = null;
-    public int[] GetNextColor() { return this.nextColor; }
-
-    public List<Puyo> GetList() { return this.list; }
-
-    public void Reset()
+    private List<Puyo> list = new List<Puyo>();
+    private NextColor nextColor = new NextColor();
+    public Factory()
     {
+        this.Start();
+    }
+    public void Start()
+    {
+        this.puyoPuyo = null;
 
         this.list.Clear();
-
         for (int y = 0; y < 16; y++)
         {
             for (int x = 0; x < 8; x++)
@@ -28,13 +25,9 @@ public class Factory
             }
         }
 
-        this.color.Reset();
-        this.nextColor = new int[] { this.color.Get(), this.color.Get(), this.color.Get(), this.color.Get() };
+        this.nextColor = new NextColor();
     }
-    public Factory()
-    {
-        this.Reset();
-    }
+
     private Puyo NewPuyo(int color, Vector2 p)
     {
         this.list.Add(new Puyo(color, p));
@@ -42,14 +35,8 @@ public class Factory
     }
     public PuyoPuyo NewPuyoPuyo()
     {
-        int c0 = this.nextColor[0];
-        int c1 = this.nextColor[1];
-        this.nextColor[0] = this.nextColor[2];
-        this.nextColor[1] = this.nextColor[3];
-        this.nextColor[2] = this.color.Get();
-        this.nextColor[3] = this.color.Get();
-
-        return new PuyoPuyo(this.NewPuyo(c0, new Vector2(3.5f, 12.5f)), this.NewPuyo(c1, new Vector2(3.5f, 13.5f)));
+        int[] a = this.nextColor.Get();
+        return new PuyoPuyo(this.NewPuyo(a[0], new Vector2(3.5f, 12.5f)), this.NewPuyo(a[1], new Vector2(3.5f, 13.5f)));
     }
     public void Sort()
     {
@@ -59,10 +46,10 @@ public class Factory
     {
         for (int i = this.list.Count - 1; i >= 0; i--)
         {
-            if (this.list[i].fire.i >= Main.REMOVE)
-            {
-                this.list.RemoveAt(i);
-            }
+            // if (this.list[i].fire.i >= Main.FIRE)
+            // {
+            //     this.list.RemoveAt(i);
+            // }
         }
     }
 }

@@ -8,8 +8,9 @@ public class Puyo
     public void SetPosition(Vector2 p) { this.position = p; }
     private int color;
     public int GetColor() { return this.color; }
-    public I freeze = new I();
-    public I fire = new I();
+    public Count freeze = new Count();
+    public Count fire = new Count();
+    private readonly Vector2 DOWN = 0.2f * Vector2.down;
 
     public Puyo(int color, Vector2 position)
     {
@@ -26,7 +27,7 @@ public class Puyo
             return;
         }
 
-        if (Move.Puyo(this, Main.PUYO_DOWN, list) != Vector2.zero)
+        if (Move.Puyo(this, this.DOWN, list) != Vector2.zero)
         {
             this.freeze.i = 0;
         }

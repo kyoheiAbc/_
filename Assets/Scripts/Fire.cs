@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Remove
+public class Fire
 {
     static public bool Ready(List<Puyo> l)
     {
         foreach (Puyo p in l)
         {
             // bug
-            if (p.freeze.i <= Main.FREEZE) return false;
-            if (0 < p.fire.i && p.fire.i <= Main.REMOVE) return false;
+            // if (p.freeze.i <= Main.FREEZE) return false;
+            // if (0 < p.fire.i && p.fire.i <= Main.FIRE) return false;
         }
         return true;
     }

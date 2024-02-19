@@ -7,7 +7,7 @@ public class Render
     private GameObject gameObject = Resources.Load<GameObject>("Puyo");
     private SpriteRenderer[] Next = new SpriteRenderer[4];
     private TextMeshPro combo;
-    private I comboI = new I();
+    private Count comboI = new Count();
     private Dictionary<Puyo, Transform> dictionary = new Dictionary<Puyo, Transform>();
     public Camera camera;
 
@@ -37,8 +37,9 @@ public class Render
         this.Next[1] = Main.Instantiate(this.gameObject, new Vector2(9f, 12.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
         this.Next[2] = Main.Instantiate(this.gameObject, new Vector2(9f, 8.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
         this.Next[3] = Main.Instantiate(this.gameObject, new Vector2(9f, 9.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.Start();
     }
-    public void Reset()
+    public void Start()
     {
         foreach (Transform t in this.dictionary.Values)
         {
@@ -58,24 +59,24 @@ public class Render
 
         if (p.fire.i != 0)
         {
-            if (p.fire.i >= Main.REMOVE)
-            {
-                Main.Destroy(this.dictionary[p].gameObject);
-                this.dictionary.Remove(p);
+            // if (p.fire.i >= Main.FIRE)
+            // {
+            //     Main.Destroy(this.dictionary[p].gameObject);
+            //     this.dictionary.Remove(p);
 
-            }
-            else
-            {
-                this.dictionary[p].localScale = new Vector2(1, 1.5f);
-            }
+            // }
+            // else
+            // {
+            //     this.dictionary[p].localScale = new Vector2(1, 1.5f);
+            // }
         }
         else
         {
             int i = p.freeze.i;
-            if (i >= Main.FREEZE) i = Main.FREEZE;
-            float f = 1f - i / (float)Main.FREEZE;
-            this.dictionary[p].position = p.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
-            this.dictionary[p].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
+            // if (i >= Main.FREEZE) i = Main.FREEZE;
+            // float f = 1f - i / (float)Main.FREEZE;
+            // this.dictionary[p].position = p.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
+            // this.dictionary[p].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
         }
     }
 
@@ -95,7 +96,7 @@ public class Render
             this.comboI.Start();
         }
 
-        if (this.comboI.i >= Main.REMOVE)
+        // if (this.comboI.i >= Main.FIRE)
         {
             this.comboI.i = 0;
             this.combo.text = combo.GetCombo() + " COMBO";

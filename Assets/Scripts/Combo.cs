@@ -2,12 +2,12 @@ using UnityEngine;
 public class Combo
 {
     private int combo;
-    private I end = new I();
+    private Count end = new Count();
 
 
     public Combo()
     {
-        this.Reset();
+        this.Start();
     }
 
     public void Update(int i)
@@ -16,7 +16,7 @@ public class Combo
 
         if (this.end.i > 180)
         {
-            this.Reset();
+            this.Start();
             return;
         }
 
@@ -33,7 +33,7 @@ public class Combo
             }
         }
     }
-    public void Reset()
+    public void Start()
     {
         this.end.i = 0;
         this.combo = 0;

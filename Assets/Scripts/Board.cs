@@ -12,11 +12,8 @@ public class Board
                 this.Set(p);
                 continue;
             }
-            if (p.freeze.i <= Main.FREEZE) continue;
-            if (this.Get(p.GetPosition() + Vector2.down) != null)
-            {
-                this.Set(p);
-            }
+            // if (p.freeze.i <= Main.FREEZE) continue;
+            this.Set(p);
         }
     }
     public void Set(Puyo p)
