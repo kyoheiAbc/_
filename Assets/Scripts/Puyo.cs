@@ -1,81 +1,39 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Puyo
 {
-    private Vector2 position;
+    public Vector2 position;
     public Vector2 GetPosition() { return this.position; }
     public void SetPosition(Vector2 p) { this.position = p; }
     private int color;
     public int GetColor() { return this.color; }
-    private int i = 0;
-    private int j = 0;
-    public int GetJ() { return this.j; }
-    private bool remove = false;
-    public void SetRemove(bool b) { this.remove = b; }
-    public bool GetRemove() { return this.remove; }
-    public int GetI() { return this.i; }
-    private PuyoPuyo puyoPuyo;
-    public PuyoPuyo GetPuyoPuyo() { return this.puyoPuyo; }
-    public void SetPuyoPuyo(PuyoPuyo p) { this.puyoPuyo = p; }
-    private Transform transform;
-    public void SetTransform(Transform t) { this.transform = t; }
-    public Transform GetTransform() { return this.transform; }
+    public I freeze = new I();
+    public I fire = new I();
 
     public Puyo(int color, Vector2 position)
     {
         this.position = position;
         this.color = color;
     }
-    public void Update(Collision c)
+    public void Update(List<Puyo> list)
     {
-        if (this.i < 256) this.i++;
-        if (this.j < 256) this.j++;
-        if (!this.remove) this.j = 0;
-
-        if (this.Move(Main.PUYO_DOWN, c) != Vector2.zero)
+        freeze.Update();
+        fire.Update();
+        if (this.position.x == 0.5f || this.position.x == 7.5f || this.position.y == 0.5f || this.position.y == 15.5f)
         {
-            this.i = 0;
-        }
-    }
-
-    public Vector2 Move(Vector2 v, Collision c)
-    {
-        if (this.position.x == 0.5f) return Vector2.zero;
-        if (this.position.x == 7.5f) return Vector2.zero;
-        if (this.position.y == 0.5f) return Vector2.zero;
-        if (this.position.y == 15.5f) return Vector2.zero;
-
-        Vector2 _position = this.position;
-        this.position += v;
-
-        Puyo p = c.Get(this);
-
-        if (p == null) return this.position - _position;
-
-        if (this.puyoPuyo != null)
-        {
-            if (this.puyoPuyo == p.GetPuyoPuyo())
-                return this.position - _position;
+            this.freeze.Start();
+            return;
         }
 
-        if (v.y != 0)
+        if (Move.Puyo(this, Main.PUYO_DOWN, list) != Vector2.zero)
         {
-            this.position.y = p.GetPosition().y - Mathf.Sign(v.y);
-            return this.position - _position;
+            this.freeze.i = 0;
         }
-
-        if (v.x != 0)
+        else
         {
-            float y = p.GetPosition().y;
-            if (Mathf.Abs(this.position.y - y) > 0.5f)
-            {
-                this.position.y = y + Mathf.Sign(this.position.y - y);
-                if (c.Get(this) == null) return this.position - _position;
-            }
+            this.freeze.Start();
         }
-
-        this.position = _position;
-        return Vector2.zero;
     }
 
 

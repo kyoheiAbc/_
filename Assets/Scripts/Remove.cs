@@ -3,50 +3,43 @@ using UnityEngine;
 
 public class Remove
 {
-    int i = 0;
-    public int GetI() { return this.i; }
-    public void SetI(int i) { this.i = i; }
-
-    public bool Ready(List<Puyo> l)
+    static public bool Ready(List<Puyo> l)
     {
         foreach (Puyo p in l)
         {
             // bug
-            if (p.GetPuyoPuyo() != null) continue;
-            if (p.GetI() <= Main.FREEZE) return false;
-            if (p.GetRemove() && p.GetJ() <= Main.REMOVE) return false;
+            if (p.freeze.i <= Main.FREEZE) return false;
+            if (0 < p.fire.i && p.fire.i <= Main.REMOVE) return false;
         }
         return true;
     }
 
-    public bool Execute(Board board)
+    public static int Execute(Board board)
     {
-        bool b = false;
-        for (int y = 1; y < 15; y++)
+        int i = 0; for (int y = 1; y < 15; y++)
         {
             for (int x = 1; x < 7; x++)
             {
                 if (board.Get(new Vector2(x, y)) == null) continue;
-                if (board.Get(new Vector2(x, y)).GetRemove()) continue;
+                if (board.Get(new Vector2(x, y)).fire.i != 0) continue;
 
-                if (this.Count(board.Get(new Vector2(x, y)), board) >= 4)
+                if (Count(board.Get(new Vector2(x, y)), board) >= 4)
                 {
-                    b = true;
-                    this.i++;
+                    i++;
                     bool[,] ba = new bool[16, 8];
-                    this.Puyo(board.Get(new Vector2(x, y)), ba, board);
+                    Puyo(board.Get(new Vector2(x, y)), ba, board);
                 }
             }
         }
-        return b;
+        return i;
     }
 
-    private int Count(Puyo p, Board b)
+    static private int Count(Puyo p, Board b)
     {
         return Count_(p, new bool[16, 8], 0, b);
     }
 
-    private int Count_(Puyo puyo, bool[,] ba, int i, Board b)
+    static private int Count_(Puyo puyo, bool[,] ba, int i, Board b)
     {
         int returnI = i;
         Vector2 p = puyo.GetPosition();
@@ -67,7 +60,7 @@ public class Remove
         return returnI;
     }
 
-    private void Puyo(Puyo puyo, bool[,] ba, Board b)
+    static private void Puyo(Puyo puyo, bool[,] ba, Board b)
     {
         if (puyo == null) return;
         int c = puyo.GetColor();
@@ -76,7 +69,7 @@ public class Remove
         Vector2 p = puyo.GetPosition();
         if (ba[(int)p.y, (int)p.x] == true) return;
         ba[(int)p.y, (int)p.x] = true;
-        puyo.SetRemove(true);
+        puyo.fire.Start();
 
         List<Puyo> list = b.GetRlud(p);
         foreach (Puyo l in list)

@@ -1,15 +1,15 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Main : MonoBehaviour
 {
-    static public Vector2 DOWN = Vector2.down * 0.1f * 0.5f;
-    static public Vector2 PUYO_DOWN = Vector2.down * 0.3f * 0.5f;
+    static public Vector2 PUYO_PUYO_DOWN = Vector2.down * 0.075f * 0.5f;
+    static public Vector2 PUYO_DOWN = Vector2.down * 0.075f * 0.5f * 4;
     static public int REMOVE = 20 * 2;
     static public int FREEZE = 10 * 2;
     static public int BREAK = 15 * 2;
 
-    private Collision collision;
     private Factory factory;
     private Input input;
     private Render render;
@@ -22,28 +22,14 @@ public class Main : MonoBehaviour
     {
         Application.targetFrameRate = 60;
 
-        this.gameObject.transform.position = new Vector3(0, 0, 0);
+        this.gameObject.transform.position = Vector3.zero;
 
-        Camera c = this.gameObject.AddComponent<Camera>();
-        c.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
-        c.clearFlags = CameraClearFlags.SolidColor;
-        c.orthographic = true;
-        c.orthographicSize = 12;
-        c.transform.position = new Vector3(4, 7, -1);
-
-        SpriteRenderer s = new GameObject("").AddComponent<SpriteRenderer>();
-        s.color = UnityEngine.Color.HSVToRGB(2 / 3f, 1f, 1f);
-        s.sprite = Resources.Load<Sprite>("Square");
-        s.transform.localScale = new Vector3(6, 12, 0);
-        s.transform.position = new Vector3(4, 7, 0);
-
-        this.input = new Input(this.gameObject.GetComponent<Camera>());
+        this.input = new Input();
         this.render = new Render();
         this.factory = new Factory();
         this.combo = new Combo();
         this.remove = null;
 
-        this.collision = new Collision(this.factory.GetList());
         this.Reset();
     }
     private void Reset()
@@ -52,6 +38,7 @@ public class Main : MonoBehaviour
         this.factory.Reset();
         this.input.Reset();
         this.combo.Reset();
+        this.render.Reset();
     }
 
     void Update()
@@ -62,7 +49,7 @@ public class Main : MonoBehaviour
             this.puyoPuyo = this.factory.NewPuyoPuyo();
             foreach (Puyo p in this.puyoPuyo.GetArray())
             {
-                if (this.collision.Get(p) != null)
+                if (Collision.Get(p, this.factory.GetList()) != null)
                 {
                     this.Reset();
                     return;
@@ -77,45 +64,58 @@ public class Main : MonoBehaviour
 
         float y = this.puyoPuyo.GetPosition().y;
         bool b = false;
+        Puyo[] a = this.puyoPuyo.GetArray();
         foreach (Puyo p in this.factory.GetList())
         {
-            if (p.GetPuyoPuyo() != null) continue;
+            if (a[0] == p) continue;
+            if (a[1] == p) continue;
+
             if (!b && p.GetPosition().y > y)
             {
                 b = true;
-                this.puyoPuyo.Update(this.collision);
+                this.puyoPuyo.Update(this.factory.GetList());
             }
-            p.Update(this.collision);
+            p.Update(this.factory.GetList());
         }
 
         if (this.puyoPuyo.GetArray()[0] == null) this.puyoPuyo = null;
         else
         {
-            Vector2 v = this.input.Update();
+            Vector2 v = this.input.Update(this.render.camera);
             if (v == Vector2.up)
             {
-                this.puyoPuyo.Drop(this.collision);
+                PuyoPuyo.Drop(puyoPuyo, this.factory.GetList());
             }
             else if (v == Vector2.right + Vector2.up)
             {
-                this.puyoPuyo.Rotate(this.collision);
+                Rotate.Execute(this.puyoPuyo, this.factory.GetList());
             }
-            else if (v != Vector2.zero) this.puyoPuyo.Move(v, this.collision);
+            else if (v != Vector2.zero) Move.PuyoPuyo_(this.puyoPuyo, v, this.factory.GetList());
         }
 
+        int i = 0;
         if (this.puyoPuyo == null && this.remove == null) this.remove = new Remove();
         if (this.remove != null)
         {
-            if (this.remove.Ready(this.factory.GetList()))
+            List<Puyo> lst = new List<Puyo>(this.factory.GetList());
+
+            if (this.puyoPuyo != null)
             {
-                if (!this.remove.Execute(new Board(this.factory.GetList())))
+                Puyo[] ary = this.puyoPuyo.GetArray();
+                lst.Remove(ary[0]);
+                lst.Remove(ary[1]);
+            }
+            if (Remove.Ready(lst))
+            {
+                i = Remove.Execute(new Board(this.factory.GetList()));
+                if (i == 0)
                 {
-                    this.remove = null;
+                    i = -1;
                 }
             }
         }
 
-        this.combo.Update(this.remove);
+        this.combo.Update(i);
 
 
         foreach (Puyo p in this.factory.GetList()) this.render.Puyo(p);
@@ -123,4 +123,18 @@ public class Main : MonoBehaviour
         this.render.RenderCombo(this.combo);
 
     }
+}
+
+public class I
+{
+    public int i = 0;
+    public void Update()
+    {
+        if (0 < i && i < 256) i++;
+    }
+    public void Start()
+    {
+        if (i == 0) i++;
+    }
+
 }

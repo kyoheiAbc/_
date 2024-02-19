@@ -7,17 +7,14 @@ public class Factory
     private List<Puyo> list = new List<Puyo>();
     private Color color = new Color();
     private int[] nextColor = new int[4];
+    private PuyoPuyo puyoPuyo = null;
     public int[] GetNextColor() { return this.nextColor; }
 
     public List<Puyo> GetList() { return this.list; }
 
     public void Reset()
     {
-        foreach (Puyo p in this.list)
-        {
-            Transform t = p.GetTransform();
-            if (t != null) Main.Destroy(p.GetTransform().gameObject);
-        }
+
         this.list.Clear();
 
         for (int y = 0; y < 16; y++)
@@ -62,9 +59,8 @@ public class Factory
     {
         for (int i = this.list.Count - 1; i >= 0; i--)
         {
-            if (this.list[i].GetRemove() && this.list[i].GetJ() >= Main.REMOVE)
+            if (this.list[i].fire.i >= Main.REMOVE)
             {
-                Main.Destroy(this.list[i].GetTransform().gameObject);
                 this.list.RemoveAt(i);
             }
         }
