@@ -2,17 +2,12 @@ using UnityEngine;
 using System.Collections.Generic;
 public class Collision
 {
-    private List<Puyo> list;
-    public Collision(List<Puyo> l)
+    static public Puyo Get(Puyo puyo, List<Puyo> list)
     {
-        this.list = l;
-    }
-    public Puyo Get(Puyo p)
-    {
-        foreach (Puyo l in this.list)
+        foreach (Puyo l in list)
         {
-            if (p == l) continue;
-            if (Vector2.SqrMagnitude(p.GetPosition() - l.GetPosition()) < 1) return l;
+            if (puyo == l) continue;
+            if (Vector2.SqrMagnitude(puyo.GetPosition() - l.GetPosition()) < 1) return l;
         }
         return null;
     }

@@ -4,13 +4,12 @@ using UnityEngine.UI;
 
 public class Main : MonoBehaviour
 {
-    static public Vector2 DOWN = Vector2.down * 0.1f * 0.5f;
-    static public Vector2 PUYO_DOWN = Vector2.down * 0.3f * 0.5f;
+    static public Vector2 PUYO_PUYO_DOWN = Vector2.down * 0.075f * 0.5f;
+    static public Vector2 PUYO_DOWN = Vector2.down * 0.075f * 0.5f * 4;
     static public int REMOVE = 20 * 2;
     static public int FREEZE = 10 * 2;
     static public int BREAK = 15 * 2;
 
-    private Collision collision;
     private Factory factory;
     private Input input;
     private Render render;
@@ -31,7 +30,6 @@ public class Main : MonoBehaviour
         this.combo = new Combo();
         this.remove = null;
 
-        this.collision = new Collision(this.factory.GetList());
         this.Reset();
     }
     private void Reset()
@@ -45,24 +43,13 @@ public class Main : MonoBehaviour
 
     void Update()
     {
-        List<Puyo> l = new List<Puyo>(this.factory.GetList());
-
-
-        if (this.puyoPuyo != null)
-        {
-            Puyo[] ary = this.puyoPuyo.GetArray();
-            l.Remove(ary[0]);
-            l.Remove(ary[1]);
-        }
-        Collision col = new Collision(l);
-
 
         if (this.puyoPuyo == null)
         {
             this.puyoPuyo = this.factory.NewPuyoPuyo();
             foreach (Puyo p in this.puyoPuyo.GetArray())
             {
-                if (this.collision.Get(p) != null)
+                if (Collision.Get(p, this.factory.GetList()) != null)
                 {
                     this.Reset();
                     return;
@@ -86,9 +73,9 @@ public class Main : MonoBehaviour
             if (!b && p.GetPosition().y > y)
             {
                 b = true;
-                this.puyoPuyo.Update(col);
+                this.puyoPuyo.Update(this.factory.GetList());
             }
-            p.Update(this.collision);
+            p.Update(this.factory.GetList());
         }
 
         if (this.puyoPuyo.GetArray()[0] == null) this.puyoPuyo = null;
@@ -97,13 +84,13 @@ public class Main : MonoBehaviour
             Vector2 v = this.input.Update(this.render.camera);
             if (v == Vector2.up)
             {
-                this.puyoPuyo.Drop(col);
+                PuyoPuyo.Drop(puyoPuyo, this.factory.GetList());
             }
             else if (v == Vector2.right + Vector2.up)
             {
-                this.puyoPuyo.Rotate(col);
+                Rotate.Execute(this.puyoPuyo, this.factory.GetList());
             }
-            else if (v != Vector2.zero) this.puyoPuyo.Move(v, col);
+            else if (v != Vector2.zero) Move.PuyoPuyo_(this.puyoPuyo, v, this.factory.GetList());
         }
 
         if (this.puyoPuyo == null && this.remove == null) this.remove = new Remove();

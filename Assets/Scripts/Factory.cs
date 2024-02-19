@@ -7,6 +7,7 @@ public class Factory
     private List<Puyo> list = new List<Puyo>();
     private Color color = new Color();
     private int[] nextColor = new int[4];
+    private PuyoPuyo puyoPuyo = null;
     public int[] GetNextColor() { return this.nextColor; }
 
     public List<Puyo> GetList() { return this.list; }

@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Puyo
 {
-    private Vector2 position;
+    public Vector2 position;
     public Vector2 GetPosition() { return this.position; }
     public void SetPosition(Vector2 p) { this.position = p; }
     private int color;
@@ -15,12 +16,17 @@ public class Puyo
         this.position = position;
         this.color = color;
     }
-    public void Update(Collision c)
+    public void Update(List<Puyo> list)
     {
         freeze.Update();
         fire.Update();
+        if (this.position.x == 0.5f || this.position.x == 7.5f || this.position.y == 0.5f || this.position.y == 15.5f)
+        {
+            this.freeze.Start();
+            return;
+        }
 
-        if (this.Move(Main.PUYO_DOWN, c) != Vector2.zero)
+        if (Move.Puyo(this, Main.PUYO_DOWN, list) != Vector2.zero)
         {
             this.freeze.i = 0;
         }
@@ -28,42 +34,6 @@ public class Puyo
         {
             this.freeze.Start();
         }
-    }
-
-    public Vector2 Move(Vector2 v, Collision c)
-    {
-        if (this.position.x == 0.5f) return Vector2.zero;
-        if (this.position.x == 7.5f) return Vector2.zero;
-        if (this.position.y == 0.5f) return Vector2.zero;
-        if (this.position.y == 15.5f) return Vector2.zero;
-
-        Vector2 _position = this.position;
-        this.position += v;
-
-        Puyo p = c.Get(this);
-
-        if (p == null) return this.position - _position;
-
-
-
-        if (v.y != 0)
-        {
-            this.position.y = p.GetPosition().y - Mathf.Sign(v.y);
-            return this.position - _position;
-        }
-
-        if (v.x != 0)
-        {
-            float y = p.GetPosition().y;
-            if (Mathf.Abs(this.position.y - y) > 0.5f)
-            {
-                this.position.y = y + Mathf.Sign(this.position.y - y);
-                if (c.Get(this) == null) return this.position - _position;
-            }
-        }
-
-        this.position = _position;
-        return Vector2.zero;
     }
 
 
