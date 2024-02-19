@@ -93,6 +93,7 @@ public class Main : MonoBehaviour
             else if (v != Vector2.zero) Move.PuyoPuyo_(this.puyoPuyo, v, this.factory.GetList());
         }
 
+        int i = 0;
         if (this.puyoPuyo == null && this.remove == null) this.remove = new Remove();
         if (this.remove != null)
         {
@@ -104,16 +105,17 @@ public class Main : MonoBehaviour
                 lst.Remove(ary[0]);
                 lst.Remove(ary[1]);
             }
-            if (this.remove.Ready(lst))
+            if (Remove.Ready(lst))
             {
-                if (!this.remove.Execute(new Board(this.factory.GetList())))
+                i = Remove.Execute(new Board(this.factory.GetList()));
+                if (i == 0)
                 {
-                    this.remove = null;
+                    i = -1;
                 }
             }
         }
 
-        this.combo.Update(this.remove);
+        this.combo.Update(i);
 
 
         foreach (Puyo p in this.factory.GetList()) this.render.Puyo(p);

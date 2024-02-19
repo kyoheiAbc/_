@@ -10,7 +10,7 @@ public class Combo
         this.Reset();
     }
 
-    public void Update(Remove r)
+    public void Update(int i)
     {
         this.end.Update();
 
@@ -20,19 +20,17 @@ public class Combo
             return;
         }
 
-        if (this.combo > 0 && r == null)
+        if (this.combo > 0 && i == -1)
         {
             this.end.Start();
         }
-
-        if (r != null)
+        if (i != -1)
         {
-            this.combo += r.GetI();
-            if (r.GetI() > 0)
+            this.combo += i;
+            if (i > 0)
             {
                 this.end.i = 0;
             }
-            r.SetI(0);
         }
     }
     public void Reset()
