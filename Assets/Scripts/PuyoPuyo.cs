@@ -6,15 +6,11 @@ using UnityEngine;
 public class PuyoPuyo
 {
     public Puyo[] array;
-    public Puyo[] GetArray() { return this.array; }
     private Count disconnect = new Count();
     private readonly Vector2 DOWN = 0.04f * Vector2.down;
-    private readonly int DISCONNECT = 40;
+    private readonly int DISCONNECT = 120;
     public MovePuyoPuyo movePuyoPuyo;
     public RotatePuyoPuyo rotatePuyoPuyo;
-
-
-
     public PuyoPuyo(Puyo p0, Puyo p1)
     {
         this.array = new Puyo[] { p0, p1 };
@@ -23,13 +19,13 @@ public class PuyoPuyo
     }
     public Vector2 GetPosition()
     {
-        return 0.5f * (this.array[0].GetPosition() + this.array[1].GetPosition());
+        return 0.5f * (this.array[0].position + this.array[1].position);
     }
-    public void Update(List<Puyo> list)
+    public bool Update(List<Puyo> list)
     {
         this.disconnect.Update();
 
-        if (movePuyoPuyo.Execute(this.DOWN, list) != Vector2.zero)
+        if (this.movePuyoPuyo.Execute(this.DOWN, list) == this.DOWN)
         {
             this.disconnect.i = 0;
         }
@@ -37,39 +33,30 @@ public class PuyoPuyo
         {
             this.disconnect.Start();
         }
-
-        if (this.disconnect.i == this.DISCONNECT)
-        {
-            this.array = new Puyo[] { null, null };
-        }
-
+        return this.disconnect.i <= this.DISCONNECT;
     }
-
-
 
     public void Drop(List<Puyo> list)
     {
         while (true)
         {
-            if (Vector2.zero == movePuyoPuyo.Execute(Vector2.down, list))
+            if (Vector2.zero == this.movePuyoPuyo.Execute(Vector2.down, list))
             {
-                // puyoPuyo.disconnect.i = Main.DISCONNECT - 1;
+                this.disconnect.i = this.DISCONNECT;
                 return;
             }
         }
     }
 
-
-
     public void Sync(int i, int rotate)
     {
         if (rotate == 0)
-            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.right * (1 - 2 * i));
+            this.array[1 - i].position = this.array[i].position + Vector2.right * (1 - 2 * i);
         else if (rotate == 1)
-            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.down * (1 - 2 * i));
+            this.array[1 - i].position = this.array[i].position + Vector2.down * (1 - 2 * i);
         else if (rotate == 2)
-            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.left * (1 - 2 * i));
+            this.array[1 - i].position = this.array[i].position + Vector2.left * (1 - 2 * i);
         else if (rotate == 3)
-            this.array[1 - i].SetPosition(this.array[i].GetPosition() + Vector2.up * (1 - 2 * i));
+            this.array[1 - i].position = this.array[i].position + Vector2.up * (1 - 2 * i);
     }
 }

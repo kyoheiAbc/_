@@ -11,34 +11,30 @@ public class MovePuyoPuyo
     }
     public Vector2 Execute(Vector2 v, List<Puyo> list)
     {
-        Vector2 position = puyoPuyo.GetPosition();
+        Vector2 position = this.puyoPuyo.GetPosition();
         _Execute(v, list);
-        Debug.Log("b");
-
-        return puyoPuyo.GetPosition() - position;
+        return this.puyoPuyo.GetPosition() - position;
     }
     private void _Execute(Vector2 v, List<Puyo> list)
     {
-        Debug.Log("a");
-        Vector2 p = puyoPuyo.array[0].GetPosition();
-        int rotate = puyoPuyo.rotatePuyoPuyo.Get();
+        Vector2 p = this.puyoPuyo.array[0].position;
+        int rotate = this.puyoPuyo.rotatePuyoPuyo.Get();
 
         int[] a = new int[] { 0, 1 };
-        if (puyoPuyo.rotatePuyoPuyo.Get() == 0 && v.x > 0) a = new int[] { 1, 0 };
-        if (puyoPuyo.rotatePuyoPuyo.Get() == 1 && v.y < 0) a = new int[] { 1, 0 };
-        if (puyoPuyo.rotatePuyoPuyo.Get() == 2 && v.x < 0) a = new int[] { 1, 0 };
-        if (puyoPuyo.rotatePuyoPuyo.Get() == 3 && v.y > 0) a = new int[] { 1, 0 };
+        if (this.puyoPuyo.rotatePuyoPuyo.Get() == 0 && v.x > 0) a = new int[] { 1, 0 };
+        if (this.puyoPuyo.rotatePuyoPuyo.Get() == 1 && v.y < 0) a = new int[] { 1, 0 };
+        if (this.puyoPuyo.rotatePuyoPuyo.Get() == 2 && v.x < 0) a = new int[] { 1, 0 };
+        if (this.puyoPuyo.rotatePuyoPuyo.Get() == 3 && v.y > 0) a = new int[] { 1, 0 };
 
         foreach (int i in a)
         {
-            if (puyoPuyo.array[i].movePuyo.Execute(v, list) != v)
+            if (this.puyoPuyo.array[i].movePuyo.Execute(v, list) != v)
             {
-                puyoPuyo.Sync(i, rotate);
-                if (Collision.Get(puyoPuyo.array[1 - i], list) != null)
+                this.puyoPuyo.Sync(i, rotate);
+                if (Collision.Get(this.puyoPuyo.array[1 - i], list) != null)
                 {
-
-                    puyoPuyo.array[0].SetPosition(p);
-                    puyoPuyo.Sync(0, rotate);
+                    this.puyoPuyo.array[0].position = p;
+                    this.puyoPuyo.Sync(0, rotate);
                 }
                 else
                 {

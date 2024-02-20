@@ -1,6 +1,6 @@
 public class Color
 {
-    private int[] array = Shuffle(new int[] { 0, 1, 2, 3 });
+    private int[] array = Shuffle(new int[] { 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3 });
     private int i = 0;
     public int Get()
     {
@@ -18,9 +18,7 @@ public class Color
         for (int i = clone.Length - 1; i > 0; i--)
         {
             int r = UnityEngine.Random.Range(0, i + 1);
-            int _ = clone[i];
-            clone[i] = clone[r];
-            clone[r] = _;
+            (clone[r], clone[i]) = (clone[i], clone[r]);
         }
         return clone;
     }

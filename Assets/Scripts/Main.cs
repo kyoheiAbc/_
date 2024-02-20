@@ -24,24 +24,38 @@ public class Main : MonoBehaviour
     void Update()
     {
 
+
+        this.render.Puyo(this.factory.GetList());
+        this.render.NextColor(this.factory.nextColor.array);
+
+
+    }
+
+    private void Control(PuyoPuyo puyoPuyo, Vector2 v)
+    {
+        if (v == Vector2.zero) return;
+        else if (v == Vector2.up) puyoPuyo.Drop(this.factory.GetList());
+        else if (v == Vector2.right + Vector2.down) puyoPuyo.rotatePuyoPuyo.Execute(this.factory.GetList());
+        else puyoPuyo.movePuyoPuyo.Execute(v, this.factory.GetList());
+    }
+
+    private void _Update(PuyoPuyo puyoPuyo, List<Puyo> list)
+    {
+        float y = puyoPuyo.GetPosition().y;
+        bool b = false;
+        foreach (Puyo p in list)
         {
-            Vector2 v = this.input.Update();
-            if (v != Vector2.zero) this.factory.GetPuyoPuyo().movePuyoPuyo.Execute(v, this.factory.GetList());
-        }
+            if (puyoPuyo.array[0] == p) continue;
+            if (puyoPuyo.array[1] == p) continue;
 
-
-        // {
-        //     foreach (Puyo p in this.factory.GetList())
-        //     {
-        //         p.Update(this.factory.GetList());
-        //     }
-        // }
-
-
-        {
-            this.render.Puyo(this.factory.GetList());
-            this.render.NextColor(this.factory.nextColor.array);
+            if (!b && p.position.y > y)
+            {
+                b = true;
+                puyoPuyo.Update(list);
+            }
+            p.Update(list);
         }
 
     }
+
 }

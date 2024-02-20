@@ -48,17 +48,17 @@ public class Fire
     private int Count_(Puyo puyo, bool[,] ba, int i)
     {
         int returnI = i;
-        Vector2 p = puyo.GetPosition();
+        Vector2 p = puyo.position;
         ba[(int)p.y, (int)p.x] = true;
         returnI++;
         List<Puyo> rltb = board.GetRlud(p);
         foreach (Puyo l in rltb)
         {
             if (l == null) continue;
-            if (l.GetColor() == -1) continue;
-            if (l.GetColor() != puyo.GetColor()) continue;
+            if (l.color == -1) continue;
+            if (l.color != puyo.color) continue;
 
-            if (!ba[(int)l.GetPosition().y, (int)l.GetPosition().x])
+            if (!ba[(int)l.position.y, (int)l.position.x])
             {
                 returnI = Count_(l, ba, returnI);
             }
@@ -69,10 +69,10 @@ public class Fire
     private void Puyo(Puyo puyo, bool[,] ba)
     {
         if (puyo == null) return;
-        int c = puyo.GetColor();
+        int c = puyo.color;
         if (c == -1) return;
 
-        Vector2 p = puyo.GetPosition();
+        Vector2 p = puyo.position;
         if (ba[(int)p.y, (int)p.x] == true) return;
         ba[(int)p.y, (int)p.x] = true;
         puyo.fire.Start();
@@ -81,7 +81,7 @@ public class Fire
         foreach (Puyo l in list)
         {
             if (l == null) continue;
-            if (c == l.GetColor()) Puyo(l, ba);
+            if (c == l.color) Puyo(l, ba);
         }
     }
 }

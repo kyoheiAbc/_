@@ -56,7 +56,7 @@ public class Render
             if (!this.dictionary.ContainsKey(p))
             {
                 this.dictionary[p] = Main.Instantiate(this.gameObject).transform;
-                this.dictionary[p].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(p.GetColor() / 5f, 0.5f, 1.0f);
+                this.dictionary[p].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(p.color / 5f, 0.5f, 1.0f);
             }
 
             if (p.fire.i != 0)
@@ -75,11 +75,11 @@ public class Render
             else
             {
                 int i = p.freeze.i;
-                // if (i >= Main.FREEZE) i = Main.FREEZE;
+                // if (i > Main.FREEZE) i = Main.FREEZE;
                 // float f = 1f - i / (float)Main.FREEZE;
                 // this.dictionary[p].position = p.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
                 // this.dictionary[p].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
-                this.dictionary[p].position = p.GetPosition();
+                this.dictionary[p].position = p.position;
 
             }
         }

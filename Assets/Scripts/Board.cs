@@ -7,7 +7,7 @@ public class Board
     {
         foreach (Puyo p in l)
         {
-            if (p.GetPosition().y == 0.5f)
+            if (p.position.y == 0.5f)
             {
                 this.Set(p);
                 continue;
@@ -18,7 +18,7 @@ public class Board
     }
     public void Set(Puyo p)
     {
-        this.array[(int)p.GetPosition().y, (int)p.GetPosition().x] = p;
+        this.array[(int)p.position.y, (int)p.position.x] = p;
     }
     public Puyo Get(Vector2 p)
     {

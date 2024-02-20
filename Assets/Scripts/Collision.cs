@@ -7,7 +7,7 @@ public class Collision
         foreach (Puyo l in list)
         {
             if (puyo == l) continue;
-            if (Vector2.SqrMagnitude(puyo.GetPosition() - l.GetPosition()) < 1) return l;
+            if (Vector2.SqrMagnitude(puyo.position - l.position) < 1) return l;
         }
         return null;
     }
