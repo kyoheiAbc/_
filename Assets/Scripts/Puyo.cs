@@ -6,7 +6,7 @@ public class Puyo
     public int color;
     public Count freeze = new Count();
     public Count fire = new Count();
-    private readonly Vector2 DOWN = 0.2f * Vector2.down;
+    private static readonly Vector2 DOWN = Vector2.down * 0.1f;
     public MovePuyo movePuyo;
     public Puyo(int color, Vector2 position)
     {
@@ -23,7 +23,7 @@ public class Puyo
             this.freeze.Start();
             return;
         }
-        if (this.movePuyo.Execute(this.DOWN, list) == this.DOWN)
+        if (this.movePuyo.Execute(Puyo.DOWN, list) == Puyo.DOWN)
         {
             this.freeze.i = 0;
         }

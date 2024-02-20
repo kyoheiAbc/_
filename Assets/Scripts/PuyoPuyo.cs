@@ -7,7 +7,7 @@ public class PuyoPuyo
 {
     public Puyo[] array;
     private Count disconnect = new Count();
-    private readonly Vector2 DOWN = 0.04f * Vector2.down;
+    private static readonly Vector2 DOWN = Vector2.down * 0.01f;
     private readonly int DISCONNECT = 120;
     public MovePuyoPuyo movePuyoPuyo;
     public RotatePuyoPuyo rotatePuyoPuyo;
@@ -25,7 +25,7 @@ public class PuyoPuyo
     {
         this.disconnect.Update();
 
-        if (this.movePuyoPuyo.Execute(this.DOWN, list) == this.DOWN)
+        if (this.movePuyoPuyo.Execute(PuyoPuyo.DOWN, list) == PuyoPuyo.DOWN)
         {
             this.disconnect.i = 0;
         }
