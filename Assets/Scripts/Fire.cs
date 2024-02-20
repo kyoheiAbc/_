@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class Fire
 {
+    Board board;
+
+    public Fire(Board b)
+    {
+        this.board = b;
+    }
     static public bool Ready(List<Puyo> l)
     {
         foreach (Puyo p in l)
@@ -14,7 +20,7 @@ public class Fire
         return true;
     }
 
-    public static int Execute(Board board)
+    public int Execute()
     {
         int i = 0; for (int y = 1; y < 15; y++)
         {
@@ -23,29 +29,29 @@ public class Fire
                 if (board.Get(new Vector2(x, y)) == null) continue;
                 if (board.Get(new Vector2(x, y)).fire.i != 0) continue;
 
-                if (Count(board.Get(new Vector2(x, y)), board) >= 4)
+                if (Count(board.Get(new Vector2(x, y))) >= 4)
                 {
                     i++;
                     bool[,] ba = new bool[16, 8];
-                    Puyo(board.Get(new Vector2(x, y)), ba, board);
+                    Puyo(board.Get(new Vector2(x, y)), ba);
                 }
             }
         }
         return i;
     }
 
-    static private int Count(Puyo p, Board b)
+    private int Count(Puyo p)
     {
-        return Count_(p, new bool[16, 8], 0, b);
+        return Count_(p, new bool[16, 8], 0);
     }
 
-    static private int Count_(Puyo puyo, bool[,] ba, int i, Board b)
+    private int Count_(Puyo puyo, bool[,] ba, int i)
     {
         int returnI = i;
         Vector2 p = puyo.GetPosition();
         ba[(int)p.y, (int)p.x] = true;
         returnI++;
-        List<Puyo> rltb = b.GetRlud(p);
+        List<Puyo> rltb = board.GetRlud(p);
         foreach (Puyo l in rltb)
         {
             if (l == null) continue;
@@ -54,13 +60,13 @@ public class Fire
 
             if (!ba[(int)l.GetPosition().y, (int)l.GetPosition().x])
             {
-                returnI = Count_(l, ba, returnI, b);
+                returnI = Count_(l, ba, returnI);
             }
         }
         return returnI;
     }
 
-    static private void Puyo(Puyo puyo, bool[,] ba, Board b)
+    private void Puyo(Puyo puyo, bool[,] ba)
     {
         if (puyo == null) return;
         int c = puyo.GetColor();
@@ -71,11 +77,11 @@ public class Fire
         ba[(int)p.y, (int)p.x] = true;
         puyo.fire.Start();
 
-        List<Puyo> list = b.GetRlud(p);
+        List<Puyo> list = board.GetRlud(p);
         foreach (Puyo l in list)
         {
             if (l == null) continue;
-            if (c == l.GetColor()) Puyo(l, ba, b);
+            if (c == l.GetColor()) Puyo(l, ba);
         }
     }
 }
