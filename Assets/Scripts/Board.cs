@@ -12,7 +12,7 @@ public class Board
                 this.Set(p);
                 continue;
             }
-            // if (p.freeze.i <= Main.FREEZE) continue;
+            if (!p.freeze.Finish()) continue;
             this.Set(p);
         }
     }

@@ -50,10 +50,10 @@ public class Factory
     {
         for (int i = this.list.Count - 1; i >= 0; i--)
         {
-            // if (this.list[i].fire.i >= Main.FIRE)
-            // {
-            //     this.list.RemoveAt(i);
-            // }
+            if (this.list[i].fire.Finish())
+            {
+                this.list.RemoveAt(i);
+            }
         }
     }
 }

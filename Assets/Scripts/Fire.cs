@@ -13,9 +13,8 @@ public class Fire
     {
         foreach (Puyo p in l)
         {
-            // bug
-            // if (p.freeze.i <= Main.FREEZE) return false;
-            // if (0 < p.fire.i && p.fire.i <= Main.FIRE) return false;
+            if (p.freeze.Finish()) return false;
+            if (0 < p.fire.i && !p.fire.Finish()) return false;
         }
         return true;
     }
