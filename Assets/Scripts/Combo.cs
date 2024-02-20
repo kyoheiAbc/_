@@ -2,7 +2,7 @@ using UnityEngine;
 public class Combo
 {
     private int combo;
-    private Count end = new Count();
+    private Count end = new Count(60);
 
 
     public Combo()

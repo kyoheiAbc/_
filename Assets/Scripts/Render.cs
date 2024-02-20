@@ -7,7 +7,6 @@ public class Render
     private GameObject gameObject = Resources.Load<GameObject>("Puyo");
     private SpriteRenderer[] nextColor = new SpriteRenderer[4];
     private TextMeshPro combo;
-    private Count comboI = new Count();
     private Dictionary<Puyo, Transform> dictionary = new Dictionary<Puyo, Transform>();
     public Camera camera;
 
@@ -59,26 +58,24 @@ public class Render
                 this.dictionary[p].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(p.color / 5f, 0.5f, 1.0f);
             }
 
-            if (p.fire.i != 0)
+            if (p.fire.i > 0)
             {
-                // if (p.fire.i >= Main.FIRE)
-                // {
-                //     Main.Destroy(this.dictionary[p].gameObject);
-                //     this.dictionary.Remove(p);
-
-                // }
-                // else
-                // {
-                //     this.dictionary[p].localScale = new Vector2(1, 1.5f);
-                // }
+                if (p.fire.Finish())
+                {
+                    Main.Destroy(this.dictionary[p].gameObject);
+                    this.dictionary.Remove(p);
+                }
+                else
+                {
+                    this.dictionary[p].localScale = new Vector2(1, 1.5f);
+                }
             }
             else
             {
                 int i = p.freeze.i;
-                // if (i > Main.FREEZE) i = Main.FREEZE;
-                // float f = 1f - i / (float)Main.FREEZE;
-                // this.dictionary[p].position = p.GetPosition() + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
-                // this.dictionary[p].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
+                float f = 1f - i / (float)p.freeze.I;
+                this.dictionary[p].position = p.position + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
+                this.dictionary[p].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
                 this.dictionary[p].position = p.position;
 
             }
@@ -87,23 +84,12 @@ public class Render
 
     public void RenderCombo(Combo combo)
     {
-        this.comboI.Update();
-
         if (combo.GetCombo() == 0)
         {
-            this.comboI.i = 0;
             this.combo.text = "";
-            return;
         }
-
-        if (this.combo.text != combo.GetCombo() + " COMBO")
+        else
         {
-            this.comboI.Start();
-        }
-
-        // if (this.comboI.i >= Main.FIRE)
-        {
-            this.comboI.i = 0;
             this.combo.text = combo.GetCombo() + " COMBO";
         }
     }
