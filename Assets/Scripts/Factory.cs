@@ -13,8 +13,6 @@ public class Factory
     }
     public void Start()
     {
-        this.puyoPuyo = this.NewPuyoPuyo();
-
         this.list.Clear();
         for (int y = 0; y < 16; y++)
         {
@@ -29,6 +27,7 @@ public class Factory
 
         this.nextColor = new NextColor();
 
+        this.puyoPuyo = this.NewPuyoPuyo();
     }
 
     private Puyo NewPuyo(int color, Vector2 p)

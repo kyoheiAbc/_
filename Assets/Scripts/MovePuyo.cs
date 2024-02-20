@@ -7,7 +7,7 @@ public class MovePuyo
 
     public MovePuyo(Puyo puyo)
     {
-        puyo = this.puyo;
+        this.puyo = puyo;
     }
 
     public Vector2 Execute(Vector2 v, List<Puyo> list)

@@ -26,9 +26,7 @@ public class Main : MonoBehaviour
 
         {
             Vector2 v = this.input.Update();
-            PuyoPuyo puyoPuyo = this.factory.GetPuyoPuyo();
-
-
+            if (v != Vector2.zero) this.factory.GetPuyoPuyo().movePuyoPuyo.Execute(v, this.factory.GetList());
         }
 
 

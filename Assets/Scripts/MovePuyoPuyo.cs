@@ -7,16 +7,19 @@ public class MovePuyoPuyo
 
     public MovePuyoPuyo(PuyoPuyo puyoPuyo)
     {
-        puyoPuyo = this.puyoPuyo;
+        this.puyoPuyo = puyoPuyo;
     }
     public Vector2 Execute(Vector2 v, List<Puyo> list)
     {
         Vector2 position = puyoPuyo.GetPosition();
         _Execute(v, list);
+        Debug.Log("b");
+
         return puyoPuyo.GetPosition() - position;
     }
     private void _Execute(Vector2 v, List<Puyo> list)
     {
+        Debug.Log("a");
         Vector2 p = puyoPuyo.array[0].GetPosition();
         int rotate = puyoPuyo.rotatePuyoPuyo.Get();
 

@@ -20,7 +20,6 @@ public class PuyoPuyo
         this.array = new Puyo[] { p0, p1 };
         this.movePuyoPuyo = new MovePuyoPuyo(this);
         this.rotatePuyoPuyo = new RotatePuyoPuyo(this);
-
     }
     public Vector2 GetPosition()
     {
