@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 public class MovePuyoPuyo
 {
     PuyoPuyo puyoPuyo;
-
     public MovePuyoPuyo(PuyoPuyo puyoPuyo)
     {
         this.puyoPuyo = puyoPuyo;
@@ -17,7 +15,7 @@ public class MovePuyoPuyo
     }
     private void _Execute(Vector2 v, List<Puyo> list)
     {
-        Vector2 p = this.puyoPuyo.array[0].position;
+        Vector2 position = this.puyoPuyo.array[0].position;
         int rotate = this.puyoPuyo.rotatePuyoPuyo.Get();
 
         int[] a = new int[] { 0, 1 };
@@ -33,17 +31,11 @@ public class MovePuyoPuyo
                 this.puyoPuyo.Sync(i, rotate);
                 if (Collision.Get(this.puyoPuyo.array[1 - i], list) != null)
                 {
-                    this.puyoPuyo.array[0].position = p;
+                    this.puyoPuyo.array[0].position = position;
                     this.puyoPuyo.Sync(0, rotate);
                 }
-                else
-                {
-                    break;
-                }
+                else break;
             }
         }
-        return;
     }
-
-
 }

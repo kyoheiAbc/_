@@ -25,18 +25,17 @@ public class Main : MonoBehaviour
     {
 
 
-        this.render.Puyo(this.factory.GetList());
+        this.render.Puyo(this.factory.list);
         this.render.NextColor(this.factory.nextColor.array);
-
 
     }
 
     private void Control(PuyoPuyo puyoPuyo, Vector2 v)
     {
         if (v == Vector2.zero) return;
-        else if (v == Vector2.up) puyoPuyo.Drop(this.factory.GetList());
-        else if (v == Vector2.right + Vector2.down) puyoPuyo.rotatePuyoPuyo.Execute(this.factory.GetList());
-        else puyoPuyo.movePuyoPuyo.Execute(v, this.factory.GetList());
+        else if (v == Vector2.up) puyoPuyo.Drop(this.factory.list);
+        else if (v == Vector2.right + Vector2.down) puyoPuyo.rotatePuyoPuyo.Execute(this.factory.list);
+        else puyoPuyo.movePuyoPuyo.Execute(v, this.factory.list);
     }
 
     private void _Update(PuyoPuyo puyoPuyo, List<Puyo> list)

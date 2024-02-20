@@ -12,14 +12,14 @@ public class Color
         this.i++;
         return this.array[i - 1];
     }
-    static int[] Shuffle(int[] a)
+    static int[] Shuffle(int[] array)
     {
-        int[] clone = (int[])a.Clone();
-        for (int i = clone.Length - 1; i > 0; i--)
+        int[] a = (int[])array.Clone();
+        for (int i = a.Length - 1; i > 0; i--)
         {
             int r = UnityEngine.Random.Range(0, i + 1);
-            (clone[r], clone[i]) = (clone[i], clone[r]);
+            (a[r], a[i]) = (a[i], a[r]);
         }
-        return clone;
+        return a;
     }
 }

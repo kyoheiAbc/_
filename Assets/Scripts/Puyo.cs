@@ -23,13 +23,13 @@ public class Puyo
             this.freeze.Start();
             return;
         }
-        if (this.movePuyo.Execute(Puyo.DOWN, list) == Puyo.DOWN)
+        if (this.movePuyo.Execute(Puyo.DOWN, list) == Vector2.zero)
         {
-            this.freeze.i = 0;
+            this.freeze.Start();
         }
         else
         {
-            this.freeze.Start();
+            this.freeze.i = 0;
         }
     }
 }

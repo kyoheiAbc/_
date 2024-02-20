@@ -21,8 +21,8 @@ public class RotatePuyoPuyo
         rotate++;
         if (rotate == 4) rotate = 0;
 
-        Vector2 p = this.puyoPuyo.array[0].position;
-        this.puyoPuyo.array[1].position = p;
+        Vector2 position = this.puyoPuyo.array[0].position;
+        this.puyoPuyo.array[1].position = position;
 
         if (rotate == 0)
             this.puyoPuyo.array[1].movePuyo.Execute(Vector2.right, list);
@@ -33,7 +33,6 @@ public class RotatePuyoPuyo
         else if (rotate == 3)
             this.puyoPuyo.array[1].movePuyo.Execute(Vector2.up, list);
 
-
         this.puyoPuyo.Sync(1, rotate);
 
         if (Collision.Get(this.puyoPuyo.array[0], list) != null)
@@ -41,9 +40,8 @@ public class RotatePuyoPuyo
             rotate++;
             if (rotate == 4) rotate = 0;
 
-            this.puyoPuyo.array[1].position = p;
+            this.puyoPuyo.array[1].position = position;
             this.puyoPuyo.Sync(1, rotate);
         }
     }
-
 }

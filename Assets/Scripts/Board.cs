@@ -3,34 +3,34 @@ using UnityEngine;
 public class Board
 {
     private Puyo[,] array = new Puyo[16, 8];
-    public Board(List<Puyo> l)
+    public Board(List<Puyo> list)
     {
-        foreach (Puyo p in l)
+        foreach (Puyo l in list)
         {
-            if (p.position.y == 0.5f)
+            if (l.position.y == 0.5f)
             {
-                this.Set(p);
+                this.Set(l);
                 continue;
             }
-            if (!p.freeze.Finish()) continue;
-            this.Set(p);
+            if (!l.freeze.Finish()) continue;
+            this.Set(l);
         }
     }
-    public void Set(Puyo p)
+    public void Set(Puyo puyo)
     {
-        this.array[(int)p.position.y, (int)p.position.x] = p;
+        this.array[(int)puyo.position.y, (int)puyo.position.x] = puyo;
     }
-    public Puyo Get(Vector2 p)
+    public Puyo Get(Vector2 position)
     {
-        return this.array[(int)p.y, (int)p.x];
+        return this.array[(int)position.y, (int)position.x];
     }
-    public List<Puyo> GetRlud(Vector2 p)
+    public List<Puyo> GetRlud(Vector2 position)
     {
         return new List<Puyo>{
-            this.Get(p + Vector2.right),
-            this.Get(p + Vector2.left),
-            this.Get(p + Vector2.up),
-            this.Get(p + Vector2.down)
+            this.Get(position + Vector2.right),
+            this.Get(position + Vector2.left),
+            this.Get(position + Vector2.up),
+            this.Get(position + Vector2.down)
         };
     }
 }

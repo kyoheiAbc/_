@@ -24,13 +24,13 @@ public class PuyoPuyo
     {
         this.disconnect.Update();
 
-        if (this.movePuyoPuyo.Execute(PuyoPuyo.DOWN, list) == PuyoPuyo.DOWN)
+        if (this.movePuyoPuyo.Execute(PuyoPuyo.DOWN, list) == Vector2.zero)
         {
-            this.disconnect.i = 0;
+            this.disconnect.Start();
         }
         else
         {
-            this.disconnect.Start();
+            this.disconnect.i = 0;
         }
         return this.disconnect.Finish();
     }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Render
 {
-    private GameObject gameObject = Resources.Load<GameObject>("Puyo");
+    private GameObject puyo = Resources.Load<GameObject>("Puyo");
     private SpriteRenderer[] nextColor = new SpriteRenderer[4];
     private TextMeshPro combo;
     private Dictionary<Puyo, Transform> dictionary = new Dictionary<Puyo, Transform>();
@@ -12,12 +12,12 @@ public class Render
 
     public Render()
     {
-        camera = new GameObject("").AddComponent<Camera>();
-        camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
-        camera.clearFlags = CameraClearFlags.SolidColor;
-        camera.orthographic = true;
-        camera.orthographicSize = 12;
-        camera.transform.position = new Vector3(4, 7, -1);
+        this.camera = new GameObject("").AddComponent<Camera>();
+        this.camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+        this.camera.clearFlags = CameraClearFlags.SolidColor;
+        this.camera.orthographic = true;
+        this.camera.orthographicSize = 12;
+        this.camera.transform.position = new Vector3(4, 7, -1);
 
         SpriteRenderer s = new GameObject("").AddComponent<SpriteRenderer>();
         s.color = UnityEngine.Color.HSVToRGB(2 / 3f, 1f, 1f);
@@ -26,16 +26,16 @@ public class Render
         s.transform.position = new Vector3(4, 7, 0);
 
 
-        combo = new GameObject("").AddComponent<TextMeshPro>();
-        combo.fontSize = 16;
-        combo.transform.position = new Vector3(4, 7, 0);
-        combo.alignment = TextAlignmentOptions.Center;
-        combo.sortingOrder = 256;
+        this.combo = new GameObject("").AddComponent<TextMeshPro>();
+        this.combo.fontSize = 16;
+        this.combo.transform.position = new Vector3(4, 7, 0);
+        this.combo.alignment = TextAlignmentOptions.Center;
+        this.combo.sortingOrder = 256;
 
-        this.nextColor[0] = Main.Instantiate(this.gameObject, new Vector2(9f, 11.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[1] = Main.Instantiate(this.gameObject, new Vector2(9f, 12.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[2] = Main.Instantiate(this.gameObject, new Vector2(9f, 8.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[3] = Main.Instantiate(this.gameObject, new Vector2(9f, 9.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[0] = Main.Instantiate(this.puyo, new Vector2(9f, 11.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[1] = Main.Instantiate(this.puyo, new Vector2(9f, 12.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[2] = Main.Instantiate(this.puyo, new Vector2(9f, 8.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[3] = Main.Instantiate(this.puyo, new Vector2(9f, 9.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
         this.Start();
     }
     public void Start()
@@ -49,50 +49,50 @@ public class Render
     }
     public void Puyo(List<Puyo> list)
     {
-        foreach (Puyo p in list)
+        foreach (Puyo l in list)
         {
 
-            if (!this.dictionary.ContainsKey(p))
+            if (!this.dictionary.ContainsKey(l))
             {
-                this.dictionary[p] = Main.Instantiate(this.gameObject).transform;
-                this.dictionary[p].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(p.color / 5f, 0.5f, 1.0f);
+                this.dictionary[l] = Main.Instantiate(this.puyo).transform;
+                this.dictionary[l].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(l.color / 5f, 0.5f, 1.0f);
             }
 
-            if (p.fire.i > 0)
+            if (l.fire.i > 0)
             {
-                if (p.fire.Finish())
+                if (l.fire.Finish())
                 {
-                    Main.Destroy(this.dictionary[p].gameObject);
-                    this.dictionary.Remove(p);
+                    Main.Destroy(this.dictionary[l].gameObject);
+                    this.dictionary.Remove(l);
                 }
                 else
                 {
-                    this.dictionary[p].localScale = new Vector2(1, 1.5f);
+                    this.dictionary[l].localScale = new Vector2(1, 1.5f);
                 }
             }
             else
             {
-                int i = p.freeze.i;
-                float f = 1f - i / (float)p.freeze.I;
-                this.dictionary[p].position = p.position + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
-                this.dictionary[p].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
-                this.dictionary[p].position = p.position;
+                int i = l.freeze.i;
+                float f = 1f - i / (float)l.freeze.I;
+                this.dictionary[l].position = l.position + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
+                this.dictionary[l].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
+                this.dictionary[l].position = l.position;
 
             }
         }
     }
 
-    public void RenderCombo(Combo combo)
-    {
-        if (combo.GetCombo() == 0)
-        {
-            this.combo.text = "";
-        }
-        else
-        {
-            this.combo.text = combo.GetCombo() + " COMBO";
-        }
-    }
+    // public void RenderCombo(Combo combo)
+    // {
+    //     if (combo.GetCombo() == 0)
+    //     {
+    //         this.combo.text = "";
+    //     }
+    //     else
+    //     {
+    //         this.combo.text = combo.GetCombo() + " COMBO";
+    //     }
+    // }
 
     public void NextColor(int[] array)
     {
