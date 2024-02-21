@@ -26,9 +26,9 @@ public class Combo
             this.list[i].Update();
         }
     }
-    public void Add(int i, int frame)
+    public void Add(int i, int delay)
     {
-        this.list.Add(new Buffer(this, i, frame));
+        this.list.Add(new Buffer(this, i, delay));
         this.end.i = 0;
     }
     private class Buffer

@@ -23,6 +23,7 @@ public class Puyo
             this.freeze.Start();
             return;
         }
+        if (this.fire.Finish()) return;
         if (this.movePuyo.Execute(Puyo.DOWN, list) == Vector2.zero)
         {
             this.freeze.Start();
