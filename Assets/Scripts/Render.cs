@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Render
 {
@@ -49,8 +50,10 @@ public class Render
     }
     public void Puyo(List<Puyo> list)
     {
+        List<Puyo> _list = this.dictionary.Keys.ToList();
         foreach (Puyo l in list)
         {
+            _list.Remove(l);
 
             if (!this.dictionary.ContainsKey(l))
             {
@@ -60,24 +63,22 @@ public class Render
 
             if (l.fire.i > 0)
             {
-                if (l.fire.Finish())
-                {
-                    Main.Destroy(this.dictionary[l].gameObject);
-                    this.dictionary.Remove(l);
-                }
-                else
-                {
-                    this.dictionary[l].localScale = new Vector2(1, 1.5f);
-                }
+                this.dictionary[l].localScale = new Vector2(1, 1.5f);
             }
             else
             {
-                int i = l.freeze.i;
-                float f = 1f - i / (float)l.freeze.I;
+                float f = 1f - (float)l.freeze.i / l.freeze.I;
                 this.dictionary[l].position = l.position + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
                 this.dictionary[l].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
             }
         }
+
+        foreach (Puyo l in _list)
+        {
+            Main.Destroy(this.dictionary[l].gameObject);
+            this.dictionary.Remove(l);
+        }
+
     }
 
     // public void RenderCombo(Combo combo)
