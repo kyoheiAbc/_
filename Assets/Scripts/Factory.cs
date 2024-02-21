@@ -25,7 +25,7 @@ public class Factory
 
         this.nextColor = new NextColor();
 
-        NewPuyoPuyo();
+        this.NewPuyoPuyo();
     }
 
     private Puyo NewPuyo(int color, Vector2 position)
@@ -33,11 +33,10 @@ public class Factory
         this.list.Add(new Puyo(color, position));
         return this.list[this.list.Count - 1];
     }
-    public PuyoPuyo NewPuyoPuyo()
+    public void NewPuyoPuyo()
     {
         int[] a = this.nextColor.Get();
         this.puyoPuyo = new PuyoPuyo(this.NewPuyo(a[0], new Vector2(3.5f, 12.5f)), this.NewPuyo(a[1], new Vector2(3.5f, 13.5f)));
-        return this.puyoPuyo;
     }
     public void Sort()
     {

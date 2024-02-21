@@ -76,8 +76,6 @@ public class Render
                 float f = 1f - i / (float)l.freeze.I;
                 this.dictionary[l].position = l.position + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
                 this.dictionary[l].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
-                this.dictionary[l].position = l.position;
-
             }
         }
     }

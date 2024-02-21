@@ -15,6 +15,8 @@ public class MovePuyoPuyo
     }
     private void _Execute(Vector2 v, List<Puyo> list)
     {
+        if (puyoPuyo.disconnect.Finish()) return;
+
         Vector2 position = this.puyoPuyo.array[0].position;
         int rotate = this.puyoPuyo.rotatePuyoPuyo.Get();
 

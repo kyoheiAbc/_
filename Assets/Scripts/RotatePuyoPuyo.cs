@@ -17,6 +17,8 @@ public class RotatePuyoPuyo
     }
     public void Execute(List<Puyo> list)
     {
+        if (puyoPuyo.disconnect.Finish()) return;
+
         int rotate = Get();
         rotate++;
         if (rotate == 4) rotate = 0;

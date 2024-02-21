@@ -23,11 +23,31 @@ public class Main : MonoBehaviour
     }
     void Update()
     {
+        {
+            this.NextPuyoPuyo(this.factory, this.input);
+        }
 
+        {
+            this.Control(this.factory.puyoPuyo, this.input.Update());
+        }
 
-        this.render.Puyo(this.factory.list);
-        this.render.NextColor(this.factory.nextColor.array);
+        {
+            this._Update(this.factory.puyoPuyo, this.factory.list);
+        }
 
+        {
+            this.render.Puyo(this.factory.list);
+            this.render.NextColor(this.factory.nextColor.array);
+        }
+    }
+
+    private void NextPuyoPuyo(Factory factory, Input input)
+    {
+        if (factory.puyoPuyo.disconnect.Finish())
+        {
+            factory.NewPuyoPuyo();
+            input.Start();
+        }
     }
 
     private void Control(PuyoPuyo puyoPuyo, Vector2 v)
@@ -42,17 +62,17 @@ public class Main : MonoBehaviour
     {
         float y = puyoPuyo.GetPosition().y;
         bool b = false;
-        foreach (Puyo p in list)
+        foreach (Puyo l in list)
         {
-            if (puyoPuyo.array[0] == p) continue;
-            if (puyoPuyo.array[1] == p) continue;
+            if (puyoPuyo.array[0] == l) continue;
+            if (puyoPuyo.array[1] == l) continue;
 
-            if (!b && p.position.y > y)
+            if (!b && l.position.y > y)
             {
                 b = true;
                 puyoPuyo.Update(list);
             }
-            p.Update(list);
+            l.Update(list);
         }
 
     }
