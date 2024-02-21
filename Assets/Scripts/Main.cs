@@ -40,6 +40,8 @@ public class Main : MonoBehaviour
                 if (v == Vector2.right + Vector2.down) this.factory.puyoPuyo.rotatePuyoPuyo.Execute(this.factory.list);
                 else if (v == Vector2.up) this.factory.puyoPuyo.Drop(this.factory.list);
                 else this.factory.puyoPuyo.movePuyoPuyo.Execute(v, this.factory.list);
+
+                if (this.factory.puyoPuyo.disconnect.Finish()) this.factory.puyoPuyo = null;
             }
         }
 

@@ -31,9 +31,8 @@ public class Factory
     {
         this.Sort();
 
-        if (this.puyoPuyo.disconnect.Finish())
+        if (this.puyoPuyo == null)
         {
-            this.puyoPuyo = null;
             for (int i = this.list.Count - 1; i >= 0; i--)
             {
                 this.list[i].Update(this.list);
@@ -45,12 +44,13 @@ public class Factory
             return;
         }
 
+        Puyo[] a = this.puyoPuyo.array;
         float y = this.puyoPuyo.GetPosition().y;
         bool b = false;
         for (int i = this.list.Count - 1; i >= 0; i--)
         {
-            if (this.puyoPuyo != null && this.puyoPuyo.array[0] == this.list[i]) continue;
-            if (this.puyoPuyo != null && this.puyoPuyo.array[1] == this.list[i]) continue;
+            if (a[0] == this.list[i]) continue;
+            if (a[1] == this.list[i]) continue;
 
             if (!b && this.list[i].position.y > y)
             {
@@ -59,6 +59,12 @@ public class Factory
                 if (this.puyoPuyo.disconnect.Finish())
                 {
                     this.puyoPuyo = null;
+                    if (a[0].position.y > a[1].position.y)
+                    {
+                        (a[1], a[0]) = (a[0], a[1]);
+                    }
+                    a[0].Update(this.list);
+                    a[1].Update(this.list);
                 }
             }
             this.list[i].Update(this.list);
