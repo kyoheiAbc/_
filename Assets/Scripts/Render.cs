@@ -81,17 +81,11 @@ public class Render
 
     }
 
-    // public void RenderCombo(Combo combo)
-    // {
-    //     if (combo.GetCombo() == 0)
-    //     {
-    //         this.combo.text = "";
-    //     }
-    //     else
-    //     {
-    //         this.combo.text = combo.GetCombo() + " COMBO";
-    //     }
-    // }
+    public void Combo(int i)
+    {
+        if (i == 0) this.combo.text = "";
+        else this.combo.text = i + " COMBO";
+    }
 
     public void NextColor(int[] array)
     {

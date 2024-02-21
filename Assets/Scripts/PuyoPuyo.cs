@@ -6,8 +6,8 @@ using UnityEngine;
 public class PuyoPuyo
 {
     public Puyo[] array;
-    public Count disconnect = new Count(90);
-    private static readonly Vector2 DOWN = Vector2.down * 0.03f;
+    public Count disconnect = new Count(60);
+    private static readonly Vector2 DOWN = Vector2.down * 0.02f;
     public MovePuyoPuyo movePuyoPuyo;
     public RotatePuyoPuyo rotatePuyoPuyo;
     public PuyoPuyo(Puyo p0, Puyo p1)
@@ -24,8 +24,6 @@ public class PuyoPuyo
     {
         this.disconnect.Update();
 
-        if (this.disconnect.Finish()) return;
-
         if (this.movePuyoPuyo.Execute(PuyoPuyo.DOWN, list) == Vector2.zero)
         {
             this.disconnect.Start();
@@ -38,13 +36,11 @@ public class PuyoPuyo
 
     public void Drop(List<Puyo> list)
     {
-        if (this.disconnect.Finish()) return;
-
         while (true)
         {
             if (Vector2.zero == this.movePuyoPuyo.Execute(Vector2.down, list))
             {
-                this.disconnect.i = this.disconnect.I;
+                // this.disconnect.i = this.disconnect.I;
                 return;
             }
         }

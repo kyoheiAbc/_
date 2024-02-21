@@ -5,6 +5,7 @@ public class Main : MonoBehaviour
     private Factory factory;
     private Render render;
     private Input input;
+    private Combo combo;
     void Awake()
     {
         Application.targetFrameRate = 60;
@@ -14,67 +15,63 @@ public class Main : MonoBehaviour
         this.factory = new Factory();
         this.render = new Render();
         this.input = new Input(this.render.camera);
+        this.combo = new Combo();
     }
     void Start()
     {
         this.factory.Start();
         this.render.Start();
         this.input.Start();
+        this.combo.Start();
     }
     void Update()
     {
         {
-            this.NextPuyoPuyo(this.factory, this.input);
+            if (this.factory.puyoPuyo == null)
+            {
+                this.factory.NewPuyoPuyo();
+                this.input.Start();
+            }
         }
 
         {
-            this.Control(this.factory.puyoPuyo, this.input.Update());
+            Vector2 v = this.input.Update();
+            if (v != Vector2.zero)
+            {
+                if (v == Vector2.right + Vector2.down) this.factory.puyoPuyo.rotatePuyoPuyo.Execute(this.factory.list);
+                else if (v == Vector2.up) this.factory.puyoPuyo.Drop(this.factory.list);
+                else this.factory.puyoPuyo.movePuyoPuyo.Execute(v, this.factory.list);
+            }
+        }
+
+
+        {
+            this.factory.Update();
         }
 
         {
-            this._Update(this.factory.puyoPuyo, this.factory.list);
+            if (Fire.Ready(this.factory.puyoPuyo, this.factory.list))
+            {
+                int i = new Fire(new Board(this.factory.list)).Execute();
+                if (i > 0)
+                {
+                    this.combo.i += i;
+                }
+                else
+                {
+                    this.combo.i = 0;
+                }
+            }
+        }
+
+        {
+            if (this.combo != null) this.combo.Update();
         }
 
         {
             this.render.Puyo(this.factory.list);
             this.render.NextColor(this.factory.nextColor.array);
+            this.render.Combo(this.combo.i);
         }
     }
-
-    private void NextPuyoPuyo(Factory factory, Input input)
-    {
-        if (factory.puyoPuyo.disconnect.Finish())
-        {
-            factory.NewPuyoPuyo();
-            input.Start();
-        }
-    }
-
-    private void Control(PuyoPuyo puyoPuyo, Vector2 v)
-    {
-        if (v == Vector2.zero) return;
-        else if (v == Vector2.up) puyoPuyo.Drop(this.factory.list);
-        else if (v == Vector2.right + Vector2.down) puyoPuyo.rotatePuyoPuyo.Execute(this.factory.list);
-        else puyoPuyo.movePuyoPuyo.Execute(v, this.factory.list);
-    }
-
-    private void _Update(PuyoPuyo puyoPuyo, List<Puyo> list)
-    {
-        float y = puyoPuyo.GetPosition().y;
-        bool b = false;
-        foreach (Puyo l in list)
-        {
-            if (puyoPuyo.array[0] == l) continue;
-            if (puyoPuyo.array[1] == l) continue;
-
-            if (!b && l.position.y > y)
-            {
-                b = true;
-                puyoPuyo.Update(list);
-            }
-            l.Update(list);
-        }
-
-    }
-
 }

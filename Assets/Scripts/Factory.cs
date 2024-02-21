@@ -11,6 +11,8 @@ public class Factory
     }
     public void Start()
     {
+        this.puyoPuyo = null;
+
         this.list.Clear();
         for (int y = 0; y < 16; y++)
         {
@@ -22,10 +24,35 @@ public class Factory
                 }
             }
         }
-
         this.nextColor = new NextColor();
+    }
 
-        this.NewPuyoPuyo();
+    public void Update()
+    {
+        this.Sort();
+
+        float y = this.puyoPuyo.GetPosition().y;
+        bool b = false;
+        for (int i = this.list.Count - 1; i >= 0; i--)
+        {
+            if (this.puyoPuyo != null && this.puyoPuyo.array[0] == this.list[i]) continue;
+            if (this.puyoPuyo != null && this.puyoPuyo.array[1] == this.list[i]) continue;
+
+            if (!b && this.list[i].position.y > y)
+            {
+                b = true;
+                this.puyoPuyo.Update(this.list);
+                if (this.puyoPuyo.disconnect.Finish())
+                {
+                    this.puyoPuyo = null;
+                }
+            }
+            this.list[i].Update(this.list);
+            if (this.list[i].fire.Finish())
+            {
+                this.list.RemoveAt(i);
+            }
+        }
     }
 
     private Puyo NewPuyo(int color, Vector2 position)
@@ -35,21 +62,12 @@ public class Factory
     }
     public void NewPuyoPuyo()
     {
+        if (this.puyoPuyo != null) return;
         int[] a = this.nextColor.Get();
         this.puyoPuyo = new PuyoPuyo(this.NewPuyo(a[0], new Vector2(3.5f, 12.5f)), this.NewPuyo(a[1], new Vector2(3.5f, 13.5f)));
     }
     public void Sort()
     {
-        this.list.Sort((p0, p1) => p0.position.y.CompareTo(p1.position.y));
-    }
-    public void Remove()
-    {
-        for (int i = this.list.Count - 1; i >= 0; i--)
-        {
-            if (this.list[i].fire.Finish())
-            {
-                this.list.RemoveAt(i);
-            }
-        }
+        this.list.Sort((p0, p1) => p1.position.y.CompareTo(p0.position.y));
     }
 }
