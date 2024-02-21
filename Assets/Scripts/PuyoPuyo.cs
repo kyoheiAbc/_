@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PuyoPuyo
 {
     public Puyo[] array;
-    public Count disconnect = new Count(15);
+    public Count disconnect = new Count(60);
     private static readonly Vector2 DOWN = Vector2.down * 0.02f;
     public MovePuyoPuyo movePuyoPuyo;
     public RotatePuyoPuyo rotatePuyoPuyo;
@@ -40,7 +38,7 @@ public class PuyoPuyo
         {
             if (Vector2.zero == this.movePuyoPuyo.Execute(Vector2.down, list))
             {
-                // this.disconnect.i = this.disconnect.I;
+                this.disconnect.i = this.disconnect.I;
                 return;
             }
         }

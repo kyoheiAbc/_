@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 public class Main : MonoBehaviour
 {
@@ -43,7 +42,6 @@ public class Main : MonoBehaviour
                 else this.factory.puyoPuyo.movePuyoPuyo.Execute(v, this.factory.list);
             }
         }
-
 
         {
             this.factory.Update();

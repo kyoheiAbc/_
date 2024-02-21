@@ -25,18 +25,19 @@ public class Fire
 
     public int Execute()
     {
-        int i = 0; for (int y = 1; y < 15; y++)
+        int i = 0;
+        for (int y = 1; y < 15; y++)
         {
             for (int x = 1; x < 7; x++)
             {
-                if (board.Get(new Vector2(x, y)) == null) continue;
-                if (board.Get(new Vector2(x, y)).fire.i != 0) continue;
+                if (this.board.Get(new Vector2(x, y)) == null) continue;
+                if (this.board.Get(new Vector2(x, y)).fire.i == 1) continue;
 
-                if (Count(board.Get(new Vector2(x, y))) >= 4)
+                if (this.Count(this.board.Get(new Vector2(x, y))) >= 4)
                 {
                     i++;
-                    bool[,] ba = new bool[16, 8];
-                    Puyo(board.Get(new Vector2(x, y)), ba);
+                    bool[,] a = new bool[16, 8];
+                    this.Puyo(this.board.Get(new Vector2(x, y)), a);
                 }
             }
         }
@@ -45,46 +46,46 @@ public class Fire
 
     private int Count(Puyo p)
     {
-        return Count_(p, new bool[16, 8], 0);
+        return this._Count(p, new bool[16, 8], 0);
     }
 
-    private int Count_(Puyo puyo, bool[,] ba, int i)
+    private int _Count(Puyo puyo, bool[,] a, int i)
     {
-        int returnI = i;
+        int I = i;
         Vector2 p = puyo.position;
-        ba[(int)p.y, (int)p.x] = true;
-        returnI++;
-        List<Puyo> rltb = board.GetRlud(p);
+        a[(int)p.y, (int)p.x] = true;
+        I++;
+        List<Puyo> rltb = this.board.GetRlud(p);
         foreach (Puyo l in rltb)
         {
             if (l == null) continue;
             if (l.color == -1) continue;
             if (l.color != puyo.color) continue;
 
-            if (!ba[(int)l.position.y, (int)l.position.x])
+            if (!a[(int)l.position.y, (int)l.position.x])
             {
-                returnI = Count_(l, ba, returnI);
+                I = this._Count(l, a, I);
             }
         }
-        return returnI;
+        return I;
     }
 
-    private void Puyo(Puyo puyo, bool[,] ba)
+    private void Puyo(Puyo puyo, bool[,] a)
     {
         if (puyo == null) return;
         int c = puyo.color;
         if (c == -1) return;
 
         Vector2 p = puyo.position;
-        if (ba[(int)p.y, (int)p.x] == true) return;
-        ba[(int)p.y, (int)p.x] = true;
+        if (a[(int)p.y, (int)p.x] == true) return;
+        a[(int)p.y, (int)p.x] = true;
         puyo.fire.Start();
 
-        List<Puyo> list = board.GetRlud(p);
+        List<Puyo> list = this.board.GetRlud(p);
         foreach (Puyo l in list)
         {
             if (l == null) continue;
-            if (c == l.color) Puyo(l, ba);
+            if (c == l.color) this.Puyo(l, a);
         }
     }
 }

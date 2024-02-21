@@ -31,6 +31,20 @@ public class Factory
     {
         this.Sort();
 
+        if (this.puyoPuyo.disconnect.Finish())
+        {
+            this.puyoPuyo = null;
+            for (int i = this.list.Count - 1; i >= 0; i--)
+            {
+                this.list[i].Update(this.list);
+                if (this.list[i].fire.Finish())
+                {
+                    this.list.RemoveAt(i);
+                }
+            }
+            return;
+        }
+
         float y = this.puyoPuyo.GetPosition().y;
         bool b = false;
         for (int i = this.list.Count - 1; i >= 0; i--)

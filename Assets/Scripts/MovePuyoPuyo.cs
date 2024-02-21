@@ -11,7 +11,9 @@ public class MovePuyoPuyo
     {
         Vector2 position = this.puyoPuyo.GetPosition();
         _Execute(v, list);
-        return this.puyoPuyo.GetPosition() - position;
+        Vector2 p = this.puyoPuyo.GetPosition() - position;
+        if (v == Vector2.down && p == Vector2.zero) this.puyoPuyo.disconnect.i = this.puyoPuyo.disconnect.I;
+        return p;
     }
     private void _Execute(Vector2 v, List<Puyo> list)
     {
