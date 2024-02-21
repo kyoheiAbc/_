@@ -55,17 +55,17 @@ public class Main : MonoBehaviour
                 int i = new Fire(new Board(this.factory.list)).Execute();
                 if (i > 0)
                 {
-                    this.combo.i += i;
+                    this.combo.Add(i, 30);
                 }
                 else
                 {
-                    this.combo.i = 0;
+                    this.combo.end.Start();
                 }
             }
         }
 
         {
-            if (this.combo != null) this.combo.Update();
+            this.combo.Update();
         }
 
         {

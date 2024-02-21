@@ -6,7 +6,7 @@ using UnityEngine;
 public class PuyoPuyo
 {
     public Puyo[] array;
-    public Count disconnect = new Count(60);
+    public Count disconnect = new Count(15);
     private static readonly Vector2 DOWN = Vector2.down * 0.02f;
     public MovePuyoPuyo movePuyoPuyo;
     public RotatePuyoPuyo rotatePuyoPuyo;
