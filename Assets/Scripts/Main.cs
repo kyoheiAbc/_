@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 public class Main : MonoBehaviour
 {
@@ -5,6 +6,7 @@ public class Main : MonoBehaviour
     private Render render;
     private Input input;
     private Combo combo;
+    public static List<CustomGameObject> list = new List<CustomGameObject>();
     void Awake()
     {
         Application.targetFrameRate = 60;
@@ -22,6 +24,7 @@ public class Main : MonoBehaviour
         this.render.Start();
         this.input.Start();
         this.combo.Start();
+        Main.list.Clear();
     }
     void Update()
     {
@@ -55,7 +58,8 @@ public class Main : MonoBehaviour
                 int i = new Fire(new Board(this.factory.list)).Execute();
                 if (i > 0)
                 {
-                    this.combo.Add(i, 30);
+                    this.combo.Add(i);
+                    this.combo.end.i = 0;
                 }
                 else
                 {
@@ -73,5 +77,32 @@ public class Main : MonoBehaviour
             this.render.NextColor(this.factory.nextColor.array);
             this.render.Combo(this.combo.i);
         }
+
+        {
+            for (int i = Main.list.Count - 1; i >= 0; i--)
+            {
+                Main.list[i].Update();
+            }
+        }
+    }
+}
+
+public class CustomGameObject
+{
+    int i;
+    public CustomGameObject(int i)
+    {
+        Main.list.Add(this);
+        this.i = i;
+    }
+    virtual public void Update()
+    {
+        this.i--;
+        if (this.i > 0) return;
+        Main.list.Remove(this);
+        this.End();
+    }
+    virtual public void End()
+    {
     }
 }
