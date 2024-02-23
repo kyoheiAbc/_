@@ -11,4 +11,12 @@ public class Collision
         }
         return null;
     }
+    static public Puyo Get(Vector2 position, List<Puyo> list)
+    {
+        foreach (Puyo l in list)
+        {
+            if (Vector2.SqrMagnitude(position - l.position) < 1) return l;
+        }
+        return null;
+    }
 }

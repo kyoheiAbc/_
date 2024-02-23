@@ -29,6 +29,14 @@ public class Main : MonoBehaviour
     void Update()
     {
         {
+            if (this.factory.puyoPuyo == null && Collision.Get(new Vector2(3.5f, 12.5f), this.factory.list) != null)
+            {
+                this.Start();
+                return;
+            }
+        }
+
+        {
             if (this.factory.puyoPuyo == null)
             {
                 this.factory.NewPuyoPuyo();
@@ -84,25 +92,5 @@ public class Main : MonoBehaviour
                 Main.list[i].Update();
             }
         }
-    }
-}
-
-public class CustomGameObject
-{
-    int i;
-    public CustomGameObject(int i)
-    {
-        Main.list.Add(this);
-        this.i = i;
-    }
-    virtual public void Update()
-    {
-        this.i--;
-        if (this.i > 0) return;
-        Main.list.Remove(this);
-        this.End();
-    }
-    virtual public void End()
-    {
     }
 }

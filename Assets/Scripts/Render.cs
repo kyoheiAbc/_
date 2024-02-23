@@ -14,22 +14,27 @@ public class Render
 
     public Render()
     {
+        GameObject gameObject = new GameObject();
+        SpriteRenderer spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = Resources.Load<Sprite>("Circle");
+        spriteRenderer.sortingOrder = 1;
         for (int i = 0; i < 4; i++)
         {
-            Main.Instantiate(this.puyo).transform.SetParent(this.transform);
+            Main.Instantiate(gameObject).transform.SetParent(this.transform);
         }
+        Main.Destroy(gameObject);
         this.transform.position = new Vector2(256, 256);
         this.transform.localScale = new Vector3(0.8f, 0.8f, 1);
 
         this.camera = new GameObject("").AddComponent<Camera>();
-        this.camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+        this.camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.35f);
         this.camera.clearFlags = CameraClearFlags.SolidColor;
         this.camera.orthographic = true;
-        this.camera.orthographicSize = 12;
+        this.camera.orthographicSize = 10;
         this.camera.transform.position = new Vector3(4, 7, -1);
 
         SpriteRenderer s = new GameObject("").AddComponent<SpriteRenderer>();
-        s.color = UnityEngine.Color.HSVToRGB(2 / 3f, 1f, 1f);
+        s.color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
         s.sprite = Resources.Load<Sprite>("Square");
         s.transform.localScale = new Vector3(6, 12, 0);
         s.transform.position = new Vector3(4, 7, 0);
@@ -61,6 +66,8 @@ public class Render
         List<Puyo> _list = this.dictionary.Keys.ToList();
         foreach (Puyo l in list)
         {
+            if (l.position.x == 0.5f || l.position.x == 7.5f || l.position.y == 0.5f || l.position.y == 15.5f) continue;
+
             _list.Remove(l);
 
             if (!this.dictionary.ContainsKey(l))
@@ -107,7 +114,7 @@ public class Render
     private class Effect : CustomGameObject
     {
         private Transform transform;
-        public Effect(Transform transform, Vector2 position, int color) : base(60)
+        public Effect(Transform transform, Vector2 position, int color) : base(30)
         {
             this.transform = Main.Instantiate(transform, position, Quaternion.identity);
             for (int i = 0; i < 4; i++)
@@ -120,10 +127,10 @@ public class Render
         public override void Update()
         {
             base.Update();
-            this.transform.GetChild(0).localPosition += new Vector3(1, 0, 0) * 0.08f;
-            this.transform.GetChild(1).localPosition += new Vector3(-1, 0, 0) * 0.08f;
-            this.transform.GetChild(2).localPosition += new Vector3(0, 1, 0) * 0.08f;
-            this.transform.GetChild(3).localPosition += new Vector3(0, -1, 0) * 0.08f;
+            this.transform.GetChild(0).localPosition += new Vector3(1, 0, 0) * 0.15f;
+            this.transform.GetChild(1).localPosition += new Vector3(-1, 0, 0) * 0.15f;
+            this.transform.GetChild(2).localPosition += new Vector3(0, 1, 0) * 0.15f;
+            this.transform.GetChild(3).localPosition += new Vector3(0, -1, 0) * 0.15f;
         }
         public override void End()
         {

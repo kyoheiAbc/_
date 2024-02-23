@@ -4,7 +4,7 @@ public class Puyo
 {
     public Vector2 position;
     public int color;
-    public Count freeze = new Count(30);
+    public Count freeze = new Count(20);
     public Count fire = new Count(30);
     private static readonly Vector2 DOWN = Vector2.down * 0.2f;
     public MovePuyo movePuyo;
