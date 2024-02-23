@@ -10,9 +10,17 @@ public class Render
     private TextMeshPro combo;
     private Dictionary<Puyo, Transform> dictionary = new Dictionary<Puyo, Transform>();
     public Camera camera;
+    private Transform transform = new GameObject().transform;
 
     public Render()
     {
+        for (int i = 0; i < 4; i++)
+        {
+            Main.Instantiate(this.puyo).transform.SetParent(this.transform);
+        }
+        this.transform.position = new Vector2(256, 256);
+        this.transform.localScale = new Vector3(0.8f, 0.8f, 1);
+
         this.camera = new GameObject("").AddComponent<Camera>();
         this.camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
         this.camera.clearFlags = CameraClearFlags.SolidColor;
@@ -77,6 +85,7 @@ public class Render
         {
             Main.Destroy(this.dictionary[l].gameObject);
             this.dictionary.Remove(l);
+            new Effect(this.transform, l.position + new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.25f, 0.25f)), l.color);
         }
 
     }
@@ -93,5 +102,32 @@ public class Render
         this.nextColor[1].color = UnityEngine.Color.HSVToRGB(array[1] / 5f, 0.5f, 1.0f);
         this.nextColor[2].color = UnityEngine.Color.HSVToRGB(array[2] / 5f, 0.5f, 1.0f);
         this.nextColor[3].color = UnityEngine.Color.HSVToRGB(array[3] / 5f, 0.5f, 1.0f);
+    }
+
+    private class Effect : CustomGameObject
+    {
+        private Transform transform;
+        public Effect(Transform transform, Vector2 position, int color) : base(60)
+        {
+            this.transform = Main.Instantiate(transform, position, Quaternion.identity);
+            for (int i = 0; i < 4; i++)
+            {
+                this.transform.GetChild(i).GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(color / 5f, 0.5f, 1.0f);
+            }
+            this.transform.Rotate(0, 0, UnityEngine.Random.Range(0, 7) * 15);
+
+        }
+        public override void Update()
+        {
+            base.Update();
+            this.transform.GetChild(0).localPosition += new Vector3(1, 0, 0) * 0.08f;
+            this.transform.GetChild(1).localPosition += new Vector3(-1, 0, 0) * 0.08f;
+            this.transform.GetChild(2).localPosition += new Vector3(0, 1, 0) * 0.08f;
+            this.transform.GetChild(3).localPosition += new Vector3(0, -1, 0) * 0.08f;
+        }
+        public override void End()
+        {
+            Main.Destroy(this.transform.gameObject);
+        }
     }
 }
