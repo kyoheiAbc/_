@@ -30,7 +30,7 @@ public class Render
         this.camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.35f);
         this.camera.clearFlags = CameraClearFlags.SolidColor;
         this.camera.orthographic = true;
-        this.camera.orthographicSize = 10;
+        this.camera.orthographicSize = 12;
         this.camera.transform.position = new Vector3(4, 7, -1);
 
         SpriteRenderer s = new GameObject("").AddComponent<SpriteRenderer>();
@@ -46,10 +46,10 @@ public class Render
         this.combo.alignment = TextAlignmentOptions.Center;
         this.combo.sortingOrder = 256;
 
-        this.nextColor[0] = Main.Instantiate(this.puyo, new Vector2(9f, 11.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[1] = Main.Instantiate(this.puyo, new Vector2(9f, 12.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[2] = Main.Instantiate(this.puyo, new Vector2(9f, 8.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[3] = Main.Instantiate(this.puyo, new Vector2(9f, 9.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[0] = Main.Instantiate(this.puyo, new Vector2(8f, 11.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[1] = Main.Instantiate(this.puyo, new Vector2(8f, 12.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[2] = Main.Instantiate(this.puyo, new Vector2(8f, 8.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[3] = Main.Instantiate(this.puyo, new Vector2(8f, 9.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
         this.Start();
     }
     public void Start()
