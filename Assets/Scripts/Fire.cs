@@ -59,7 +59,7 @@ public class Fire
         foreach (Puyo l in rltb)
         {
             if (l == null) continue;
-            if (l.color == -1) continue;
+            if (l.color == -1 || l.color == 10) continue;
             if (l.color != puyo.color) continue;
 
             if (!a[(int)l.position.y, (int)l.position.x])
@@ -74,7 +74,7 @@ public class Fire
     {
         if (puyo == null) return;
         int c = puyo.color;
-        if (c == -1) return;
+        if (c == -1 || c == 10) return;
 
         Vector2 p = puyo.position;
         if (a[(int)p.y, (int)p.x] == true) return;
@@ -85,6 +85,7 @@ public class Fire
         foreach (Puyo l in list)
         {
             if (l == null) continue;
+            if (l.color == 10) l.fire.Start();
             if (c == l.color) this.Puyo(l, a);
         }
     }

@@ -17,11 +17,15 @@ public class Combo
         }
     }
     public int i = 0;
+    private int _i = 0;
+    public bool b = false;
     public Count end = new Count(120);
     public void Start()
     {
         this.i = 0;
         this.end.i = 0;
+        this._i = this.i;
+        this.b = false;
     }
     public void Add(int i)
     {
@@ -29,6 +33,8 @@ public class Combo
     }
     public void Update()
     {
+        this.b = this.i != this._i;
+        this._i = this.i;
         this.end.Update();
         if (this.end.Finish()) this.i = 0;
     }

@@ -90,4 +90,22 @@ public class Factory
     {
         this.list.Sort((p0, p1) => p1.position.y.CompareTo(p0.position.y));
     }
+
+    public List<Puyo> NewGarbagePuyo(int i)
+    {
+        int[] a;
+        int _i = 0;
+        for (int y = 0; y < (i - 1) / 6 + 1; y++)
+        {
+            a = Utility.Shuffle(new int[] { 1, 2, 3, 4, 5, 6 });
+            for (int x = 0; x < 6; x++)
+            {
+                _i++;
+                Puyo p = new Puyo(10, new Vector2(a[x] + 0.5f, 14.5f - y));
+                if (Collision.Get(p, this.list) == null) list.Add(p);
+                if (_i == i) break;
+            }
+        }
+        return list;
+    }
 }
