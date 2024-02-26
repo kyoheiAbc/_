@@ -19,7 +19,7 @@ public class Combo
     public int i = 0;
     private int _i = 0;
     public bool b = false;
-    public Count end = new Count(120);
+    public Count end = new Count(60);
     public void Start()
     {
         this.i = 0;

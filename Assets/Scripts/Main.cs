@@ -87,10 +87,11 @@ public class Main : MonoBehaviour
 
         {
             this.bot.Update();
+            if (this.bot.health <= 0) this.Start();
         }
 
         {
-            this.offset.Update();
+            this.offset.Update(this.factory, this.combo, this.bot);
         }
 
         {
