@@ -60,23 +60,22 @@ public class Main : MonoBehaviour
             this.factory.Update();
         }
 
+        Fire fire = null;
         {
             if (Fire.Ready(this.factory.puyoPuyo, this.factory.list))
             {
-                int i = new Fire(new Board(this.factory.list)).Execute();
-                if (i > 0)
-                {
-                    this.combo.Add(i);
-                    this.combo.end.i = 0;
-                }
-                else
-                {
-                    this.combo.end.Start();
-                }
+                fire = new Fire(new Board(this.factory.list));
+                fire.Execute();
             }
         }
 
+
         {
+            if (fire != null)
+            {
+                this.combo.Add(fire.i);
+                if (fire.i == 0) this.combo.end.Start();
+            }
             this.combo.Update();
         }
 

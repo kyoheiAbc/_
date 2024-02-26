@@ -29,7 +29,9 @@ public class Combo
     }
     public void Add(int i)
     {
+        if (i == 0) return;
         new _Combo(this, i);
+        this.end.i = 0;
     }
     public void Update()
     {

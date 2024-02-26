@@ -5,10 +5,12 @@ using UnityEngine;
 public class Fire
 {
     Board board;
+    public int i;
 
     public Fire(Board b)
     {
         this.board = b;
+        this.i = 0;
     }
     static public bool Ready(PuyoPuyo puyoPuyo, List<Puyo> list)
     {
@@ -23,9 +25,8 @@ public class Fire
         return true;
     }
 
-    public int Execute()
+    public void Execute()
     {
-        int i = 0;
         for (int y = 1; y < 15; y++)
         {
             for (int x = 1; x < 7; x++)
@@ -41,7 +42,6 @@ public class Fire
                 }
             }
         }
-        return i;
     }
 
     private int Count(Puyo p)
