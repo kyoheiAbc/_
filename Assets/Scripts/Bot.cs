@@ -22,6 +22,7 @@ public class Bot
         this.combo.Update();
 
         if (this.attack != null) return;
+        if (this.combo.i != 0) return;
         if (Time.frameCount % 180 == 0 && Random.Range(0, 3) == 0)
         {
             this.attack = new Attack(this, 3);

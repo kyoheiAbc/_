@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Offset
 {
-    int temporary = 0;
-    int _temporary = 0;
-    int i = 0;
+    public int temporary = 0;
+    public int _temporary = 0;
+    public int i = 0;
 
     public Offset()
     {
@@ -44,7 +44,6 @@ public class Offset
         {
             if (bot.combo.i != 0) return;
             bot.health -= this.i;
-            Debug.Log("bot.health" + bot.health);
             this.i = 0;
         }
         else if (this.i < 0)

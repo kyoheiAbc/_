@@ -11,6 +11,8 @@ public class Render
     private Dictionary<Puyo, Transform> dictionary = new Dictionary<Puyo, Transform>();
     public Camera camera;
     private Transform transform = new GameObject().transform;
+    private TextMeshPro bot;
+    private GameObject[] garbagePuyo = new GameObject[6];
 
     public Render()
     {
@@ -50,6 +52,25 @@ public class Render
         this.nextColor[1] = Main.Instantiate(this.puyo, new Vector2(8f, 12.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
         this.nextColor[2] = Main.Instantiate(this.puyo, new Vector2(8f, 8.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
         this.nextColor[3] = Main.Instantiate(this.puyo, new Vector2(8f, 9.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+
+        this.bot = new GameObject("").AddComponent<TextMeshPro>();
+        this.bot.fontSize = 12;
+        this.bot.transform.position = new Vector3(8.5f, 15.5f, 0);
+        this.bot.alignment = TextAlignmentOptions.Center;
+        this.bot.sortingOrder = 256;
+
+        this.garbagePuyo[0] = Main.Instantiate(this.puyo, new Vector2(1.5f, 14.5f), Quaternion.identity);
+        this.garbagePuyo[1] = Main.Instantiate(this.puyo, new Vector2(2.5f, 14.5f), Quaternion.identity);
+        this.garbagePuyo[2] = Main.Instantiate(this.puyo, new Vector2(3.5f, 14.5f), Quaternion.identity);
+        this.garbagePuyo[3] = Main.Instantiate(this.puyo, new Vector2(4.5f, 14.5f), Quaternion.identity);
+        this.garbagePuyo[4] = Main.Instantiate(this.puyo, new Vector2(5.5f, 14.5f), Quaternion.identity);
+        this.garbagePuyo[5] = Main.Instantiate(this.puyo, new Vector2(6.5f, 14.5f), Quaternion.identity);
+        foreach (GameObject g in this.garbagePuyo)
+        {
+            g.GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+        }
+
+
         this.Start();
     }
     public void Start()
@@ -74,6 +95,7 @@ public class Render
             {
                 this.dictionary[l] = Main.Instantiate(this.puyo).transform;
                 this.dictionary[l].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(l.color / 5f, 0.5f, 1.0f);
+                if (l.color == 10) this.dictionary[l].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
             }
 
             if (l.fire.i > 0)
@@ -111,6 +133,22 @@ public class Render
         this.nextColor[3].color = UnityEngine.Color.HSVToRGB(array[3] / 5f, 0.5f, 1.0f);
     }
 
+    public void Bot(int i)
+    {
+        this.bot.text = i.ToString();
+
+    }
+
+    public void GarbagePuyo(Offset offset)
+    {
+        int I = offset._temporary - offset.i - offset.temporary;
+        for (int i = 0; i < this.garbagePuyo.Length; i++)
+        {
+            this.garbagePuyo[i].SetActive(i < I);
+        }
+    }
+
+
     private class Effect : CustomGameObject
     {
         private Transform transform;
@@ -120,6 +158,7 @@ public class Render
             for (int i = 0; i < 4; i++)
             {
                 this.transform.GetChild(i).GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(color / 5f, 0.5f, 1.0f);
+                if (color == 10) this.transform.GetChild(i).GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
             }
             this.transform.Rotate(0, 0, UnityEngine.Random.Range(0, 7) * 15);
 

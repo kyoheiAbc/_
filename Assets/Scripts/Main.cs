@@ -98,6 +98,8 @@ public class Main : MonoBehaviour
             this.render.Puyo(this.factory.list);
             this.render.NextColor(this.factory.nextColor.array);
             this.render.Combo(this.combo.i);
+            this.render.Bot(this.bot.health);
+            this.render.GarbagePuyo(this.offset);
         }
 
         {
