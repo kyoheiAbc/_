@@ -100,6 +100,7 @@ public class Main : MonoBehaviour
             this.render.Combo(this.combo.i);
             this.render.Bot(this.bot.health);
             this.render.GarbagePuyo(this.offset);
+            this.render.Attack(this.combo, this.bot);
         }
 
         {

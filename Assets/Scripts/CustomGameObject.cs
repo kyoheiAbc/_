@@ -1,6 +1,10 @@
 public class CustomGameObject
 {
     int i;
+    public int GetI()
+    {
+        return this.i;
+    }
     public CustomGameObject(int i)
     {
         Main.list.Add(this);

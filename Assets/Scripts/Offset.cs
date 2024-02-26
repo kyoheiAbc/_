@@ -1,5 +1,3 @@
-using UnityEditor.Rendering;
-using UnityEngine;
 
 public class Offset
 {

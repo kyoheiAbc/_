@@ -12,7 +12,8 @@ public class Render
     public Camera camera;
     private Transform transform = new GameObject().transform;
     private TextMeshPro bot;
-    private GameObject[] garbagePuyo = new GameObject[6];
+    private GameObject[] garbagePuyo = new GameObject[36];
+    private Transform[] character = new Transform[2];
 
     public Render()
     {
@@ -33,7 +34,7 @@ public class Render
         this.camera.clearFlags = CameraClearFlags.SolidColor;
         this.camera.orthographic = true;
         this.camera.orthographicSize = 12;
-        this.camera.transform.position = new Vector3(4, 7, -1);
+        this.camera.transform.position = new Vector3(8, 7, -1);
 
         SpriteRenderer s = new GameObject("").AddComponent<SpriteRenderer>();
         s.color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
@@ -58,18 +59,26 @@ public class Render
         this.bot.transform.position = new Vector3(8.5f, 15.5f, 0);
         this.bot.alignment = TextAlignmentOptions.Center;
         this.bot.sortingOrder = 256;
-
-        this.garbagePuyo[0] = Main.Instantiate(this.puyo, new Vector2(1.5f, 14.5f), Quaternion.identity);
-        this.garbagePuyo[1] = Main.Instantiate(this.puyo, new Vector2(2.5f, 14.5f), Quaternion.identity);
-        this.garbagePuyo[2] = Main.Instantiate(this.puyo, new Vector2(3.5f, 14.5f), Quaternion.identity);
-        this.garbagePuyo[3] = Main.Instantiate(this.puyo, new Vector2(4.5f, 14.5f), Quaternion.identity);
-        this.garbagePuyo[4] = Main.Instantiate(this.puyo, new Vector2(5.5f, 14.5f), Quaternion.identity);
-        this.garbagePuyo[5] = Main.Instantiate(this.puyo, new Vector2(6.5f, 14.5f), Quaternion.identity);
-        foreach (GameObject g in this.garbagePuyo)
+        for (int y = 0; y < 6; y++)
         {
-            g.GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+            for (int x = 0; x < 6; x++)
+            {
+                this.garbagePuyo[x + y * 6] = Main.Instantiate(this.puyo, new Vector2(x + 0.5f, 14.5f + y), Quaternion.identity);
+                this.garbagePuyo[x + y * 6].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+            }
+
         }
 
+
+        this.character[0] = new GameObject("").transform;
+        this.character[0].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ringo");
+        this.character[0].localScale = new Vector3(8, 8, 0);
+        this.character[0].position = new Vector3(16, 1.5f, 0);
+
+        this.character[1] = new GameObject("").transform;
+        this.character[1].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("maguro");
+        this.character[1].localScale = new Vector3(8, 8, 0);
+        this.character[1].position = new Vector3(16, 12.5f, 0);
 
         this.Start();
     }
@@ -148,6 +157,19 @@ public class Render
         }
     }
 
+    public void Attack(Combo combo, Bot bot)
+    {
+        if (combo.b && combo.i > 0)
+        {
+            new _Attack(this.character[0], false);
+        }
+        if (bot.combo.b && bot.combo.i > 0)
+        {
+            new _Attack(this.character[1], true);
+        }
+
+    }
+
 
     private class Effect : CustomGameObject
     {
@@ -176,4 +198,28 @@ public class Render
             Main.Destroy(this.transform.gameObject);
         }
     }
+
+    private class _Attack : CustomGameObject
+    {
+        Transform transform;
+        Vector2 position;
+        bool bot;
+        public _Attack(Transform transform, bool bot) : base(30)
+        {
+            this.transform = transform;
+            this.position = this.transform.position;
+            this.bot = bot;
+
+        }
+        public override void Update()
+        {
+            float f = (30 - base.GetI()) / 29f;
+            if (!this.bot)
+                this.transform.localPosition = this.position + new Vector2(0, Mathf.Sin(Mathf.PI * f)) * 3f;
+            else
+                this.transform.localPosition = this.position - new Vector2(0, Mathf.Sin(Mathf.PI * f)) * 3f;
+            base.Update();
+        }
+    }
+
 }

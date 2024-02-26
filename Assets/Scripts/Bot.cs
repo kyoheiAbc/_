@@ -5,6 +5,8 @@ public class Bot
     public int health;
     public Combo combo = new Combo();
     private Attack attack;
+    private float random;
+
 
     public Bot()
     {
@@ -16,6 +18,7 @@ public class Bot
         this.health = 8;
         this.combo.Start();
         this.attack = null;
+        this.random = Random.Range(0f, 1f);
     }
     public void Update()
     {
@@ -23,9 +26,11 @@ public class Bot
 
         if (this.attack != null) return;
         if (this.combo.i != 0) return;
-        if (Time.frameCount % 180 == 0 && Random.Range(0, 3) == 0)
+        if (Time.frameCount < 180) return;
+
+        if (Time.frameCount % 180 == (int)(180 * this.random) && Random.Range(0, 3) == 0)
         {
-            this.attack = new Attack(this, 3);
+            this.attack = new Attack(this, Random.Range(3, 8));
         }
     }
 
