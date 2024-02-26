@@ -6,6 +6,8 @@ public class Main : MonoBehaviour
     private Render render;
     private Input input;
     private Combo combo;
+    private Bot bot;
+    private Offset offset;
     public static List<CustomGameObject> list = new List<CustomGameObject>();
     void Awake()
     {
@@ -17,6 +19,8 @@ public class Main : MonoBehaviour
         this.render = new Render();
         this.input = new Input(this.render.camera);
         this.combo = new Combo();
+        this.bot = new Bot();
+        this.offset = new Offset();
     }
     void Start()
     {
@@ -24,6 +28,8 @@ public class Main : MonoBehaviour
         this.render.Start();
         this.input.Start();
         this.combo.Start();
+        this.bot.Start();
+        this.offset.Start();
         Main.list.Clear();
     }
     void Update()
@@ -77,6 +83,14 @@ public class Main : MonoBehaviour
                 if (fire.i == 0) this.combo.end.Start();
             }
             this.combo.Update();
+        }
+
+        {
+            this.bot.Update();
+        }
+
+        {
+            this.offset.Update();
         }
 
         {
