@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using System.Linq;
 
 public class Render
@@ -11,9 +12,9 @@ public class Render
     private Dictionary<Puyo, Transform> dictionary = new Dictionary<Puyo, Transform>();
     public Camera camera;
     private Transform transform = new GameObject().transform;
-    private TextMeshPro bot;
     private GameObject[] garbagePuyo = new GameObject[36];
     private Transform[] character = new Transform[2];
+    private GameObject gauge;
 
     public Render()
     {
@@ -33,13 +34,12 @@ public class Render
         this.camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.35f);
         this.camera.clearFlags = CameraClearFlags.SolidColor;
         this.camera.orthographic = true;
-        this.camera.orthographicSize = 12;
-        this.camera.transform.position = new Vector3(8, 7, -1);
+        this.camera.orthographicSize = 10;
+        this.camera.transform.position = new Vector3(8.5f, 7, -1);
 
         SpriteRenderer s = new GameObject("").AddComponent<SpriteRenderer>();
         s.color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
-        s.sprite = Resources.Load<Sprite>("Square");
-        s.transform.localScale = new Vector3(6, 12, 0);
+        s.sprite = Resources.Load<Sprite>("board");
         s.transform.position = new Vector3(4, 7, 0);
 
 
@@ -49,36 +49,46 @@ public class Render
         this.combo.alignment = TextAlignmentOptions.Center;
         this.combo.sortingOrder = 256;
 
-        this.nextColor[0] = Main.Instantiate(this.puyo, new Vector2(8f, 11.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[1] = Main.Instantiate(this.puyo, new Vector2(8f, 12.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[2] = Main.Instantiate(this.puyo, new Vector2(8f, 8.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[3] = Main.Instantiate(this.puyo, new Vector2(8f, 9.5f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        SpriteRenderer s_ = new GameObject("").AddComponent<SpriteRenderer>();
+        s_.color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+        s_.sprite = Resources.Load<Sprite>("next");
+        s_.transform.position = new Vector3(8.5f, 10, 0);
+        this.nextColor[0] = Main.Instantiate(this.puyo, new Vector2(8.5f, 11f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[1] = Main.Instantiate(this.puyo, new Vector2(8.5f, 12f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[2] = Main.Instantiate(this.puyo, new Vector2(8.5f, 8f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        this.nextColor[3] = Main.Instantiate(this.puyo, new Vector2(8.5f, 9f), Quaternion.identity).GetComponent<SpriteRenderer>();
 
-        this.bot = new GameObject("").AddComponent<TextMeshPro>();
-        this.bot.fontSize = 12;
-        this.bot.transform.position = new Vector3(8.5f, 15.5f, 0);
-        this.bot.alignment = TextAlignmentOptions.Center;
-        this.bot.sortingOrder = 256;
         for (int y = 0; y < 6; y++)
         {
             for (int x = 0; x < 6; x++)
             {
-                this.garbagePuyo[x + y * 6] = Main.Instantiate(this.puyo, new Vector2(x + 0.5f, 14.5f + y), Quaternion.identity);
+                this.garbagePuyo[x + y * 6] = Main.Instantiate(this.puyo, new Vector2(x + 1.5f, 14.5f + y), Quaternion.identity);
                 this.garbagePuyo[x + y * 6].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
             }
 
         }
 
+        this.gauge = new GameObject();
+        new GameObject().transform.SetParent(this.gauge.transform);
+        new GameObject().transform.SetParent(this.gauge.transform);
+        this.gauge.transform.GetChild(0).AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Square");
+        this.gauge.transform.GetChild(0).GetComponent<SpriteRenderer>().color = UnityEngine.Color.green;
+        this.gauge.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = 1;
+        this.gauge.transform.GetChild(1).AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Square");
+        this.gauge.transform.GetChild(1).GetComponent<SpriteRenderer>().color = UnityEngine.Color.black;
+        this.gauge.transform.GetChild(1).GetComponent<SpriteRenderer>().sortingOrder = 1;
+        this.gauge.transform.localPosition = new Vector2(13.25f, 12.75f);
+        this.gauge.transform.localScale = new Vector2(5.5f, 0.25f);
 
         this.character[0] = new GameObject("").transform;
         this.character[0].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ringo");
-        this.character[0].localScale = new Vector3(8, 8, 0);
-        this.character[0].position = new Vector3(16, 1.5f, 0);
+        this.character[0].localScale = new Vector3(5.5f, 5.5f, 0);
+        this.character[0].position = new Vector3(13.25f, 3.75f, 0);
 
         this.character[1] = new GameObject("").transform;
         this.character[1].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("maguro");
-        this.character[1].localScale = new Vector3(8, 8, 0);
-        this.character[1].position = new Vector3(16, 12.5f, 0);
+        this.character[1].localScale = new Vector3(5.5f, 5.5f, 0);
+        this.character[1].position = new Vector3(13.25f, 10.25f, 0);
 
         this.Start();
     }
@@ -144,8 +154,7 @@ public class Render
 
     public void Bot(int i)
     {
-        this.bot.text = i.ToString();
-
+        Gauge.Set(this.gauge.transform.GetChild(0).transform, i / 8f);
     }
 
     public void GarbagePuyo(Offset offset)
@@ -221,5 +230,15 @@ public class Render
             base.Update();
         }
     }
+
+    private class Gauge
+    {
+        public static void Set(Transform transform, float f)
+        {
+            transform.localScale = new Vector2(f, 1);
+            transform.localPosition = new Vector3(-(1 - transform.localScale.x) * 0.5f, 0, 0);
+        }
+    }
+
 
 }
