@@ -123,7 +123,7 @@ public class Render
             }
             else
             {
-                float f = 1f - (float)l.freeze.i / l.freeze.I;
+                float f = 1f - (float)l.freeze.i / l.freeze.max;
                 this.dictionary[l].position = l.position + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
                 this.dictionary[l].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
             }
@@ -222,7 +222,7 @@ public class Render
         }
         public override void Update()
         {
-            float f = (30 - base.GetI()) / 29f;
+            float f = (30 - base.i) / 29f;
             if (!this.bot)
                 this.transform.localPosition = this.position + new Vector2(0, Mathf.Sin(Mathf.PI * f)) * 3f;
             else

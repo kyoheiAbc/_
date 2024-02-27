@@ -4,7 +4,7 @@ public class Main : MonoBehaviour
 {
     private Factory factory;
     private Render render;
-    private Input input;
+    private InputAndroid input;
     private Combo combo;
     private Bot bot;
     private Offset offset;
@@ -17,7 +17,7 @@ public class Main : MonoBehaviour
 
         this.factory = new Factory();
         this.render = new Render();
-        this.input = new Input(this.render.camera);
+        this.input = new InputAndroid(this.render.camera);
         this.combo = new Combo();
         this.bot = new Bot();
         this.offset = new Offset();

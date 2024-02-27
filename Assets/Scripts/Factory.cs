@@ -97,7 +97,7 @@ public class Factory
         int _i = 0;
         for (int y = 0; y < (i - 1) / 6 + 1; y++)
         {
-            a = Utility.Shuffle(new int[] { 1, 2, 3, 4, 5, 6 });
+            a = Static.Shuffle(new int[] { 1, 2, 3, 4, 5, 6 });
             for (int x = 0; x < 6; x++)
             {
                 _i++;

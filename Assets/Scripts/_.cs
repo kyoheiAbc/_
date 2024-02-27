@@ -1,31 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-
-public class CustomGameObject
-{
-    int i;
-    public int GetI()
-    {
-        return this.i;
-    }
-    public CustomGameObject(int i)
-    {
-        Main.list.Add(this);
-        this.i = i;
-    }
-    virtual public void Update()
-    {
-        this.i--;
-        if (this.i > 0) return;
-        Main.list.Remove(this);
-        this.End();
-    }
-    virtual public void End()
-    {
-    }
-}
-
-public class Utility
+public class Static
 {
     public static int[] Shuffle(int[] array)
     {
@@ -38,18 +13,37 @@ public class Utility
         return a;
     }
 }
-
+public class CustomGameObject
+{
+    protected int i;
+    public CustomGameObject(int i)
+    {
+        Main.list.Add(this);
+        this.i = i;
+    }
+    virtual public void Update()
+    {
+        this.i--;
+        if (this.i == 0)
+        {
+            this.End();
+            Main.list.Remove(this);
+        }
+    }
+    virtual public void End() { }
+}
 public class Count
 {
-    public int i = 0;
-    public int I;
+    public int i;
+    public readonly int max;
     public Count(int i)
     {
-        this.I = i;
+        this.i = 0;
+        this.max = i;
     }
     public void Update()
     {
-        if (0 < this.i && this.i < this.I) this.i++;
+        if (0 < this.i && this.i < this.max) this.i++;
     }
     public void Start()
     {
@@ -57,10 +51,9 @@ public class Count
     }
     public bool Finish()
     {
-        return this.i == this.I;
+        return this.i == this.max;
     }
 }
-
 public class Collision
 {
     static public Puyo Get(Puyo puyo, List<Puyo> list)

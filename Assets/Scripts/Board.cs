@@ -12,8 +12,7 @@ public class Board
                 this.Set(l);
                 continue;
             }
-            if (!l.freeze.Finish()) continue;
-            this.Set(l);
+            if (l.freeze.Finish()) this.Set(l);
         }
     }
     public void Set(Puyo puyo)
