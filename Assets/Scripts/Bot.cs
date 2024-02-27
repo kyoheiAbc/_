@@ -15,7 +15,7 @@ public class Bot
 
     public void Start()
     {
-        this.health = 8;
+        this.health = 16;
         this.combo.Start();
         this.attack = null;
         this.random = Random.Range(0f, 1f);

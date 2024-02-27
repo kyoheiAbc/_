@@ -5,7 +5,9 @@ class Input
     private Vector2 position;
     private bool down;
     private bool move;
-    static private readonly float threshold = Screen.width * 0.03f;
+    private readonly bool android = true;
+
+    static private readonly float threshold = 1.25f;
     public Input(Camera camera)
     {
         this.camera = camera;
@@ -18,53 +20,56 @@ class Input
     }
     public Vector2 Update()
     {
-        // for (int i = 0; i < UnityEngine.Input.touchCount; i++)
-        // {
-        //     Touch t = UnityEngine.Input.GetTouch(i);
-        //     if (t.phase == TouchPhase.Began)
-        //     {
-        //         if (t.position.x > 0.5f * Screen.width)
-        //         {
-        //             return Vector2.right + Vector2.down;
-        //         }
-        //         if (t.position.x < 0.5f * Screen.width)
-        //         {
-        //             this.down = true;
-        //             this.position = t.position;
-        //         }
-        //     }
+        if (this.android)
+        {
+            for (int i = 0; i < UnityEngine.Input.touchCount; i++)
+            {
+                Touch t = UnityEngine.Input.GetTouch(i);
+                if (t.phase == TouchPhase.Began)
+                {
+                    if (t.position.x > 0.5f * Screen.width)
+                    {
+                        return Vector2.right + Vector2.down;
+                    }
+                    if (t.position.x < 0.5f * Screen.width)
+                    {
+                        this.down = true;
+                        this.position = this.camera.ScreenToWorldPoint(t.position);
+                    }
+                }
 
-        //     if (t.phase == TouchPhase.Ended)
-        //     {
-        //         if (t.position.x < 0.5f * Screen.width) this.down = false;
-        //     }
+                if (t.phase == TouchPhase.Ended)
+                {
+                    if (t.position.x < 0.5f * Screen.width) this.down = false;
+                }
 
-        //     if (this.down && t.position.x < 0.5f * Screen.width)
-        //     {
-        //         Vector2 v = t.position - this.position;
-        //         if (v.x >= threshold)
-        //         {
-        //             this.position = t.position;
-        //             return Vector2.right;
-        //         }
-        //         if (v.x <= -threshold)
-        //         {
-        //             this.position = t.position;
-        //             return Vector2.left;
-        //         }
-        //         if (v.y >= threshold)
-        //         {
-        //             this.position = t.position;
-        //             return Vector2.up;
-        //         }
-        //         if (v.y <= -threshold)
-        //         {
-        //             this.position = t.position;
-        //             return Vector2.down;
-        //         }
-        //     }
-        // }
-        // return Vector2.zero;
+                if (this.down && t.position.x < 0.5f * Screen.width)
+                {
+                    Vector2 v = (Vector2)this.camera.ScreenToWorldPoint(t.position) - this.position;
+                    if (v.x >= threshold)
+                    {
+                        this.position = t.position;
+                        return Vector2.right;
+                    }
+                    if (v.x <= -threshold)
+                    {
+                        this.position = t.position;
+                        return Vector2.left;
+                    }
+                    if (v.y >= threshold * 2f)
+                    {
+                        this.position = t.position;
+                        return Vector2.up;
+                    }
+                    if (v.y <= -threshold)
+                    {
+                        this.position = t.position;
+                        return Vector2.down;
+                    }
+                }
+            }
+            return Vector2.zero;
+        }
 
         if (UnityEngine.Input.GetMouseButtonDown(0))
         {

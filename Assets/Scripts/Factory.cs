@@ -108,4 +108,14 @@ public class Factory
         }
         return list;
     }
+    static public bool garbagePuyoMove(List<Puyo> list)
+    {
+        foreach (Puyo l in list)
+        {
+            if (l.color != 10) continue;
+            if (!l.freeze.Finish()) return true;
+        }
+        return false;
+    }
+
 }

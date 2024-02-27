@@ -34,7 +34,7 @@ public class Render
         this.camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.35f);
         this.camera.clearFlags = CameraClearFlags.SolidColor;
         this.camera.orthographic = true;
-        this.camera.orthographicSize = 10;
+        this.camera.orthographicSize = 8;
         this.camera.transform.position = new Vector3(8.5f, 7, -1);
 
         SpriteRenderer s = new GameObject("").AddComponent<SpriteRenderer>();
@@ -154,7 +154,7 @@ public class Render
 
     public void Bot(int i)
     {
-        Gauge.Set(this.gauge.transform.GetChild(0).transform, i / 8f);
+        Gauge.Set(this.gauge.transform.GetChild(0).transform, i / 16f);
     }
 
     public void GarbagePuyo(Offset offset)

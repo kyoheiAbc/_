@@ -35,24 +35,25 @@ public class Main : MonoBehaviour
     void Update()
     {
         {
-            if (this.factory.puyoPuyo == null && Collision.Get(new Vector2(3.5f, 12.5f), this.factory.list) != null)
-            {
-                this.Start();
-                return;
-            }
-        }
-
-        {
             if (this.factory.puyoPuyo == null)
             {
-                this.factory.NewPuyoPuyo();
-                this.input.Start();
+                if (!Factory.garbagePuyoMove(this.factory.list))
+                {
+                    this.factory.NewPuyoPuyo();
+                    this.input.Start();
+                    if (Collision.Get(this.factory.puyoPuyo.array[0], this.factory.list) != null ||
+                        Collision.Get(this.factory.puyoPuyo.array[1], this.factory.list) != null)
+                    {
+                        this.Start();
+                        return;
+                    }
+                }
             }
         }
 
         {
             Vector2 v = this.input.Update();
-            if (v != Vector2.zero)
+            if (v != Vector2.zero && this.factory.puyoPuyo != null)
             {
                 if (v == Vector2.right + Vector2.down) this.factory.puyoPuyo.rotatePuyoPuyo.Execute(this.factory.list);
                 else if (v == Vector2.up) this.factory.puyoPuyo.Drop(this.factory.list);
