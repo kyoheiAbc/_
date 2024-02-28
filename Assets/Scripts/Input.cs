@@ -97,7 +97,7 @@ class InputAndroid
                     this.position += v;
                     return Vector2.left;
                 }
-                if (v.y >= 1)
+                if (v.y >= 1.5f)
                 {
                     this.position += v;
                     return Vector2.up;

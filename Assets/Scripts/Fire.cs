@@ -46,10 +46,10 @@ public class Fire
 
     private int Count(Puyo p)
     {
-        return this._Count(p, new bool[16, 8], 0);
+        return this._count(p, new bool[16, 8], 0);
     }
 
-    private int _Count(Puyo puyo, bool[,] a, int i)
+    private int _count(Puyo puyo, bool[,] a, int i)
     {
         int I = i;
         Vector2 p = puyo.position;
@@ -64,7 +64,7 @@ public class Fire
 
             if (!a[(int)l.position.y, (int)l.position.x])
             {
-                I = this._Count(l, a, I);
+                I = this._count(l, a, I);
             }
         }
         return I;
@@ -79,13 +79,13 @@ public class Fire
         Vector2 p = puyo.position;
         if (a[(int)p.y, (int)p.x] == true) return;
         a[(int)p.y, (int)p.x] = true;
-        puyo.fire.Start();
+        puyo.fire.Launch();
 
         List<Puyo> list = this.board.GetRlud(p);
         foreach (Puyo l in list)
         {
             if (l == null) continue;
-            if (l.color == 10) l.fire.Start();
+            if (l.color == 10) l.fire.Launch();
             if (c == l.color) this.Puyo(l, a);
         }
     }

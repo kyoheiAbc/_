@@ -81,7 +81,7 @@ public class Main : MonoBehaviour
             if (fire != null)
             {
                 this.combo.Add(fire.i);
-                if (fire.i == 0) this.combo.end.Start();
+                if (fire.i == 0) this.combo.end.Launch();
             }
             this.combo.Update();
         }

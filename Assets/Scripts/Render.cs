@@ -159,7 +159,7 @@ public class Render
 
     public void GarbagePuyo(Offset offset)
     {
-        int I = offset._temporary - offset.i - offset.temporary;
+        int I = offset.temporary[1] - offset.i - offset.temporary[0];
         for (int i = 0; i < this.garbagePuyo.Length; i++)
         {
             this.garbagePuyo[i].SetActive(i < I);
@@ -168,11 +168,11 @@ public class Render
 
     public void Attack(Combo combo, Bot bot)
     {
-        if (combo.b && combo.i > 0)
+        if (combo.update)
         {
             new _Attack(this.character[0], false);
         }
-        if (bot.combo.b && bot.combo.i > 0)
+        if (bot.combo.update)
         {
             new _Attack(this.character[1], true);
         }

@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Puyo
 {
+    public static readonly int FIRE = 30;
+    public static readonly int FREEZE = 20;
+    private static readonly Vector2 DOWN = Vector2.down * 0.2f;
     public Vector2 position;
     public int color;
-    public Count freeze = new Count(20);
-    public Count fire = new Count(30);
-    private static readonly Vector2 DOWN = Vector2.down * 0.2f;
+    public Count freeze = new Count(Puyo.FREEZE);
+    public Count fire = new Count(Puyo.FIRE);
     public MovePuyo movePuyo;
     public Puyo(int color, Vector2 position)
     {
@@ -20,17 +22,17 @@ public class Puyo
         this.fire.Update();
         if (this.position.x == 0.5f || this.position.x == 7.5f || this.position.y == 0.5f || this.position.y == 15.5f)
         {
-            this.freeze.Start();
+            this.freeze.Launch();
             return;
         }
         if (this.fire.Finish()) return;
         if (this.movePuyo.Execute(Puyo.DOWN, list) == Vector2.zero)
         {
-            this.freeze.Start();
+            this.freeze.Launch();
         }
         else
         {
-            this.freeze.i = 0;
+            this.freeze = new Count(Puyo.FREEZE);
         }
     }
 }
@@ -45,12 +47,12 @@ public class MovePuyo
     public Vector2 Execute(Vector2 v, List<Puyo> list)
     {
         Vector2 position = this.puyo.position;
-        _Execute(v, list);
+        _execute(v, list);
         return this.puyo.position - position;
     }
-    private void _Execute(Vector2 v, List<Puyo> list)
+    private void _execute(Vector2 v, List<Puyo> list)
     {
-        Vector2 _position = this.puyo.position;
+        Vector2 p = this.puyo.position;
         this.puyo.position += v;
 
         Puyo c = Collision.Get(this.puyo, list);
@@ -72,6 +74,6 @@ public class MovePuyo
                 if (Collision.Get(puyo, list) == null) return;
             }
         }
-        this.puyo.position = _position;
+        this.puyo.position = p;
     }
 }

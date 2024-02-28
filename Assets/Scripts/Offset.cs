@@ -1,41 +1,37 @@
 
 public class Offset
 {
-    public int temporary = 0;
-    public int _temporary = 0;
+    public int[] temporary = new int[2];
     public int i = 0;
-
     public Offset()
     {
         this.Start();
     }
     public void Start()
     {
-        this.temporary = 0;
-        this._temporary = 0;
-
+        this.temporary = new int[] { 0, 0 };
         this.i = 0;
     }
     public void Update(Factory factory, Combo combo, Bot bot)
     {
-        if (combo.b)
+        if (combo.update)
         {
-            this.temporary += combo.i;
+            this.temporary[0] += combo.i;
         }
         if (combo.end.Finish())
         {
-            this.i += this.temporary;
-            this.temporary = 0;
+            this.i += this.temporary[0];
+            this.temporary[0] = 0;
         }
 
-        if (bot.combo.b)
+        if (bot.combo.update)
         {
-            this._temporary += bot.combo.i;
+            this.temporary[1] += bot.combo.i;
         }
         if (bot.combo.end.Finish())
         {
-            this.i -= this._temporary;
-            this._temporary = 0;
+            this.i -= this.temporary[1];
+            this.temporary[1] = 0;
         }
 
         if (this.i > 0)

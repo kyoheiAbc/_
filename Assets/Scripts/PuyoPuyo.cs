@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class PuyoPuyo
 {
-    public Puyo[] array;
-    public Count disconnect = new Count(60);
+    public static readonly int DISCONNECT = 60;
     private static readonly Vector2 DOWN = Vector2.down * 0.02f;
+    public Puyo[] array;
+    public Count disconnect = new Count(PuyoPuyo.DISCONNECT);
     public MovePuyoPuyo movePuyoPuyo;
     public RotatePuyoPuyo rotatePuyoPuyo;
     public PuyoPuyo(Puyo p0, Puyo p1)
@@ -24,11 +25,11 @@ public class PuyoPuyo
 
         if (this.movePuyoPuyo.Execute(PuyoPuyo.DOWN, list) == Vector2.zero)
         {
-            this.disconnect.Start();
+            this.disconnect.Launch();
         }
         else
         {
-            this.disconnect.i = 0;
+            this.disconnect = new Count(PuyoPuyo.DISCONNECT);
         }
     }
 
@@ -68,12 +69,12 @@ public class MovePuyoPuyo
     public Vector2 Execute(Vector2 v, List<Puyo> list)
     {
         Vector2 position = this.puyoPuyo.GetPosition();
-        _Execute(v, list);
+        _execute(v, list);
         Vector2 p = this.puyoPuyo.GetPosition() - position;
         if (v == Vector2.down && p == Vector2.zero) this.puyoPuyo.disconnect.i = this.puyoPuyo.disconnect.max;
         return p;
     }
-    private void _Execute(Vector2 v, List<Puyo> list)
+    private void _execute(Vector2 v, List<Puyo> list)
     {
         Vector2 position = this.puyoPuyo.array[0].position;
         int rotate = this.puyoPuyo.rotatePuyoPuyo.Get();

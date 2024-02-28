@@ -45,7 +45,7 @@ public class Count
     {
         if (0 < this.i && this.i < this.max) this.i++;
     }
-    public void Start()
+    public void Launch()
     {
         if (this.i == 0) this.i++;
     }

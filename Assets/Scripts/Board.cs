@@ -12,6 +12,7 @@ public class Board
                 this.Set(l);
                 continue;
             }
+            if (this.Get(l.position + Vector2.down) == null) continue;
             if (l.freeze.Finish()) this.Set(l);
         }
     }
