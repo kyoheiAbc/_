@@ -5,15 +5,17 @@ public class Board
     private Puyo[,] array = new Puyo[16, 8];
     public Board(List<Puyo> list)
     {
-        foreach (Puyo l in list)
+        for (int i = list.Count - 1; i >= 0; i--)
         {
-            if (l.position.y == 0.5f)
+            if (list[i].position.y == 0.5f)
             {
-                this.Set(l);
+                this.Set(list[i]);
                 continue;
             }
-            if (this.Get(l.position + Vector2.down) == null) continue;
-            if (l.freeze.Finish()) this.Set(l);
+            if (list[i].freeze.Finish())
+            {
+                if (this.Get(list[i].position + Vector2.down) != null) this.Set(list[i]);
+            }
         }
     }
     public void Set(Puyo puyo)

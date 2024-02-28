@@ -69,7 +69,7 @@ public class MovePuyoPuyo
     public Vector2 Execute(Vector2 v, List<Puyo> list)
     {
         Vector2 position = this.puyoPuyo.GetPosition();
-        _execute(v, list);
+        this._execute(v, list);
         Vector2 p = this.puyoPuyo.GetPosition() - position;
         if (v == Vector2.down && p == Vector2.zero) this.puyoPuyo.disconnect.i = this.puyoPuyo.disconnect.max;
         return p;
