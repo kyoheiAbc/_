@@ -31,19 +31,23 @@ public class CustomGameObject
         }
     }
     virtual public void End() { }
+    virtual public void Clear()
+    {
+        Main.list.Remove(this);
+    }
 }
 public class Count
 {
     public int i;
-    public readonly int max;
+    public readonly int maximum;
     public Count(int i)
     {
         this.i = 0;
-        this.max = i;
+        this.maximum = i;
     }
     public void Update()
     {
-        if (0 < this.i && this.i < this.max) this.i++;
+        if (0 < this.i && this.i < this.maximum) this.i++;
     }
     public void Launch()
     {
@@ -51,7 +55,7 @@ public class Count
     }
     public bool Finish()
     {
-        return this.i == this.max;
+        return this.i == this.maximum;
     }
 }
 public class Collision

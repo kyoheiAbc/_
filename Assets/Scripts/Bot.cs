@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class Bot
 {
-    private static readonly int COMBO = 120;
-    public int health;
+    private static readonly int COMBO = 90;
+    public float health;
+
     public Combo combo = new Combo();
     private Attack attack;
     public Bot()
@@ -12,7 +13,7 @@ public class Bot
     }
     public void Start()
     {
-        this.health = 16;
+        this.health = 1;
         this.combo.Start();
         this.attack = null;
     }
@@ -52,6 +53,5 @@ public class Bot
                 parent.attack = new Attack(parent, this.repeat);
             }
         }
-
     }
 }

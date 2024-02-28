@@ -37,7 +37,7 @@ public class Offset
         if (this.i > 0)
         {
             if (bot.combo.i != 0) return;
-            bot.health -= this.i;
+            bot.health -= this.i / 16f;
             this.i = 0;
         }
         else if (this.i < 0)

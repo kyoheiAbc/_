@@ -49,6 +49,7 @@ class Input
 }
 class InputAndroid
 {
+    readonly private static float THRESHOLD = 1.25f;
     private Camera camera;
     private Vector2 position;
     private bool down;
@@ -87,22 +88,22 @@ class InputAndroid
             if (this.down && t.position.x < 0.5f * Screen.width)
             {
                 Vector2 v = (Vector2)this.camera.ScreenToWorldPoint(t.position) - this.position;
-                if (v.x >= 1)
+                if (v.x >= InputAndroid.THRESHOLD)
                 {
                     this.position += v;
                     return Vector2.right;
                 }
-                if (v.x <= -1)
+                if (v.x <= -InputAndroid.THRESHOLD)
                 {
                     this.position += v;
                     return Vector2.left;
                 }
-                if (v.y >= 1.5f)
+                if (v.y >= InputAndroid.THRESHOLD * 2f)
                 {
                     this.position += v;
                     return Vector2.up;
                 }
-                if (v.y <= -1)
+                if (v.y <= -InputAndroid.THRESHOLD)
                 {
                     this.position += v;
                     return Vector2.down;

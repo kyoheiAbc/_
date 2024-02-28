@@ -5,6 +5,8 @@ public class Main : MonoBehaviour
     private Factory factory;
     private Render render;
     private InputAndroid input;
+    // private Input input;
+
     private Combo combo;
     private Bot bot;
     private Offset offset;
@@ -18,6 +20,8 @@ public class Main : MonoBehaviour
         this.factory = new Factory();
         this.render = new Render();
         this.input = new InputAndroid(this.render.camera);
+        // this.input = new Input(this.render.camera);
+
         this.combo = new Combo();
         this.bot = new Bot();
         this.offset = new Offset();
@@ -30,7 +34,10 @@ public class Main : MonoBehaviour
         this.combo.Start();
         this.bot.Start();
         this.offset.Start();
-        Main.list.Clear();
+        for (int i = Main.list.Count - 1; i >= 0; i--)
+        {
+            Main.list[i].Clear();
+        }
     }
     void Update()
     {
@@ -99,9 +106,9 @@ public class Main : MonoBehaviour
             this.render.Puyo(this.factory.list);
             this.render.NextColor(this.factory.nextColor.array);
             this.render.Combo(this.combo.i);
-            this.render.Bot(this.bot.health);
+            this.render.Bot(this.bot);
             this.render.GarbagePuyo(this.offset);
-            this.render.Attack(this.combo, this.bot);
+            this.render.Character(this.combo, this.bot);
         }
 
         {

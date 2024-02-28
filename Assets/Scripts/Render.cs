@@ -3,92 +3,105 @@ using TMPro;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Linq;
-
 public class Render
 {
-    private GameObject puyo = Resources.Load<GameObject>("Puyo");
+    static readonly int EFFECT = 30;
+
+    private GameObject puyo;
     private SpriteRenderer[] nextColor = new SpriteRenderer[4];
     private TextMeshPro combo;
     private Dictionary<Puyo, Transform> dictionary = new Dictionary<Puyo, Transform>();
     public Camera camera;
-    private Transform transform = new GameObject().transform;
-    private GameObject[] garbagePuyo = new GameObject[36];
+    private Transform effect;
+    private GameObject[] garbagePuyo = new GameObject[32];
     private Transform[] character = new Transform[2];
-    private GameObject gauge;
-
+    private Gauge gauge;
     public Render()
     {
-        GameObject gameObject = new GameObject();
-        SpriteRenderer spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = Resources.Load<Sprite>("Circle");
-        spriteRenderer.sortingOrder = 1;
-        for (int i = 0; i < 4; i++)
         {
-            Main.Instantiate(gameObject).transform.SetParent(this.transform);
+            this.puyo = new GameObject();
+            this.puyo.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Circle");
+            this.puyo.GetComponent<SpriteRenderer>().sortingOrder = 2;
+            GameObject gameObject = new GameObject();
+            gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Puyo");
+            gameObject.GetComponent<SpriteRenderer>().sortingOrder = 3;
+            gameObject.transform.SetParent(this.puyo.transform);
+            this.puyo.transform.localPosition = new Vector3(255, 255, 255);
         }
-        Main.Destroy(gameObject);
-        this.transform.position = new Vector2(256, 256);
-        this.transform.localScale = new Vector3(0.8f, 0.8f, 1);
-
-        this.camera = new GameObject("").AddComponent<Camera>();
-        this.camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.35f);
-        this.camera.clearFlags = CameraClearFlags.SolidColor;
-        this.camera.orthographic = true;
-        this.camera.orthographicSize = 8;
-        this.camera.transform.position = new Vector3(8.5f, 7, -1);
-
-        SpriteRenderer s = new GameObject("").AddComponent<SpriteRenderer>();
-        s.color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
-        s.sprite = Resources.Load<Sprite>("board");
-        s.transform.position = new Vector3(4, 7, 0);
-
-
-        this.combo = new GameObject("").AddComponent<TextMeshPro>();
-        this.combo.fontSize = 16;
-        this.combo.transform.position = new Vector3(4, 7, 0);
-        this.combo.alignment = TextAlignmentOptions.Center;
-        this.combo.sortingOrder = 256;
-
-        SpriteRenderer s_ = new GameObject("").AddComponent<SpriteRenderer>();
-        s_.color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
-        s_.sprite = Resources.Load<Sprite>("next");
-        s_.transform.position = new Vector3(8.5f, 10, 0);
-        this.nextColor[0] = Main.Instantiate(this.puyo, new Vector2(8.5f, 11f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[1] = Main.Instantiate(this.puyo, new Vector2(8.5f, 12f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[2] = Main.Instantiate(this.puyo, new Vector2(8.5f, 8f), Quaternion.identity).GetComponent<SpriteRenderer>();
-        this.nextColor[3] = Main.Instantiate(this.puyo, new Vector2(8.5f, 9f), Quaternion.identity).GetComponent<SpriteRenderer>();
-
-        for (int y = 0; y < 6; y++)
         {
-            for (int x = 0; x < 6; x++)
+            this.camera = new GameObject().AddComponent<Camera>();
+            this.camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.35f);
+            this.camera.clearFlags = CameraClearFlags.SolidColor;
+            this.camera.orthographic = true;
+            this.camera.orthographicSize = 7;
+            this.camera.transform.position = new Vector3(7, 7, -1);
+        }
+        {
+            SpriteRenderer s = new GameObject().AddComponent<SpriteRenderer>();
+            s.color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+            s.sprite = Resources.Load<Sprite>("board");
+            s.sortingOrder = 1;
+            s.transform.position = new Vector3(4, 7, 0);
+        }
+        {
+            SpriteRenderer s = new GameObject().AddComponent<SpriteRenderer>();
+            s.color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+            s.sprite = Resources.Load<Sprite>("next");
+            s.sortingOrder = 1;
+            s.transform.position = new Vector3(8.5f, 10, 0);
+            this.nextColor[0] = Main.Instantiate(this.puyo, new Vector2(8.5f, 11f), Quaternion.identity).GetComponent<SpriteRenderer>();
+            this.nextColor[1] = Main.Instantiate(this.puyo, new Vector2(8.5f, 12f), Quaternion.identity).GetComponent<SpriteRenderer>();
+            this.nextColor[2] = Main.Instantiate(this.puyo, new Vector2(8.5f, 8f), Quaternion.identity).GetComponent<SpriteRenderer>();
+            this.nextColor[3] = Main.Instantiate(this.puyo, new Vector2(8.5f, 9f), Quaternion.identity).GetComponent<SpriteRenderer>();
+        }
+        {
+            this.effect = new GameObject().transform;
+            for (int i = 0; i < 4; i++)
             {
-                this.garbagePuyo[x + y * 6] = Main.Instantiate(this.puyo, new Vector2(x + 1.5f, 14.5f + y), Quaternion.identity);
-                this.garbagePuyo[x + y * 6].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+                new GameObject().transform.SetParent(this.effect);
+                SpriteRenderer spriteRenderer = this.effect.GetChild(i).AddComponent<SpriteRenderer>();
+                spriteRenderer.sprite = Resources.Load<Sprite>("Circle");
+                spriteRenderer.sortingOrder = 2;
             }
-
+            this.effect.transform.localPosition = new Vector3(255, 255, 255);
         }
-
-        this.gauge = new GameObject();
-        new GameObject().transform.SetParent(this.gauge.transform);
-        new GameObject().transform.SetParent(this.gauge.transform);
-        this.gauge.transform.GetChild(0).AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Square");
-        this.gauge.transform.GetChild(0).GetComponent<SpriteRenderer>().color = UnityEngine.Color.green;
-        this.gauge.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = 1;
-        this.gauge.transform.GetChild(1).AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Square");
-        this.gauge.transform.GetChild(1).GetComponent<SpriteRenderer>().color = UnityEngine.Color.black;
-        this.gauge.transform.GetChild(1).GetComponent<SpriteRenderer>().sortingOrder = 1;
-        this.gauge.transform.localPosition = new Vector2(13.25f, 12.75f);
-        this.gauge.transform.localScale = new Vector2(5.5f, 0.25f);
-
-        this.character[0] = new GameObject("").transform;
-        this.character[0].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ringo");
-        this.character[0].localScale = new Vector3(5.5f, 5.5f, 0);
-        this.character[0].position = new Vector3(13.25f, 3.75f, 0);
-
-        this.character[1] = new GameObject("").transform;
-        this.character[1].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("maguro");
-        this.character[1].localScale = new Vector3(5.5f, 5.5f, 0);
-        this.character[1].position = new Vector3(13.25f, 10.25f, 0);
+        {
+            this.combo = new GameObject().AddComponent<TextMeshPro>();
+            this.combo.fontSize = 14;
+            this.combo.color = UnityEngine.Color.HSVToRGB(1 / 6f, 1, 1);
+            this.combo.transform.position = new Vector3(10.25f, 3.75f, 0);
+            this.combo.alignment = TextAlignmentOptions.Center;
+            this.combo.sortingOrder = 4;
+        }
+        {
+            GameObject gameObject = new GameObject();
+            for (int y = 0; y < 8; y++)
+            {
+                for (int x = 0; x < 4; x++)
+                {
+                    this.garbagePuyo[x + y * 4] = Main.Instantiate(this.puyo, new Vector2(x + 14, 1.5f + y), Quaternion.identity);
+                    this.garbagePuyo[x + y * 4].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+                    this.garbagePuyo[x + y * 4].transform.SetParent(gameObject.transform);
+                }
+            }
+            gameObject.transform.localScale = new Vector3(0.6875f, 0.6875f, 1);
+            gameObject.transform.localPosition = new Vector3(4, 0.325f, 0);
+        }
+        {
+            this.gauge = new Gauge(new Vector2(13.25f, 7.375f), new Vector2(5.5f, 0.25f));
+        }
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                GameObject gameObject = new GameObject();
+                this.character[i] = new GameObject().transform;
+                this.character[i].SetParent(gameObject.transform);
+                this.character[i].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ringo");
+                this.character[i].gameObject.GetComponent<SpriteRenderer>().sortingOrder = 1;
+                gameObject.transform.localScale = new Vector3(5.5f, 5.5f, 0);
+                gameObject.transform.position = new Vector3(10.25f + 3 * i, 3.75f + 6.5f * i, 0);
+            }
+        }
 
         this.Start();
     }
@@ -99,7 +112,7 @@ public class Render
             Main.Destroy(t.gameObject);
         }
         this.dictionary.Clear();
-
+        this.combo.text = "";
     }
     public void Puyo(List<Puyo> list)
     {
@@ -123,7 +136,7 @@ public class Render
             }
             else
             {
-                float f = 1f - (float)l.freeze.i / l.freeze.max;
+                float f = 1f - (float)l.freeze.i / l.freeze.maximum;
                 this.dictionary[l].position = l.position + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
                 this.dictionary[l].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
             }
@@ -133,7 +146,7 @@ public class Render
         {
             Main.Destroy(this.dictionary[l].gameObject);
             this.dictionary.Remove(l);
-            new Effect(this.transform, l.position + new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.25f, 0.25f)), l.color);
+            new Effect(this.effect, l.position + new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.25f, 0.25f)), l.color);
         }
 
     }
@@ -152,9 +165,9 @@ public class Render
         this.nextColor[3].color = UnityEngine.Color.HSVToRGB(array[3] / 5f, 0.5f, 1.0f);
     }
 
-    public void Bot(int i)
+    public void Bot(Bot bot)
     {
-        Gauge.Set(this.gauge.transform.GetChild(0).transform, i / 16f);
+        this.gauge.Set(bot.health);
     }
 
     public void GarbagePuyo(Offset offset)
@@ -166,24 +179,22 @@ public class Render
         }
     }
 
-    public void Attack(Combo combo, Bot bot)
+    public void Character(Combo combo, Bot bot)
     {
         if (combo.update)
         {
-            new _Attack(this.character[0], false);
+            new Attack(this.character[0], 0.5f);
         }
         if (bot.combo.update)
         {
-            new _Attack(this.character[1], true);
+            new Attack(this.character[1], -0.5f);
         }
-
     }
-
 
     private class Effect : CustomGameObject
     {
         private Transform transform;
-        public Effect(Transform transform, Vector2 position, int color) : base(30)
+        public Effect(Transform transform, Vector2 position, int color) : base(Render.EFFECT)
         {
             this.transform = Main.Instantiate(transform, position, Quaternion.identity);
             for (int i = 0; i < 4; i++)
@@ -206,39 +217,61 @@ public class Render
         {
             Main.Destroy(this.transform.gameObject);
         }
+        public override void Clear()
+        {
+            base.Clear();
+            this.End();
+        }
     }
 
-    private class _Attack : CustomGameObject
+    private class Attack : CustomGameObject
     {
         Transform transform;
-        Vector2 position;
-        bool bot;
-        public _Attack(Transform transform, bool bot) : base(30)
+        float f;
+        public Attack(Transform transform, float f) : base(Render.EFFECT)
         {
             this.transform = transform;
-            this.position = this.transform.position;
-            this.bot = bot;
-
+            this.f = f;
         }
         public override void Update()
         {
-            float f = (30 - base.i) / 29f;
-            if (!this.bot)
-                this.transform.localPosition = this.position + new Vector2(0, Mathf.Sin(Mathf.PI * f)) * 3f;
-            else
-                this.transform.localPosition = this.position - new Vector2(0, Mathf.Sin(Mathf.PI * f)) * 3f;
+            float f = (Render.EFFECT - base.i) / (float)(Render.EFFECT - 1);
+            this.transform.localPosition = new Vector3(0, Mathf.Sin(Mathf.PI * f), 0) * this.f;
             base.Update();
+        }
+        public override void End()
+        {
+            this.transform.localPosition = Vector2.zero;
+        }
+        public override void Clear()
+        {
+            base.Clear();
+            this.transform.localPosition = Vector2.zero;
         }
     }
 
     private class Gauge
     {
-        public static void Set(Transform transform, float f)
+        Transform transform;
+        public Gauge(Vector2 position, Vector2 scale)
         {
-            transform.localScale = new Vector2(f, 1);
-            transform.localPosition = new Vector3(-(1 - transform.localScale.x) * 0.5f, 0, 0);
+            GameObject gameObject = new GameObject();
+            new GameObject().transform.SetParent(gameObject.transform);
+            new GameObject().transform.SetParent(gameObject.transform);
+            gameObject.transform.GetChild(0).AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Square");
+            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().color = UnityEngine.Color.green;
+            gameObject.transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = 3;
+            gameObject.transform.GetChild(1).AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Square");
+            gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().color = UnityEngine.Color.black;
+            gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().sortingOrder = 2;
+            this.transform = gameObject.transform.GetChild(0).transform;
+            gameObject.transform.localPosition = position;
+            gameObject.transform.localScale = scale;
+        }
+        public void Set(float f)
+        {
+            this.transform.localScale = new Vector2(f, 1);
+            this.transform.localPosition = new Vector3(-(1 - transform.localScale.x) * 0.5f, 0, 0);
         }
     }
-
-
 }
