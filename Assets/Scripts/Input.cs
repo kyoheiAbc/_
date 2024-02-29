@@ -49,7 +49,7 @@ class Input
 }
 class InputAndroid
 {
-    readonly private static float THRESHOLD = 1.25f;
+    readonly private static float THRESHOLD = 1.0f;
     private Camera camera;
     private Vector2 position;
     private bool down;
@@ -98,7 +98,7 @@ class InputAndroid
                     this.position += v;
                     return Vector2.left;
                 }
-                if (v.y >= InputAndroid.THRESHOLD * 2f)
+                if (v.y >= InputAndroid.THRESHOLD)
                 {
                     this.position += v;
                     return Vector2.up;

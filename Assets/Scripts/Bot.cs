@@ -4,9 +4,10 @@ public class Bot
 {
     private static readonly int COMBO = 90;
     public float health;
-
+    public Count energy = null;
     public Combo combo = new Combo();
     private Attack attack;
+    public int attackIteration;
     public Bot()
     {
         this.Start();
@@ -16,17 +17,24 @@ public class Bot
         this.health = 1;
         this.combo.Start();
         this.attack = null;
+        this.energy = null;
+        this.attackIteration = Random.Range(3, 8);
     }
     public void Update()
     {
         this.combo.Update();
+        if (this.energy != null) this.energy.Update();
 
         if (this.attack != null) return;
         if (this.combo.i != 0) return;
 
-        if (Random.Range(0, 16 * 60) == 0)
+        if (this.energy == null) this.energy = new Count(90 * this.attackIteration);
+        this.energy.Launch();
+        if (this.energy.Finish())
         {
-            this.attack = new Attack(this, Random.Range(3, 8));
+            this.attack = new Attack(this, this.attackIteration);
+            this.energy = null;
+            this.attackIteration = Random.Range(3, 8);
         }
     }
 
