@@ -38,12 +38,14 @@ public class Offset
         {
             if (bot.combo.i != 0) return;
             bot.health -= this.i / 16f;
+            Render.Character(0);
             this.i = 0;
         }
         else if (this.i < 0)
         {
             if (combo.i != 0) return;
             factory.NewGarbagePuyo(-i);
+            Render.Character(1);
             this.i = 0;
         }
     }

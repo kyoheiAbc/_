@@ -15,7 +15,7 @@ public class Render
     public Camera camera;
     private Transform effect;
     private GameObject[] garbagePuyo = new GameObject[33];
-    private Transform[] character = new Transform[2];
+    static private Transform[] character = new Transform[2];
     private Gauge[] gauge;
     public Render()
     {
@@ -95,11 +95,11 @@ public class Render
             for (int i = 0; i < 2; i++)
             {
                 GameObject gameObject = new GameObject();
-                this.character[i] = new GameObject().transform;
-                this.character[i].SetParent(gameObject.transform);
-                if (i == 0) this.character[i].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ringo");
-                if (i == 1) this.character[i].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("maguro");
-                this.character[i].gameObject.GetComponent<SpriteRenderer>().sortingOrder = 1;
+                Render.character[i] = new GameObject().transform;
+                Render.character[i].SetParent(gameObject.transform);
+                if (i == 0) Render.character[i].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ringo");
+                if (i == 1) Render.character[i].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("maguro");
+                Render.character[i].gameObject.GetComponent<SpriteRenderer>().sortingOrder = 1;
                 gameObject.transform.localScale = new Vector3(5.5f, 5.5f, 0);
                 gameObject.transform.position = new Vector3(10f + 0.75f * i, 3.75f + 6.5f * i, 0);
             }
@@ -187,12 +187,16 @@ public class Render
     {
         if (combo.update)
         {
-            new Attack(this.character[0], 0.5f);
+            if (combo.i > 0) new Attack(Render.character[0], 0.3f);
         }
         if (bot.combo.update)
         {
-            new Attack(this.character[1], -0.5f);
+            if (bot.combo.i > 0) new Attack(Render.character[1], -0.3f);
         }
+    }
+    static public void Character(int i)
+    {
+        new Attack(Render.character[i], 0.6f * (1 - 2 * i));
     }
 
     private class Effect : CustomGameObject
