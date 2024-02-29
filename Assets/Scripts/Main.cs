@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 public class Main : MonoBehaviour
 {
+    public static int[] character = new int[2];
     private Factory factory;
     private Render render;
-    // private InputAndroid input;
-    private Input input;
+    private InputAndroid input;
+    // private Input input;
 
     private Combo combo;
     private Bot bot;
@@ -19,8 +21,8 @@ public class Main : MonoBehaviour
 
         this.factory = new Factory();
         this.render = new Render();
-        // this.input = new InputAndroid(this.render.camera);
-        this.input = new Input(this.render.camera);
+        this.input = new InputAndroid(this.render.camera);
+        // this.input = new Input(this.render.camera);
 
         this.combo = new Combo();
         this.bot = new Bot();
@@ -52,6 +54,7 @@ public class Main : MonoBehaviour
                         Collision.Get(this.factory.puyoPuyo.array[1], this.factory.list) != null)
                     {
                         this.Start();
+                        SceneManager.LoadScene("Character");
                         return;
                     }
                 }
@@ -95,7 +98,11 @@ public class Main : MonoBehaviour
 
         {
             this.bot.Update();
-            if (this.bot.health <= 0) this.Start();
+            if (this.bot.health <= 0)
+            {
+                this.Start();
+                SceneManager.LoadScene("Character");
+            }
         }
 
         {

@@ -7,7 +7,20 @@ using UnityEngine.TextCore.Text;
 public class Render
 {
     static readonly int EFFECT = 30;
-
+    public static Sprite[] sprite = new Sprite[] {
+        Resources.Load<Sprite>("chara-img-aruru"),
+        Resources.Load<Sprite>("chara-img-witch"),
+        Resources.Load<Sprite>("chara-img-schezo"),
+        Resources.Load<Sprite>("chara-img-satan"),
+        Resources.Load<Sprite>("chara-img-amity"),
+        Resources.Load<Sprite>("chara-img-sig"),
+        Resources.Load<Sprite>("chara-img-rafina"),
+        Resources.Load<Sprite>("chara-img-lemres"),
+        Resources.Load<Sprite>("chara-img-ringo"),
+        Resources.Load<Sprite>("chara-img-maguro"),
+        Resources.Load<Sprite>("chara-img-risukuma"),
+        Resources.Load<Sprite>("chara-img-ecolo"),
+    };
     private GameObject puyo;
     private SpriteRenderer[] nextColor = new SpriteRenderer[4];
     private TextMeshPro combo;
@@ -97,8 +110,12 @@ public class Render
                 GameObject gameObject = new GameObject();
                 Render.character[i] = new GameObject().transform;
                 Render.character[i].SetParent(gameObject.transform);
-                if (i == 0) Render.character[i].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("ringo");
-                if (i == 1) Render.character[i].gameObject.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("maguro");
+                if (i == 0) Render.character[i].gameObject.AddComponent<SpriteRenderer>().sprite = Render.sprite[Main.character[0]];
+                if (i == 1) Render.character[i].gameObject.AddComponent<SpriteRenderer>().sprite = Render.sprite[Main.character[1]];
+                new GameObject().transform.SetParent(gameObject.transform);
+                gameObject.transform.GetChild(1).AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Square");
+                if (i == 0) gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(2 / 3f, 0.3f, 1);
+                if (i == 1) gameObject.transform.GetChild(1).GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(0, 0.3f, 1);
                 Render.character[i].gameObject.GetComponent<SpriteRenderer>().sortingOrder = 1;
                 gameObject.transform.localScale = new Vector3(5.5f, 5.5f, 0);
                 gameObject.transform.position = new Vector3(10f + 0.75f * i, 3.75f + 6.5f * i, 0);
