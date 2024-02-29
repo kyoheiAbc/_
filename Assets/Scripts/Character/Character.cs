@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public class Character : MonoBehaviour
 {
-    private Input input;
+    private InputAndroid input;
     private int[,] array = new int[2, 6];
     private Vector2[] v = new Vector2[2] { Vector2.zero, new Vector2(255, 255) };
     private CharacterRender render;
@@ -35,7 +35,7 @@ public class Character : MonoBehaviour
         gameObject.transform.localScale = new Vector2(1.25f, 1.25f);
         gameObject.transform.localPosition = new Vector3(3.125f, -0.625f, 0);
 
-        this.input = new Input(camera);
+        this.input = new InputAndroid(camera);
 
         for (int y = 0; y < 2; y++)
         {

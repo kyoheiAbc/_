@@ -18,7 +18,7 @@ public class Bot
         this.combo.Start();
         this.attack = null;
         this.energy = null;
-        this.attackIteration = Random.Range(3, 8);
+        this.attackIteration = Static.Shuffle(new int[] { 3, 3, 3, 5, 5, 7 })[0];
     }
     public void Update()
     {
@@ -34,7 +34,7 @@ public class Bot
         {
             this.attack = new Attack(this, this.attackIteration);
             this.energy = null;
-            this.attackIteration = Random.Range(3, 8);
+            this.attackIteration = Static.Shuffle(new int[] { 3, 3, 3, 5, 5, 7 })[0];
         }
     }
 

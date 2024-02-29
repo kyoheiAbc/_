@@ -30,6 +30,7 @@ public class Main : MonoBehaviour
     }
     void Start()
     {
+        PuyoPuyo.DOWN = Vector2.down * 0.02f;
         this.factory.Start();
         this.render.Start();
         this.input.Start();
@@ -43,6 +44,13 @@ public class Main : MonoBehaviour
     }
     void Update()
     {
+        if (Time.frameCount % 180 == 0)
+        {
+            Debug.Log(Time.frameCount);
+            PuyoPuyo.DOWN *= 1.01f;
+            if (PuyoPuyo.DOWN.y < -1) PuyoPuyo.DOWN = Vector2.down;
+        }
+
         {
             if (this.factory.puyoPuyo == null)
             {

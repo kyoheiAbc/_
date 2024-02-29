@@ -4,7 +4,7 @@ using UnityEngine;
 public class PuyoPuyo
 {
     public static readonly int DISCONNECT = 60;
-    private static readonly Vector2 DOWN = Vector2.down * 0.02f;
+    public static Vector2 DOWN = Vector2.down * 0.02f;
     public Puyo[] array;
     public Count disconnect = new Count(PuyoPuyo.DISCONNECT);
     public MovePuyoPuyo movePuyoPuyo;
