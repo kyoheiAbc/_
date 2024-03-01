@@ -6,6 +6,7 @@ public class Fire
 {
     Board board;
     public int i;
+    public static int NUMBER = 4;
 
     public Fire(Board b)
     {
@@ -34,7 +35,7 @@ public class Fire
                 if (this.board.Get(new Vector2(x, y)) == null) continue;
                 if (this.board.Get(new Vector2(x, y)).fire.i == 1) continue;
 
-                if (this.Count(this.board.Get(new Vector2(x, y))) >= 4)
+                if (this.Count(this.board.Get(new Vector2(x, y))) >= Fire.NUMBER)
                 {
                     i++;
                     bool[,] a = new bool[16, 8];
