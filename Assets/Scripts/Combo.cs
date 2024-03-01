@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Combo
 {
-    static private readonly int END = 60;
     public int i = 0;
     private int j = 0;
     public Count end;
@@ -11,14 +10,14 @@ public class Combo
     {
         this.i = 0;
         this.j = this.i;
-        this.end = new Count(Combo.END);
+        this.end = new Count(Static.COMBO);
         this.update = false;
     }
     public void Add(int i)
     {
         if (i == 0) return;
         new _combo(this, i);
-        this.end = new Count(Combo.END);
+        this.end = new Count(Static.COMBO);
     }
     public void Update()
     {

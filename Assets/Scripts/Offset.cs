@@ -26,7 +26,7 @@ public class Offset
 
         if (bot.combo.update)
         {
-            this.temporary[1] += bot.combo.i;
+            this.temporary[1] = (int)(this.temporary[1] + bot.combo.i * Static.BOT_ATTACK / 100f);
         }
         if (bot.combo.end.Finish())
         {
@@ -37,7 +37,7 @@ public class Offset
         if (this.i > 0)
         {
             if (bot.combo.i != 0) return;
-            bot.health -= this.i / 16f;
+            bot.health -= this.i;
             Render.Character(0);
             this.i = 0;
         }

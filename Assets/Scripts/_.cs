@@ -2,6 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Static
 {
+    public static int THRESHOLD = 3;
+    public static int COLOR = 4;
+    public static int FIRE = 4;
+    public static int DOWN = 3;
+    public static int COMBO = 90;
+    public static int BOT_HEALTH = 64;
+    public static int BOT_ATTACK = 100;
+    public static int BOT_SPEED = 3 * 60;
     public static int[] Shuffle(int[] array)
     {
         int[] a = (int[])array.Clone();

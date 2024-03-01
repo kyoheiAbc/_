@@ -3,7 +3,8 @@ using UnityEngine;
 public class Bot
 {
     private static readonly int COMBO = 90;
-    public float health;
+    public int health;
+
     public Count energy = null;
     public Combo combo = new Combo();
     private Attack attack;
@@ -14,7 +15,7 @@ public class Bot
     }
     public void Start()
     {
-        this.health = 1;
+        this.health = Static.BOT_HEALTH;
         this.combo.Start();
         this.attack = null;
         this.energy = null;
@@ -28,7 +29,7 @@ public class Bot
         if (this.attack != null) return;
         if (this.combo.i != 0) return;
 
-        if (this.energy == null) this.energy = new Count(90 * this.attackIteration);
+        if (this.energy == null) this.energy = new Count(Static.BOT_SPEED * this.attackIteration);
         this.energy.Launch();
         if (this.energy.Finish())
         {

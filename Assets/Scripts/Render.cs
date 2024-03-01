@@ -184,9 +184,9 @@ public class Render
         this.nextColor[3].color = UnityEngine.Color.HSVToRGB(array[3] / 5f, 0.5f, 1.0f);
     }
 
-    public void Bot(Bot bot)
+    public void BotGauge(Bot bot)
     {
-        this.gauge[0].Set(bot.health);
+        this.gauge[0].Set(bot.health / (float)Static.BOT_HEALTH);
         if (bot.energy == null) this.gauge[1].Set(0);
         else this.gauge[1].Set(bot.energy.i / (float)bot.energy.maximum);
     }

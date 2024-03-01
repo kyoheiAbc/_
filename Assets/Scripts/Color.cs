@@ -2,17 +2,16 @@ using System.Diagnostics;
 
 public class Color
 {
-    public static int NUMBER = 4;
     private int[] array;
     private int i;
     public Color()
     {
-        this.array = new int[Color.NUMBER * 4];
+        this.array = new int[Static.COLOR * 4];
         int[] a = Static.Shuffle(new int[] { 0, 1, 2, 3, 4 });
 
         for (int i = 0; i < this.array.Length; i++)
         {
-            this.array[i] = a[i % Color.NUMBER];
+            this.array[i] = a[i % Static.COLOR];
         }
         this.array = Static.Shuffle(this.array);
         this.i = 0;

@@ -8,6 +8,8 @@ using UnityEngine.UIElements;
 public class Character : MonoBehaviour
 {
     private InputAndroid input;
+    // private Input input;
+
     private int[,] array = new int[2, 6];
     private Vector2[] v = new Vector2[2] { Vector2.zero, new Vector2(255, 255) };
     private CharacterRender render;
@@ -16,12 +18,13 @@ public class Character : MonoBehaviour
     {
         Application.targetFrameRate = 60;
 
+
         Camera camera = new GameObject().AddComponent<Camera>();
         camera.backgroundColor = UnityEngine.Color.HSVToRGB(1 / 6f, 0.4f, 0.8f);
         camera.clearFlags = CameraClearFlags.SolidColor;
         camera.orthographic = true;
-        camera.orthographicSize = 1.75f;
-        camera.transform.position = new Vector3(6.25f / 2f, -0.5f, -1);
+        camera.orthographicSize = 1.5f;
+        camera.transform.position = new Vector3(2.5f, -0.5f, -1f);
 
         GameObject gameObject = new GameObject();
         gameObject.transform.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Character");
@@ -32,10 +35,12 @@ public class Character : MonoBehaviour
         color.a = 0.4f;
         gameObject.transform.GetComponent<SpriteRenderer>().color = color;
 
-        gameObject.transform.localScale = new Vector2(1.25f, 1.25f);
-        gameObject.transform.localPosition = new Vector3(3.125f, -0.625f, 0);
+        gameObject.transform.localScale = new Vector2(1f, 1f);
+        gameObject.transform.localPosition = new Vector3(2.5f, -0.5f, 0);
 
-        this.input = new InputAndroid(camera);
+        this.input = new InputAndroid();
+        // this.input = new Input();
+
 
         for (int y = 0; y < 2; y++)
         {
@@ -64,7 +69,7 @@ public class Character : MonoBehaviour
             {
                 Main.character[0] = this.array[-(int)this.v[0].y, (int)this.v[0].x];
                 Main.character[1] = this.array[-(int)this.v[1].y, (int)this.v[1].x];
-                SceneManager.LoadScene("Main");
+                SceneManager.LoadScene("Configuration");
             }
         }
         else
@@ -108,13 +113,13 @@ public class Character : MonoBehaviour
             this.transform[0] = new GameObject().transform;
             this.transform[0].AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Cursor");
             this.transform[0].GetComponent<SpriteRenderer>().sortingOrder = -1;
-            this.transform[0].localScale = new Vector2(1.2f, 1.2f);
+            this.transform[0].localScale = new Vector2(1f, 1f);
             this.transform[0].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(2 / 3f, 0.5f, 1);
 
             this.transform[1] = new GameObject().transform;
             this.transform[1].AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Cursor");
             this.transform[1].GetComponent<SpriteRenderer>().sortingOrder = -1;
-            this.transform[1].localScale = new Vector2(1.2f, 1.2f);
+            this.transform[1].localScale = new Vector2(1f, 1f);
             this.transform[1].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(0, 0.5f, 1);
 
             for (int y = 0; y < 2; y++)
@@ -123,14 +128,15 @@ public class Character : MonoBehaviour
                 {
                     Transform transform = new GameObject().transform;
                     transform.AddComponent<SpriteRenderer>().sprite = Render.sprite[x + y * 6];
-                    transform.localPosition = new Vector2(x * 1.25f, -y * 1.25f);
+                    transform.localPosition = new Vector2(x, -y);
+                    transform.localScale = new Vector2(0.9f, 0.9f);
                 }
             }
         }
         public void Update(Vector2[] v)
         {
-            this.transform[0].localPosition = v[0] * 1.25f;
-            this.transform[1].localPosition = v[1] * 1.25f;
+            this.transform[0].localPosition = v[0];
+            this.transform[1].localPosition = v[1];
         }
 
     }
