@@ -9,13 +9,13 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
+    path: Assets/Scenes/Configuration.unity
+    guid: a2919821c50e24ac293614a3c9107d30
+  - enabled: 1
     path: Assets/Scenes/Character.unity
     guid: 59532997a1f87493c8df2e493ad06e66
   - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: 7a21287e3e0f84d5c8115a5bd139e8b1
-  - enabled: 1
-    path: Assets/Scenes/Configuration.unity
-    guid: a2919821c50e24ac293614a3c9107d30
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 276b2e8ee08dc44e8a66195881b47ccf, type: 2}

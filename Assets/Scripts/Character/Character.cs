@@ -7,8 +7,8 @@ using UnityEngine.UIElements;
 
 public class Character : MonoBehaviour
 {
-    // private InputAndroid input;
-    private Input input;
+    private InputAndroid input;
+    // private Input input;
 
     private int[,] array = new int[2, 6];
     private Vector2[] v = new Vector2[2] { Vector2.zero, new Vector2(255, 255) };
@@ -38,8 +38,8 @@ public class Character : MonoBehaviour
         gameObject.transform.localScale = new Vector2(1f, 1f);
         gameObject.transform.localPosition = new Vector3(2.5f, -0.5f, 0);
 
-        // this.input = new InputAndroid();
-        this.input = new Input();
+        this.input = new InputAndroid();
+        // this.input = new Input();
 
 
         for (int y = 0; y < 2; y++)

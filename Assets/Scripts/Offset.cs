@@ -26,7 +26,7 @@ public class Offset
 
         if (bot.combo.update)
         {
-            this.temporary[1] = (int)(this.temporary[1] + bot.combo.i * Static.BOT_ATTACK / 100f);
+            this.temporary[1] += bot.combo.i;
         }
         if (bot.combo.end.Finish())
         {
@@ -38,13 +38,15 @@ public class Offset
         {
             if (bot.combo.i != 0) return;
             bot.health -= this.i;
+            if (bot.health < 0) bot.health = 0;
             Render.Character(0);
             this.i = 0;
         }
         else if (this.i < 0)
         {
             if (combo.i != 0) return;
-            factory.NewGarbagePuyo(-i);
+
+            factory.NewGarbagePuyo((-i) * (int)(Static.BOT_ATTACK / 100f));
             Render.Character(1);
             this.i = 0;
         }
