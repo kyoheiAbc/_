@@ -261,17 +261,17 @@ public class Render
         public override void Update()
         {
             float f = (Render.EFFECT - base.i) / (float)(Render.EFFECT - 1);
-            this.transform.localPosition = new Vector3(0, Mathf.Sin(Mathf.PI * f), 0) * this.f;
+            if (this.transform != null) this.transform.localPosition = new Vector3(0, Mathf.Sin(Mathf.PI * f), 0) * this.f;
             base.Update();
         }
         public override void End()
         {
-            this.transform.localPosition = Vector2.zero;
+            if (this.transform != null) this.transform.localPosition = Vector2.zero;
         }
         public override void Clear()
         {
             base.Clear();
-            this.transform.localPosition = Vector2.zero;
+            if (this.transform != null) this.transform.localPosition = Vector2.zero;
         }
     }
 

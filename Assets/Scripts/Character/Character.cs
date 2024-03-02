@@ -69,7 +69,7 @@ public class Character : MonoBehaviour
             {
                 Main.character[0] = this.array[-(int)this.v[0].y, (int)this.v[0].x];
                 Main.character[1] = this.array[-(int)this.v[1].y, (int)this.v[1].x];
-                SceneManager.LoadScene("Configuration");
+                SceneManager.LoadScene("Main");
             }
         }
         else

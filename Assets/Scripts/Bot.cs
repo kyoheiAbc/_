@@ -21,17 +21,22 @@ public class Bot
         this.attack = null;
         this.energy = null;
 
-        this.array = new int[Static.BOT_COMBO_3 + Static.BOT_COMBO_5 + Static.BOT_COMBO_7];
-        Debug.Log("---" + this.array.Length);
-
-        for (int i = 0; i < this.array.Length; i++)
+        if (Static.BOT_COMBO_3 + Static.BOT_COMBO_5 + Static.BOT_COMBO_7 == 0)
         {
-            if (i < Static.BOT_COMBO_3 + Static.BOT_COMBO_5 + Static.BOT_COMBO_7) this.array[i] = 7;
-            if (i < Static.BOT_COMBO_3 + Static.BOT_COMBO_5) this.array[i] = 5;
-            if (i < Static.BOT_COMBO_3) this.array[i] = 3;
-            Debug.Log(this.array[i]);
+            this.array = new int[] { 3 };
         }
-        Debug.Log("---");
+        else
+        {
+
+            this.array = new int[Static.BOT_COMBO_3 + Static.BOT_COMBO_5 + Static.BOT_COMBO_7];
+
+            for (int i = 0; i < this.array.Length; i++)
+            {
+                if (i < Static.BOT_COMBO_3 + Static.BOT_COMBO_5 + Static.BOT_COMBO_7) this.array[i] = 7;
+                if (i < Static.BOT_COMBO_3 + Static.BOT_COMBO_5) this.array[i] = 5;
+                if (i < Static.BOT_COMBO_3) this.array[i] = 3;
+            }
+        }
 
         this.attackIteration = Static.Shuffle(this.array)[0];
     }

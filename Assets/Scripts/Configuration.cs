@@ -103,7 +103,7 @@ public class ConfigurationMonoBehaviour : MonoBehaviour
                 if (position.y > Screen.height - 96)
                 {
                     Static.Json.Save();
-                    SceneManager.LoadScene("Main");
+                    SceneManager.LoadScene("Character");
                 }
             }
         }

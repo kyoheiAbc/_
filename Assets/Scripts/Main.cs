@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class Main : MonoBehaviour
 {
     public static int[] character = new int[2];
+    private int sleep = 0;
     private Factory factory;
     private Render render;
     // private InputAndroid input;
@@ -29,6 +30,7 @@ public class Main : MonoBehaviour
     }
     void Start()
     {
+        this.sleep = 0;
         PuyoPuyo.DOWN = Vector2.down * 0.02f;
         this.factory.Start();
         this.render.Start();
@@ -43,6 +45,16 @@ public class Main : MonoBehaviour
     }
     void Update()
     {
+        if (this.sleep > 0)
+        {
+            this.sleep--;
+            if (this.sleep == 0)
+            {
+                SceneManager.LoadScene("Configuration");
+            }
+            return;
+        }
+
         if (Time.frameCount % 180 == 0)
         {
             PuyoPuyo.DOWN = PuyoPuyo.DOWN * (1f + Static.DOWN / 100f);
@@ -59,8 +71,7 @@ public class Main : MonoBehaviour
                     if (Collision.Get(this.factory.puyoPuyo.array[0], this.factory.list) != null ||
                         Collision.Get(this.factory.puyoPuyo.array[1], this.factory.list) != null)
                     {
-                        this.Start();
-                        SceneManager.LoadScene("Character");
+                        this.sleep = 180;
                         return;
                     }
                 }
@@ -106,8 +117,8 @@ public class Main : MonoBehaviour
             this.bot.Update();
             if (this.bot.health <= 0)
             {
-                this.Start();
-                SceneManager.LoadScene("Character");
+                this.sleep = 180;
+                return;
             }
         }
 
