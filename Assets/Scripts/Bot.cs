@@ -9,6 +9,7 @@ public class Bot
     public Combo combo = new Combo();
     private Attack attack;
     public int attackIteration;
+    private int[] array;
     public Bot()
     {
         this.Start();
@@ -19,7 +20,20 @@ public class Bot
         this.combo.Start();
         this.attack = null;
         this.energy = null;
-        this.attackIteration = Static.Shuffle(new int[] { 3, 3, 3, 5, 5, 7 })[0];
+
+        this.array = new int[Static.BOT_COMBO_3 + Static.BOT_COMBO_5 + Static.BOT_COMBO_7];
+        Debug.Log("---" + this.array.Length);
+
+        for (int i = 0; i < this.array.Length; i++)
+        {
+            if (i < Static.BOT_COMBO_3 + Static.BOT_COMBO_5 + Static.BOT_COMBO_7) this.array[i] = 7;
+            if (i < Static.BOT_COMBO_3 + Static.BOT_COMBO_5) this.array[i] = 5;
+            if (i < Static.BOT_COMBO_3) this.array[i] = 3;
+            Debug.Log(this.array[i]);
+        }
+        Debug.Log("---");
+
+        this.attackIteration = Static.Shuffle(this.array)[0];
     }
     public void Update()
     {
@@ -35,7 +49,7 @@ public class Bot
         {
             this.attack = new Attack(this, this.attackIteration);
             this.energy = null;
-            this.attackIteration = Static.Shuffle(new int[] { 3, 3, 3, 5, 5, 7 })[0];
+            this.attackIteration = Static.Shuffle(this.array)[0];
         }
     }
 
