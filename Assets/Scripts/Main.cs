@@ -7,8 +7,7 @@ public class Main : MonoBehaviour
     private int sleep = 0;
     private Factory factory;
     private Render render;
-    private InputAndroid input;
-    // private Input input;
+    private Input input;
     private Combo combo;
     private Bot bot;
     private Offset offset;
@@ -21,8 +20,7 @@ public class Main : MonoBehaviour
 
         this.factory = new Factory();
         this.render = new Render();
-        this.input = new InputAndroid();
-        // this.input = new Input();
+        this.input = new Input();
 
         this.combo = new Combo();
         this.bot = new Bot();
@@ -34,7 +32,6 @@ public class Main : MonoBehaviour
         PuyoPuyo.DOWN = Vector2.down * 0.02f;
         this.factory.Start();
         this.render.Start();
-        this.input.Start();
         this.combo.Start();
         this.bot.Start();
         this.offset.Start();
@@ -67,7 +64,6 @@ public class Main : MonoBehaviour
                 if (!Factory.garbagePuyoMove(this.factory.list))
                 {
                     this.factory.NewPuyoPuyo();
-                    this.input.Start();
                     if (Collision.Get(this.factory.puyoPuyo.array[0], this.factory.list) != null ||
                         Collision.Get(this.factory.puyoPuyo.array[1], this.factory.list) != null)
                     {
