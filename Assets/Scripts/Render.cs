@@ -149,13 +149,13 @@ public class Render
                 if (l.color == 10) this.dictionary[l].GetComponent<SpriteRenderer>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
             }
 
-            if (l.fire.i > 0)
+            if (l.fire.GetProgress() > 0)
             {
                 this.dictionary[l].localScale = new Vector2(1, 1.5f);
             }
             else
             {
-                float f = 1f - (float)l.freeze.i / l.freeze.maximum;
+                float f = 1f - l.freeze.GetProgress();
                 this.dictionary[l].position = l.position + new Vector2(0, -0.25f * Mathf.Sin(Mathf.PI * f));
                 this.dictionary[l].localScale = new Vector2(1 + 0.25f * Mathf.Sin(Mathf.PI * f), 1);
             }
@@ -188,7 +188,7 @@ public class Render
     {
         this.gauge[0].Set(bot.health / (float)Static.BOT_HEALTH);
         if (bot.energy == null) this.gauge[1].Set(0);
-        else this.gauge[1].Set(bot.energy.i / (float)bot.energy.maximum);
+        else this.gauge[1].Set(bot.energy.GetProgress());
     }
 
     public void GarbagePuyo(Offset offset)

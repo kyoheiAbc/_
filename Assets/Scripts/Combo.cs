@@ -22,7 +22,7 @@ public class Combo
     public void Update()
     {
         this.end.Update();
-        if (this.end.Finish()) this.i = 0;
+        if (this.end.GetProgress() == 1) this.i = 0;
         this.update = this.i != this.j;
         this.j = this.i;
     }

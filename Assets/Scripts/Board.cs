@@ -12,7 +12,7 @@ public class Board
                 this.Set(list[i]);
                 continue;
             }
-            if (list[i].freeze.Finish())
+            if (list[i].freeze.GetProgress() == 1)
             {
                 if (this.Get(list[i].position + Vector2.down) != null) this.Set(list[i]);
             }

@@ -22,13 +22,13 @@ public class Puyo
         this.fire.Update();
         if (this.position.x == 0.5f || this.position.x == 7.5f || this.position.y == 0.5f || this.position.y == 15.5f)
         {
-            this.freeze.Launch();
+            this.freeze.Start();
             return;
         }
-        if (this.fire.Finish()) return;
+        if (this.fire.GetProgress() == 1) return;
         if (this.movePuyo.Execute(Puyo.DOWN, list) == Vector2.zero)
         {
-            this.freeze.Launch();
+            this.freeze.Start();
         }
         else
         {

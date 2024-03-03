@@ -126,26 +126,30 @@ public class CustomGameObject
 }
 public class Count
 {
-    public int i;
-    public readonly int maximum;
-    public Count(int i)
+    private int count, max;
+    public Count(int max)
     {
-        this.i = 0;
-        this.maximum = i;
+        count = 0;
+        this.max = max;
     }
     public void Update()
     {
-        if (0 < this.i && this.i < this.maximum) this.i++;
+        if (0 < count && count < max) count++;
     }
-    public void Launch()
+    public void Start()
     {
-        if (this.i == 0) this.i++;
+        if (count == 0) count++;
     }
-    public bool Finish()
+    public void Finish()
     {
-        return this.i == this.maximum;
+        count = max;
+    }
+    public float GetProgress()
+    {
+        return (float)count / max;
     }
 }
+
 public class Collision
 {
     static public Puyo Get(Puyo puyo, List<Puyo> list)

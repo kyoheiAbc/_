@@ -18,7 +18,7 @@ public class Offset
         {
             this.temporary[0] += combo.i;
         }
-        if (combo.end.Finish())
+        if (combo.end.GetProgress() == 1)
         {
             this.i += this.temporary[0];
             this.temporary[0] = 0;
@@ -28,7 +28,7 @@ public class Offset
         {
             this.temporary[1] += bot.combo.i;
         }
-        if (bot.combo.end.Finish())
+        if (bot.combo.end.GetProgress() == 1)
         {
             this.i -= this.temporary[1];
             this.temporary[1] = 0;

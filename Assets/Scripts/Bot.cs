@@ -49,8 +49,8 @@ public class Bot
         if (this.combo.i != 0) return;
 
         if (this.energy == null) this.energy = new Count(Static.BOT_SPEED * this.attackIteration);
-        this.energy.Launch();
-        if (this.energy.Finish())
+        this.energy.Start();
+        if (this.energy.GetProgress() == 1)
         {
             this.attack = new Attack(this, this.attackIteration);
             this.energy = null;
@@ -74,7 +74,7 @@ public class Bot
             if (this.repeat == 0)
             {
                 this.parent.attack = null;
-                this.parent.combo.end.Launch();
+                this.parent.combo.end.Start();
             }
             else
             {

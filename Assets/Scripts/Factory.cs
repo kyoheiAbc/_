@@ -36,7 +36,7 @@ public class Factory
             for (int i = this.list.Count - 1; i >= 0; i--)
             {
                 this.list[i].Update(this.list);
-                if (this.list[i].fire.Finish())
+                if (this.list[i].fire.GetProgress() == 1)
                 {
                     this.list.RemoveAt(i);
                 }
@@ -56,7 +56,7 @@ public class Factory
             {
                 b = true;
                 this.puyoPuyo.Update(this.list);
-                if (this.puyoPuyo.disconnect.Finish())
+                if (this.puyoPuyo.disconnect.GetProgress() == 1)
                 {
                     this.puyoPuyo = null;
                     if (a[0].position.y > a[1].position.y)
@@ -68,7 +68,7 @@ public class Factory
                 }
             }
             this.list[i].Update(this.list);
-            if (this.list[i].fire.Finish())
+            if (this.list[i].fire.GetProgress() == 1)
             {
                 this.list.RemoveAt(i);
             }
@@ -113,7 +113,7 @@ public class Factory
         foreach (Puyo l in list)
         {
             if (l.color != 10) continue;
-            if (!l.freeze.Finish()) return true;
+            if (l.freeze.GetProgress() != 1) return true;
         }
         return false;
     }

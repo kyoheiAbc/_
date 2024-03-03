@@ -82,7 +82,7 @@ public class Main : MonoBehaviour
                 else if (v == Vector2.up) this.factory.puyoPuyo.Drop(this.factory.list);
                 else this.factory.puyoPuyo.movePuyoPuyo.Execute(v, this.factory.list);
 
-                if (this.factory.puyoPuyo.disconnect.Finish()) this.factory.puyoPuyo = null;
+                if (this.factory.puyoPuyo.disconnect.GetProgress() == 1) this.factory.puyoPuyo = null;
             }
         }
 
@@ -104,7 +104,7 @@ public class Main : MonoBehaviour
             if (fire != null)
             {
                 this.combo.Add(fire.i);
-                if (fire.i == 0) this.combo.end.Launch();
+                if (fire.i == 0) this.combo.end.Start();
             }
             this.combo.Update();
         }

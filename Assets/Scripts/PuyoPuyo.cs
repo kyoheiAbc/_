@@ -25,7 +25,7 @@ public class PuyoPuyo
 
         if (this.movePuyoPuyo.Execute(PuyoPuyo.DOWN, list) == Vector2.zero)
         {
-            this.disconnect.Launch();
+            this.disconnect.Start();
         }
         else
         {
@@ -39,7 +39,7 @@ public class PuyoPuyo
         {
             if (Vector2.zero == this.movePuyoPuyo.Execute(Vector2.down, list))
             {
-                this.disconnect.i = this.disconnect.maximum;
+                this.disconnect.Finish();
                 return;
             }
         }
@@ -71,7 +71,7 @@ public class MovePuyoPuyo
         Vector2 position = this.puyoPuyo.GetPosition();
         this._execute(v, list);
         Vector2 p = this.puyoPuyo.GetPosition() - position;
-        if (v == Vector2.down && p == Vector2.zero) this.puyoPuyo.disconnect.i = this.puyoPuyo.disconnect.maximum;
+        if (v == Vector2.down && p == Vector2.zero) this.puyoPuyo.disconnect.Finish();
         return p;
     }
     private void _execute(Vector2 v, List<Puyo> list)

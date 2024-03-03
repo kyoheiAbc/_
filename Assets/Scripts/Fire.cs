@@ -19,8 +19,8 @@ public class Fire
             if (puyoPuyo != null && puyoPuyo.array[0] == l) continue;
             if (puyoPuyo != null && puyoPuyo.array[1] == l) continue;
 
-            if (!l.freeze.Finish()) return false;
-            if (0 < l.fire.i && !l.fire.Finish()) return false;
+            if (l.freeze.GetProgress() != 1) return false;
+            if (0 < l.fire.GetProgress() && l.fire.GetProgress() != 1) return false;
         }
         return true;
     }
@@ -32,7 +32,7 @@ public class Fire
             for (int x = 1; x < 7; x++)
             {
                 if (this.board.Get(new Vector2(x, y)) == null) continue;
-                if (this.board.Get(new Vector2(x, y)).fire.i == 1) continue;
+                if (this.board.Get(new Vector2(x, y)).fire.GetProgress() > 0) continue;
 
                 if (this.Count(this.board.Get(new Vector2(x, y))) >= Static.FIRE)
                 {
@@ -79,13 +79,13 @@ public class Fire
         Vector2 p = puyo.position;
         if (a[(int)p.y, (int)p.x] == true) return;
         a[(int)p.y, (int)p.x] = true;
-        puyo.fire.Launch();
+        puyo.fire.Start();
 
         List<Puyo> list = this.board.GetRlud(p);
         foreach (Puyo l in list)
         {
             if (l == null) continue;
-            if (l.color == 10) l.fire.Launch();
+            if (l.color == 10) l.fire.Start();
             if (c == l.color) this.Puyo(l, a);
         }
     }
