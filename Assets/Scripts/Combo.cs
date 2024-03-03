@@ -3,41 +3,43 @@ using UnityEngine;
 public class Combo
 {
     public int i = 0;
-    private int j = 0;
-    public Count end;
-    public bool update;
-    public void Start()
-    {
-        this.i = 0;
-        this.j = this.i;
-        this.end = new Count(Static.COMBO);
-        this.update = false;
-    }
+    public Count end = new Count(Static.COMBO);
+    List<Child> list = new List<Child>();
+    public bool update = false;
+
     public void Add(int i)
     {
         if (i == 0) return;
-        new _combo(this, i);
-        this.end = new Count(Static.COMBO);
+        list.Add(new Child(i));
+        end = new Count(Static.COMBO);
     }
     public void Update()
     {
         this.end.Update();
-        if (this.end.GetProgress() == 1) this.i = 0;
-        this.update = this.i != this.j;
-        this.j = this.i;
-    }
-    private class _combo : CustomGameObject
-    {
-        readonly private Combo parent;
-        readonly private int combo;
-        public _combo(Combo parent, int i) : base(Puyo.FIRE)
+        update = false;
+        for (int i = list.Count - 1; i >= 0; i--)
         {
-            this.parent = parent;
-            this.combo = i;
+            list[i].Update();
+            if (list[i].GetProgress() == 1)
+            {
+                this.i += list[i].i;
+                list.Remove(list[i]);
+                update = true;
+            }
         }
-        public override void End()
+        if (this.end.GetProgress() == 1)
         {
-            this.parent.i += this.combo;
+            if (this.i > 0) update = true;
+            this.i = 0;
+        }
+    }
+    private class Child : Count
+    {
+        public readonly int i;
+        public Child(int i) : base(30)
+        {
+            this.i = i;
+            base.Start();
         }
     }
 }

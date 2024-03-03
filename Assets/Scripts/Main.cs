@@ -32,7 +32,7 @@ public class Main : MonoBehaviour
         PuyoPuyo.DOWN = Vector2.down * 0.02f;
         this.factory.Start();
         this.render.Start();
-        this.combo.Start();
+        this.combo = new Combo();
         this.bot.Start();
         this.offset.Start();
         for (int i = Main.list.Count - 1; i >= 0; i--)

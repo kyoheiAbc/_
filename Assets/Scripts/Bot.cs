@@ -17,7 +17,7 @@ public class Bot
     public void Start()
     {
         this.health = Static.BOT_HEALTH;
-        this.combo.Start();
+        combo = new Combo();
         this.attack = null;
         this.energy = null;
 
