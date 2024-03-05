@@ -26,7 +26,7 @@ public class SceneCharacter : Scene
     }
     public override void Update(Vector2 v)
     {
-        this.renderCharacter.Update(this);
+        this.renderCharacter.Update();
     }
 }
 public class RenderCharacter : Render
@@ -37,12 +37,12 @@ public class RenderCharacter : Render
 
         this.rt = this.NewSprite(new Vector2(500, 200), new Vector2(300, 400), new Vector2(0, 0.5f), Resources.Load<Sprite>("Square"));
     }
-    public void Update(Scene scene)
+    public void Update()
     {
-        // if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
-        // {
-
-        // }
+        if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
+        {
+            Debug.Log("Contact");
+        }
         // Render.Put(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta);
     }
 
@@ -75,13 +75,13 @@ public class Render
         this.crt = canvas.GetComponent<RectTransform>();
     }
 
-    public GameObject NewGameObject()
+    private GameObject NewGameObject()
     {
         GameObject gameObject = new GameObject();
         gameObject.transform.SetParent(this.gameObject.transform, false);
         return gameObject;
     }
-    public RectTransform NewSprite(Vector2 position, Vector2 size, Vector2 anchor, Sprite sprite)
+    protected RectTransform NewSprite(Vector2 position, Vector2 size, Vector2 anchor, Sprite sprite)
     {
         GameObject gameObject = NewGameObject();
         gameObject.transform.SetParent(this.crt.transform, false);
@@ -93,21 +93,19 @@ public class Render
         gameObject.AddComponent<Image>().sprite = sprite;
         return rectTransform;
     }
-    static public bool Contact(Vector2 point, RectTransform rectTransform, Vector2 cs)
+    static protected bool Contact(Vector2 point, RectTransform rectTransform, Vector2 cs)
     {
         float f = Screen.width / cs.x;
-        point /= f;
-        if (point.x > rectTransform.localPosition.x + cs.x * 0.5f + rectTransform.sizeDelta.x * 0.5f) return false;
-        if (point.x < rectTransform.localPosition.x + cs.x * 0.5f - rectTransform.sizeDelta.x * 0.5f) return false;
-        if (point.y > rectTransform.localPosition.y + cs.y * 0.5f + rectTransform.sizeDelta.y * 0.5f) return false;
-        if (point.y < rectTransform.localPosition.y + cs.y * 0.5f - rectTransform.sizeDelta.y * 0.5f) return false;
+        point = point / f - cs * 0.5f;
+        if (point.x > rectTransform.localPosition.x + rectTransform.sizeDelta.x * 0.5f) return false;
+        if (point.x < rectTransform.localPosition.x - rectTransform.sizeDelta.x * 0.5f) return false;
+        if (point.y > rectTransform.localPosition.y + rectTransform.sizeDelta.y * 0.5f) return false;
+        if (point.y < rectTransform.localPosition.y - rectTransform.sizeDelta.y * 0.5f) return false;
         return true;
     }
-    static public void Put(Vector2 point, RectTransform rectTransform, Vector2 cs)
+    static protected void Put(Vector2 point, RectTransform rectTransform, Vector2 cs)
     {
         float f = Screen.width / cs.x;
-
-        rectTransform.localPosition = point / f;
-        rectTransform.localPosition -= (Vector3)cs * 0.5f;
+        rectTransform.localPosition = (Vector3)point / f - (Vector3)cs * 0.5f;
     }
 }

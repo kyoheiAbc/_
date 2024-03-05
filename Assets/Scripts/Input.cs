@@ -34,4 +34,12 @@ class Input
         }
         return Vector2.zero;
     }
+    public static Vector2 GetTouchPosition()
+    {
+        for (int i = 0; i < UnityEngine.Input.touchCount; i++)
+        {
+            return UnityEngine.Input.GetTouch(i).position;
+        }
+        return Vector2.zero;
+    }
 }
