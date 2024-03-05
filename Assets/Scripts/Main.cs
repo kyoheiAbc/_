@@ -1,18 +1,21 @@
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Main
 {
-    private Scene scene = new SceneCharacter();
-    private Input input = new Input();
+    // private Scene scene = new SceneCharacter();
+    // private Input input = new Input();
     public Main()
     {
         Application.targetFrameRate = 60;
+        new RenderOption();
+
     }
     public void Update()
     {
-        this.scene.Update(this.input.Update());
+        // this.scene.Update(this.input.Update());
     }
 }
 
@@ -23,7 +26,7 @@ public class SceneCharacter : Scene
 
     public SceneCharacter()
     {
-        this.renderCharacter = new RenderCharacter();
+        // this.renderCharacter = new RenderCharacter();
     }
     public override void Update(Vector2 v)
     {
@@ -60,6 +63,38 @@ public class RenderCharacter : Render
 
 }
 
+public class RenderOption : Render
+{
+    public RenderOption()
+    {
+        GameObject gameObject = new GameObject();
+        RectTransform rectTransform = gameObject.AddComponent<RectTransform>();
+        gameObject.AddComponent<Image>().sprite = Resources.Load<Sprite>("Square");
+        gameObject.transform.GetComponent<Image>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.25f);
+
+        Slider slider = gameObject.AddComponent<Slider>();
+        rectTransform.anchoredPosition = new Vector2(100, 200);
+        rectTransform.sizeDelta = new Vector2(300, 50);
+        rectTransform.localScale = new Vector3(1, 1, 1);
+
+        new GameObject().AddComponent<RectTransform>().SetParent(gameObject.transform, false);
+        gameObject.transform.GetChild(0).AddComponent<Image>().sprite = Resources.Load<Sprite>("Square");
+        gameObject.transform.GetChild(0).GetComponent<Image>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.75f);
+        gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+        gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+
+        slider.fillRect = gameObject.transform.GetChild(0).GetComponent<RectTransform>();
+        slider.minValue = 0;
+        slider.maxValue = 100;
+        slider.wholeNumbers = true;
+
+        slider.value = 35;
+
+        gameObject.transform.SetParent(this.crt.transform, false);
+
+    }
+}
+
 
 public class Scene
 {
@@ -87,7 +122,7 @@ public class Render
         this.crt = canvas.GetComponent<RectTransform>();
     }
 
-    private GameObject NewGameObject()
+    protected GameObject NewGameObject()
     {
         GameObject gameObject = new GameObject();
         gameObject.transform.SetParent(this.gameObject.transform, false);
