@@ -20,30 +20,42 @@ public class Main
 public class SceneCharacter : Scene
 {
     RenderCharacter renderCharacter;
+
     public SceneCharacter()
     {
-        this.renderCharacter = new RenderCharacter(Vector2.zero, 2);
+        this.renderCharacter = new RenderCharacter();
     }
     public override void Update(Vector2 v)
     {
-        this.renderCharacter.Update();
+        this.renderCharacter.Update(v);
     }
 }
 public class RenderCharacter : Render
 {
     RectTransform rt;
-    public RenderCharacter(Vector2 position, float orthographicSize)
-    {
+    RectTransform[] cursor = new RectTransform[2];
 
-        this.rt = this.NewSprite(new Vector2(500, 200), new Vector2(300, 400), new Vector2(0, 0.5f), Resources.Load<Sprite>("Square"));
+    public RenderCharacter()
+    {
+        for (int y = 0; y < 2; y++)
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                this.NewSprite(new Vector2(x * 400 + 400, -y * 400 + 700), new Vector2(300, 300), new Vector2(0f, 0f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(Random.Range(0, 1f), 0.5f, 1));
+            }
+        }
+        this.rt = this.NewSprite(new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
+        this.cursor[0] = this.NewSprite(new Vector2(400, 700), new Vector2(330, 330), new Vector2(0, 0), Resources.Load<Sprite>("Cursor"), UnityEngine.Color.HSVToRGB(Random.Range(0, 1f), 0.5f, 1));
+        this.cursor[1] = this.NewSprite(new Vector2(400, 700), new Vector2(330, 330), new Vector2(0, 0), Resources.Load<Sprite>("Cursor"), UnityEngine.Color.HSVToRGB(Random.Range(0, 1f), 0.5f, 1));
+
     }
-    public void Update()
+    public void Update(Vector2 v)
     {
         if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
         {
             Debug.Log("Contact");
         }
-        // Render.Put(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta);
+        this.cursor[0].localPosition += (Vector3)v * 400;
     }
 
 }
@@ -81,7 +93,7 @@ public class Render
         gameObject.transform.SetParent(this.gameObject.transform, false);
         return gameObject;
     }
-    protected RectTransform NewSprite(Vector2 position, Vector2 size, Vector2 anchor, Sprite sprite)
+    protected RectTransform NewSprite(Vector2 position, Vector2 size, Vector2 anchor, Sprite sprite, Color color)
     {
         GameObject gameObject = NewGameObject();
         gameObject.transform.SetParent(this.crt.transform, false);
@@ -91,6 +103,7 @@ public class Render
         rectTransform.anchoredPosition = position;
         rectTransform.sizeDelta = size;
         gameObject.AddComponent<Image>().sprite = sprite;
+        gameObject.GetComponent<Image>().color = color;
         return rectTransform;
     }
     static protected bool Contact(Vector2 point, RectTransform rectTransform, Vector2 cs)
