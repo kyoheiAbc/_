@@ -15,7 +15,14 @@ public class Main
     {
         this.scene.Update(this.input.Update());
 
-
+        if (Static.scene == Static.Scene.Play)
+        {
+            if (this.scene is not ScenePlay)
+            {
+                this.scene.Destroy();
+                this.scene = new ScenePlay();
+            }
+        }
         if (Static.scene == Static.Scene.Character)
         {
             if (this.scene is not SceneCharacter)
@@ -35,13 +42,47 @@ public class Main
     }
 
 }
+public class ScenePlay : Scene
+{
+    public ScenePlay()
+    {
+        this.render = new RenderPlay();
+    }
+    public override void Update(Vector2 v)
+    {
+        base.Update(v);
+        if (v == Vector2.right + Vector2.down)
+        {
+            Static.scene = Static.Scene.Character;
+        }
+    }
+}
+public class RenderPlay : Render
+{
+    RectTransform rt;
+
+    public RenderPlay()
+    {
+        this.rt = this.NewSprite(new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
+    }
+
+    public void Update(Vector2 vector2)
+    {
+        if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
+        {
+            if (UnityEngine.Input.GetMouseButtonDown(0)) Static.scene = Static.Scene.Option;
+        }
+
+    }
+}
+
 public class SceneCharacter : Scene
 {
-    RenderCharacter renderCharacter = new RenderCharacter();
     private int[,] array = new int[2, 4];
     Vector2 vector2;
     public SceneCharacter()
     {
+        this.render = new RenderCharacter();
         for (int y = 0; y < 2; y++)
         {
             for (int x = 0; x < 4; x++)
@@ -57,7 +98,7 @@ public class SceneCharacter : Scene
 
         int i = this.array[-(int)this.vector2.y, (int)this.vector2.x];
 
-        this.renderCharacter.Update(this.vector2);
+        ((RenderCharacter)this.render).Update(this.vector2);
     }
 
     private bool Error(Vector2 v)
@@ -68,14 +109,11 @@ public class SceneCharacter : Scene
         if (v.y > 0) return true;
         return false;
     }
-    public override void Destroy()
-    {
-        this.renderCharacter.Destroy();
-    }
 }
 public class RenderCharacter : Render
 {
-    RectTransform rt;
+    RectTransform[] rt = new RectTransform[2];
+
     RectTransform[] cursor = new RectTransform[2];
 
     public RenderCharacter()
@@ -87,7 +125,8 @@ public class RenderCharacter : Render
                 this.NewSprite(new Vector2(x * 400 + 400, -y * 400 + 700), new Vector2(300, 300), new Vector2(0f, 0f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(Random.Range(0, 1f), 0.5f, 1));
             }
         }
-        this.rt = this.NewSprite(new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
+        this.rt[0] = this.NewSprite(new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
+        this.rt[1] = this.NewSprite(new Vector2(50, -50), new Vector2(100, 100), new Vector2(0f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
         this.cursor[0] = this.NewSprite(new Vector2(400, 700), new Vector2(330, 330), new Vector2(0, 0), Resources.Load<Sprite>("Cursor"), UnityEngine.Color.HSVToRGB(Random.Range(0, 1f), 0.5f, 1));
         this.cursor[1] = this.NewSprite(new Vector2(-1000, -1000), new Vector2(330, 330), new Vector2(0, 0), Resources.Load<Sprite>("Cursor"), UnityEngine.Color.HSVToRGB(Random.Range(0, 1f), 0.5f, 1));
 
@@ -95,7 +134,11 @@ public class RenderCharacter : Render
     public void Update(Vector2 vector2)
     {
         this.cursor[0].localPosition = new Vector2(vector2.x, vector2.y) * 400 + new Vector2(-this.crt.sizeDelta.x * 0.5f + 400, -this.crt.sizeDelta.y * 0.5f + 700);
-        if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
+        if (Render.Contact(UnityEngine.Input.mousePosition, this.rt[0], this.crt.sizeDelta))
+        {
+            if (UnityEngine.Input.GetMouseButtonDown(0)) Static.scene = Static.Scene.Play;
+        }
+        if (Render.Contact(UnityEngine.Input.mousePosition, this.rt[1], this.crt.sizeDelta))
         {
             if (UnityEngine.Input.GetMouseButtonDown(0)) Static.scene = Static.Scene.Option;
         }
@@ -104,15 +147,14 @@ public class RenderCharacter : Render
 }
 public class SceneOption : Scene
 {
-    RenderOption renderOption = new RenderOption();
+    public SceneOption()
+    {
+        this.render = new RenderOption();
+    }
     public override void Update(Vector2 v)
     {
 
-        this.renderOption.Update();
-    }
-    public override void Destroy()
-    {
-        this.renderOption.Destroy();
+        ((RenderOption)this.render).Update();
     }
 }
 
@@ -148,9 +190,6 @@ public class RenderOption : Render
         textMeshPro = this.NewGameObject().AddComponent<TextMeshPro>();
         textMeshPro.transform.SetParent(rectTransform, false);
         textMeshPro.GetComponent<RectTransform>().localScale = new Vector3(10, 10, 1);
-        // textMeshPro.GetComponent<RectTransform>().anchorMax = new Vector2(1, 0.5f);
-        // textMeshPro.GetComponent<RectTransform>().anchorMin = new Vector2(1, 0.5f);
-        // textMeshPro.GetComponent<RectTransform>().anchoredPosition = new Vector3(50, 0, 1);
         textMeshPro.enableWordWrapping = false;
         textMeshPro.alignment = TextAlignmentOptions.Center;
         textMeshPro.sortingOrder = 1;
@@ -181,8 +220,12 @@ public class RenderOption : Render
 
 public class Scene
 {
+    protected Render render;
     virtual public void Update(Vector2 v) { }
-    virtual public void Destroy() { }
+    public void Destroy()
+    {
+        if (this.render != null) this.render.Destroy();
+    }
 }
 
 public class Render
@@ -249,7 +292,7 @@ public class Static
 {
     public enum Scene
     {
-        Main,
+        Play,
         Character,
         Option
     }
