@@ -1,141 +1,113 @@
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-public class Main : MonoBehaviour
+using UnityEngine.UI;
+
+public class Main
 {
-    public static int[] character = new int[2];
-    private int sleep = 0;
-    private Factory factory;
-    private Render render;
-    private Input input;
-    private Combo combo;
-    private Bot bot;
-    private Offset offset;
-    public static List<CustomGameObject> list = new List<CustomGameObject>();
-    void Awake()
+    private Scene scene = new SceneCharacter();
+    private Input input = new Input();
+    public Main()
     {
         Application.targetFrameRate = 60;
-
-        this.gameObject.transform.position = Vector3.zero;
-
-        this.factory = new Factory();
-        this.render = new Render();
-        this.input = new Input();
-
-        this.combo = new Combo();
-        this.bot = new Bot();
-        this.offset = new Offset();
     }
-    void Start()
+    public void Update()
     {
-        this.sleep = 0;
-        PuyoPuyo.DOWN = Vector2.down * 0.02f;
-        this.factory.Start();
-        this.render.Start();
-        this.combo = new Combo();
-        this.bot.Start();
-        this.offset.Start();
-        for (int i = Main.list.Count - 1; i >= 0; i--)
-        {
-            Main.list[i].Clear();
-        }
+        this.scene.Update(this.input.Update());
     }
-    void Update()
+}
+
+
+public class SceneCharacter : Scene
+{
+    RenderCharacter renderCharacter;
+    public SceneCharacter()
     {
-        if (this.sleep > 0)
-        {
-            this.sleep--;
-            if (this.sleep == 0)
-            {
-                SceneManager.LoadScene("Configuration");
-            }
-            return;
-        }
+        this.renderCharacter = new RenderCharacter(Vector2.zero, 2);
+    }
+    public override void Update(Vector2 v)
+    {
+        this.renderCharacter.Update(this);
+    }
+}
+public class RenderCharacter : Render
+{
+    RectTransform rt;
+    public RenderCharacter(Vector2 position, float orthographicSize)
+    {
 
-        if (Time.frameCount % 180 == 0)
-        {
-            PuyoPuyo.DOWN = PuyoPuyo.DOWN * (1f + Static.DOWN / 100f);
-            if (PuyoPuyo.DOWN.y < -1) PuyoPuyo.DOWN = Vector2.down;
-        }
+        this.rt = this.NewSprite(new Vector2(500, 200), new Vector2(300, 400), new Vector2(0, 0.5f), Resources.Load<Sprite>("Square"));
+    }
+    public void Update(Scene scene)
+    {
+        // if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
+        // {
 
-        {
-            if (this.factory.puyoPuyo == null)
-            {
-                if (!Factory.garbagePuyoMove(this.factory.list))
-                {
-                    this.factory.NewPuyoPuyo();
-                    if (Collision.Get(this.factory.puyoPuyo.array[0], this.factory.list) != null ||
-                        Collision.Get(this.factory.puyoPuyo.array[1], this.factory.list) != null)
-                    {
-                        this.sleep = 180;
-                        return;
-                    }
-                }
-            }
-        }
+        // }
+        // Render.Put(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta);
+    }
 
-        {
-            Vector2 v = this.input.Update();
-            if (v != Vector2.zero && this.factory.puyoPuyo != null)
-            {
-                if (v == Vector2.right + Vector2.down) this.factory.puyoPuyo.rotatePuyoPuyo.Execute(this.factory.list);
-                else if (v == Vector2.up) this.factory.puyoPuyo.Drop(this.factory.list);
-                else this.factory.puyoPuyo.movePuyoPuyo.Execute(v, this.factory.list);
-
-                if (this.factory.puyoPuyo.disconnect.GetProgress() == 1) this.factory.puyoPuyo = null;
-            }
-        }
-
-        {
-            this.factory.Update();
-        }
-
-        Fire fire = null;
-        {
-            if (Fire.Ready(this.factory.puyoPuyo, this.factory.list))
-            {
-                fire = new Fire(new Board(this.factory.list));
-                fire.Execute();
-            }
-        }
+}
 
 
-        {
-            if (fire != null)
-            {
-                this.combo.Add(fire.i);
-                if (fire.i == 0) this.combo.end.Start();
-            }
-            this.combo.Update();
-        }
+public class Scene
+{
+    virtual public void Update(Vector2 v) { }
+}
 
-        {
-            this.bot.Update();
-            if (this.bot.health <= 0)
-            {
-                this.sleep = 180;
-                return;
-            }
-        }
+public class Render
+{
+    private readonly GameObject gameObject;
+    protected readonly RectTransform crt;
+    public Render()
+    {
+        this.gameObject = new GameObject();
 
-        {
-            this.offset.Update(this.factory, this.combo, this.bot);
-        }
+        Camera camera = NewGameObject().AddComponent<Camera>();
+        camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
+        camera.clearFlags = CameraClearFlags.SolidColor;
+        camera.orthographic = true;
 
-        {
-            this.render.Puyo(this.factory.list);
-            this.render.NextColor(this.factory.nextColor.array);
-            this.render.Combo(this.combo.i);
-            this.render.BotGauge(this.bot);
-            this.render.GarbagePuyo(this.offset);
-            this.render.Character(this.combo, this.bot);
-        }
+        Canvas canvas = NewGameObject().AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceCamera;
+        canvas.worldCamera = camera;
+        canvas.AddComponent<CanvasScaler>().referenceResolution = new Vector2(2000, 1000);
+        canvas.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        this.crt = canvas.GetComponent<RectTransform>();
+    }
 
-        {
-            for (int i = Main.list.Count - 1; i >= 0; i--)
-            {
-                Main.list[i].Update();
-            }
-        }
+    public GameObject NewGameObject()
+    {
+        GameObject gameObject = new GameObject();
+        gameObject.transform.SetParent(this.gameObject.transform, false);
+        return gameObject;
+    }
+    public RectTransform NewSprite(Vector2 position, Vector2 size, Vector2 anchor, Sprite sprite)
+    {
+        GameObject gameObject = NewGameObject();
+        gameObject.transform.SetParent(this.crt.transform, false);
+        RectTransform rectTransform = gameObject.AddComponent<RectTransform>();
+        rectTransform.anchorMax = anchor;
+        rectTransform.anchorMin = anchor;
+        rectTransform.anchoredPosition = position;
+        rectTransform.sizeDelta = size;
+        gameObject.AddComponent<Image>().sprite = sprite;
+        return rectTransform;
+    }
+    static public bool Contact(Vector2 point, RectTransform rectTransform, Vector2 cs)
+    {
+        float f = Screen.width / cs.x;
+        point /= f;
+        if (point.x > rectTransform.localPosition.x + cs.x * 0.5f + rectTransform.sizeDelta.x * 0.5f) return false;
+        if (point.x < rectTransform.localPosition.x + cs.x * 0.5f - rectTransform.sizeDelta.x * 0.5f) return false;
+        if (point.y > rectTransform.localPosition.y + cs.y * 0.5f + rectTransform.sizeDelta.y * 0.5f) return false;
+        if (point.y < rectTransform.localPosition.y + cs.y * 0.5f - rectTransform.sizeDelta.y * 0.5f) return false;
+        return true;
+    }
+    static public void Put(Vector2 point, RectTransform rectTransform, Vector2 cs)
+    {
+        float f = Screen.width / cs.x;
+
+        rectTransform.localPosition = point / f;
+        rectTransform.localPosition -= (Vector3)cs * 0.5f;
     }
 }

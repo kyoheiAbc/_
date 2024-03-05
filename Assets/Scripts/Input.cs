@@ -1,14 +1,15 @@
 using UnityEngine;
 class Input
 {
-    protected Vector2 position;
-    virtual public Vector2 Update()
+    private Vector2 position;
+    public Vector2 Update()
     {
         if (UnityEngine.Input.GetKeyDown(KeyCode.Return)) return Vector2.right + Vector2.down;
         if (UnityEngine.Input.GetKeyDown(KeyCode.RightArrow)) return Vector2.right;
         if (UnityEngine.Input.GetKeyDown(KeyCode.LeftArrow)) return Vector2.left;
         if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow)) return Vector2.up;
         if (UnityEngine.Input.GetKeyDown(KeyCode.DownArrow)) return Vector2.down;
+
         for (int i = 0; i < UnityEngine.Input.touchCount; i++)
         {
             Touch t = UnityEngine.Input.GetTouch(i);
