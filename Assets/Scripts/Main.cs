@@ -67,31 +67,19 @@ public class RenderOption : Render
 {
     public RenderOption()
     {
-        GameObject gameObject = new GameObject();
-        RectTransform rectTransform = gameObject.AddComponent<RectTransform>();
-        gameObject.AddComponent<Image>().sprite = Resources.Load<Sprite>("Square");
-        gameObject.transform.GetComponent<Image>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.25f);
+        this.NewSlider(new Vector2(300, 300), new Vector2(300, 50), new Vector2(0, 0.5f), 25, 75);
 
-        Slider slider = gameObject.AddComponent<Slider>();
-        rectTransform.anchoredPosition = new Vector2(100, 200);
-        rectTransform.sizeDelta = new Vector2(300, 50);
-        rectTransform.localScale = new Vector3(1, 1, 1);
-
-        new GameObject().AddComponent<RectTransform>().SetParent(gameObject.transform, false);
-        gameObject.transform.GetChild(0).AddComponent<Image>().sprite = Resources.Load<Sprite>("Square");
-        gameObject.transform.GetChild(0).GetComponent<Image>().color = UnityEngine.Color.HSVToRGB(0, 0, 0.75f);
-        gameObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = Vector2.zero;
-        gameObject.transform.GetChild(0).GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-
-        slider.fillRect = gameObject.transform.GetChild(0).GetComponent<RectTransform>();
-        slider.minValue = 0;
-        slider.maxValue = 100;
+    }
+    private Slider NewSlider(Vector2 position, Vector2 size, Vector2 anchor, int min, int max)
+    {
+        RectTransform rectTransform = this.NewSprite(position, size, anchor, Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 0.25f));
+        this.NewSprite(Vector2.zero, Vector2.zero, Vector2.zero, Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 0.75f)).SetParent(rectTransform, false);
+        Slider slider = rectTransform.AddComponent<Slider>();
+        slider.fillRect = rectTransform.GetChild(0).GetComponent<RectTransform>();
+        slider.minValue = min;
+        slider.maxValue = max;
         slider.wholeNumbers = true;
-
-        slider.value = 35;
-
-        gameObject.transform.SetParent(this.crt.transform, false);
-
+        return slider;
     }
 }
 
