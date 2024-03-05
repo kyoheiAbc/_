@@ -7,7 +7,6 @@ public class Main
 {
     private Scene scene = new SceneCharacter();
     private Input input = new Input();
-    public static int si = 0;
     public Main()
     {
         Application.targetFrameRate = 60;
@@ -17,7 +16,7 @@ public class Main
         this.scene.Update(this.input.Update());
 
 
-        if (Main.si == 0)
+        if (Static.scene == Static.Scene.Character)
         {
             if (this.scene is not SceneCharacter)
             {
@@ -25,7 +24,7 @@ public class Main
                 this.scene = new SceneCharacter();
             }
         }
-        if (Main.si == 1)
+        if (Static.scene == Static.Scene.Option)
         {
             if (this.scene is not SceneOption)
             {
@@ -98,7 +97,7 @@ public class RenderCharacter : Render
         this.cursor[0].localPosition = new Vector2(vector2.x, vector2.y) * 400 + new Vector2(-this.crt.sizeDelta.x * 0.5f + 400, -this.crt.sizeDelta.y * 0.5f + 700);
         if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
         {
-            if (UnityEngine.Input.GetMouseButtonDown(0)) Main.si = 1;
+            if (UnityEngine.Input.GetMouseButtonDown(0)) Static.scene = Static.Scene.Option;
         }
 
     }
@@ -174,7 +173,7 @@ public class RenderOption : Render
 
         if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
         {
-            if (UnityEngine.Input.GetMouseButtonDown(0)) Main.si = 0;
+            if (UnityEngine.Input.GetMouseButtonDown(0)) Static.scene = Static.Scene.Character;
         }
     }
 }
@@ -245,4 +244,14 @@ public class Render
     {
         _monoBehaviour.Destroy(this.gameObject);
     }
+}
+public class Static
+{
+    public enum Scene
+    {
+        Main,
+        Character,
+        Option
+    }
+    public static Scene scene = 0;
 }
