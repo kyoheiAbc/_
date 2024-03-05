@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class Main
 {
-    private Scene scene = new SceneCharacter();
+    static Scene scene = new SceneCharacter();
     private Input input = new Input();
     public Main()
     {
@@ -13,34 +14,27 @@ public class Main
     }
     public void Update()
     {
-        this.scene.Update(this.input.Update());
+        Main.scene.Update(this.input.Update());
 
-        if (Static.scene == Static.Scene.Play)
+
+    }
+    static public void NewScene(Type t)
+    {
+        if (t == Main.scene.GetType()) return;
+        Main.scene.Destroy();
+        switch (t.Name)
         {
-            if (this.scene is not ScenePlay)
-            {
-                this.scene.Destroy();
-                this.scene = new ScenePlay();
-            }
-        }
-        if (Static.scene == Static.Scene.Character)
-        {
-            if (this.scene is not SceneCharacter)
-            {
-                this.scene.Destroy();
-                this.scene = new SceneCharacter();
-            }
-        }
-        if (Static.scene == Static.Scene.Option)
-        {
-            if (this.scene is not SceneOption)
-            {
-                this.scene.Destroy();
-                this.scene = new SceneOption();
-            }
+            case nameof(ScenePlay):
+                Main.scene = new ScenePlay();
+                break;
+            case nameof(SceneCharacter):
+                Main.scene = new SceneCharacter();
+                break;
+            case nameof(SceneOption):
+                Main.scene = new SceneOption();
+                break;
         }
     }
-
 }
 public class ScenePlay : Scene
 {
@@ -53,7 +47,7 @@ public class ScenePlay : Scene
         base.Update(v);
         if (v == Vector2.right + Vector2.down)
         {
-            Static.scene = Static.Scene.Character;
+            Main.NewScene(typeof(SceneCharacter));
         }
     }
 }
@@ -70,7 +64,11 @@ public class RenderPlay : Render
     {
         if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
         {
-            if (UnityEngine.Input.GetMouseButtonDown(0)) Static.scene = Static.Scene.Option;
+            if (UnityEngine.Input.GetMouseButtonDown(0))
+            {
+                Main.NewScene(typeof(SceneCharacter));
+
+            }
         }
 
     }
@@ -122,13 +120,13 @@ public class RenderCharacter : Render
         {
             for (int x = 0; x < 4; x++)
             {
-                this.NewSprite(new Vector2(x * 400 + 400, -y * 400 + 700), new Vector2(300, 300), new Vector2(0f, 0f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(Random.Range(0, 1f), 0.5f, 1));
+                this.NewSprite(new Vector2(x * 400 + 400, -y * 400 + 700), new Vector2(300, 300), new Vector2(0f, 0f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(UnityEngine.Random.Range(0, 1f), 0.5f, 1));
             }
         }
         this.rt[0] = this.NewSprite(new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
         this.rt[1] = this.NewSprite(new Vector2(50, -50), new Vector2(100, 100), new Vector2(0f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
-        this.cursor[0] = this.NewSprite(new Vector2(400, 700), new Vector2(330, 330), new Vector2(0, 0), Resources.Load<Sprite>("Cursor"), UnityEngine.Color.HSVToRGB(Random.Range(0, 1f), 0.5f, 1));
-        this.cursor[1] = this.NewSprite(new Vector2(-1000, -1000), new Vector2(330, 330), new Vector2(0, 0), Resources.Load<Sprite>("Cursor"), UnityEngine.Color.HSVToRGB(Random.Range(0, 1f), 0.5f, 1));
+        this.cursor[0] = this.NewSprite(new Vector2(400, 700), new Vector2(330, 330), new Vector2(0, 0), Resources.Load<Sprite>("Cursor"), UnityEngine.Color.HSVToRGB(UnityEngine.Random.Range(0, 1f), 0.5f, 1));
+        this.cursor[1] = this.NewSprite(new Vector2(-1000, -1000), new Vector2(330, 330), new Vector2(0, 0), Resources.Load<Sprite>("Cursor"), UnityEngine.Color.HSVToRGB(UnityEngine.Random.Range(0, 1f), 0.5f, 1));
 
     }
     public void Update(Vector2 vector2)
@@ -136,11 +134,18 @@ public class RenderCharacter : Render
         this.cursor[0].localPosition = new Vector2(vector2.x, vector2.y) * 400 + new Vector2(-this.crt.sizeDelta.x * 0.5f + 400, -this.crt.sizeDelta.y * 0.5f + 700);
         if (Render.Contact(UnityEngine.Input.mousePosition, this.rt[0], this.crt.sizeDelta))
         {
-            if (UnityEngine.Input.GetMouseButtonDown(0)) Static.scene = Static.Scene.Play;
+            if (UnityEngine.Input.GetMouseButtonDown(0))
+            {
+                Main.NewScene(typeof(ScenePlay));
+            }
         }
         if (Render.Contact(UnityEngine.Input.mousePosition, this.rt[1], this.crt.sizeDelta))
         {
-            if (UnityEngine.Input.GetMouseButtonDown(0)) Static.scene = Static.Scene.Option;
+            if (UnityEngine.Input.GetMouseButtonDown(0))
+            {
+                Main.NewScene(typeof(SceneOption));
+
+            }
         }
 
     }
@@ -212,7 +217,10 @@ public class RenderOption : Render
 
         if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
         {
-            if (UnityEngine.Input.GetMouseButtonDown(0)) Static.scene = Static.Scene.Character;
+            if (UnityEngine.Input.GetMouseButtonDown(0))
+            {
+                Main.NewScene(typeof(SceneCharacter));
+            }
         }
     }
 }
@@ -287,14 +295,4 @@ public class Render
     {
         _monoBehaviour.Destroy(this.gameObject);
     }
-}
-public class Static
-{
-    public enum Scene
-    {
-        Play,
-        Character,
-        Option
-    }
-    public static Scene scene = 0;
 }
