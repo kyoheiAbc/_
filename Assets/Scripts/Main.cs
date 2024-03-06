@@ -8,7 +8,7 @@ using TMPro;
 
 public class Main
 {
-    Play play = new Play();
+    private Play play = new Play();
     public Main()
     {
         UE.Application.targetFrameRate = 60;
@@ -18,6 +18,7 @@ public class Main
         this.play.Update();
     }
 }
+
 
 public class Play
 {
@@ -30,14 +31,11 @@ public class Play
 
 public class RenderPlay
 {
-    Render render = new Render();
+    private Render render = new Render();
     public RenderPlay()
     {
-        this.render.canvas.component.AddComponent<UI.GraphicRaycaster>();
-        this.render.canvas.component.AddComponent<EventSystem>();
-        this.render.canvas.component.AddComponent<StandaloneInputModule>();
 
-        new Slider(this.render, new Vector2(0, 0), new Vector2(300, 50), new Vector2(0.5f, 0.5f), 25, 75);
+
 
     }
     public void Update()
@@ -47,16 +45,44 @@ public class RenderPlay
     }
 }
 
+
+public class Render
+{
+    private GameObject gameObject;
+    private Canvas canvas;
+    private Button back, enter;
+    public Render()
+    {
+        this.gameObject = new GameObject();
+        new Camera(this.gameObject);
+        this.canvas = new Canvas(this.gameObject, this.gameObject.GetComponent<UE.Camera>());
+
+        this.back = new Button(this.canvas, new Vector2(50, -50), new Vector2(100, 100), new Vector2(0f, 1f), Resources.Load<Sprite>("Square"));
+        this.enter = new Button(this.canvas, new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"));
+    }
+
+    public void Update()
+    {
+        if (this.back.Hit(this.canvas.ScreenPosition(UE.Input.mousePosition))) Debug.Log("a");
+    }
+
+    public Slider NewSlider()
+    {
+        return new Slider(this.canvas, new Vector2(0, 0), new Vector2(300, 50), new Vector2(0.5f, 0.5f), 25, 75);
+    }
+}
+
+
 public class Slider
 {
-    UI.Slider component;
-    public Slider(Render render, Vector2 position, Vector2 size, Vector2 anchor, int min, int max)
+    private UI.Slider component;
+    public Slider(Canvas canvas, Vector2 position, Vector2 size, Vector2 anchor, int min, int max)
     {
-        RectTransform rectTransform = render.NewRectTransform(position, size, anchor);
+        RectTransform rectTransform = canvas.NewRectTransform(position, size, anchor);
         rectTransform.AddComponent<UI.Image>().sprite = Resources.Load<Sprite>("Square");
         this.component = rectTransform.AddComponent<UI.Slider>();
 
-        RectTransform rT = render.NewRectTransform(Vector2.zero, Vector2.zero, Vector2.zero);
+        RectTransform rT = canvas.NewRectTransform(Vector2.zero, Vector2.zero, Vector2.zero);
         rT.AddComponent<UI.Image>().sprite = Resources.Load<Sprite>("Square");
         rT.GetComponent<UI.Image>().color = UE.Color.green;
         rT.SetParent(rectTransform, false);
@@ -88,88 +114,79 @@ public class Slider
 }
 
 
-
-public class Render
+public class Button
 {
-    public GameObject gameObject;
-    public Camera camera;
-    public Canvas canvas;
-    public Button back, enter;
-    public Render()
+    private RectTransform rectTransform;
+    public Button(Canvas canvas, Vector2 position, Vector2 size, Vector2 anchor, Sprite sprite)
     {
-        this.gameObject = new GameObject();
-        this.camera = new Camera(this);
-        this.canvas = new Canvas(this);
-
-        this.back = new Button(this, new Vector2(50, -50), new Vector2(100, 100), new Vector2(0f, 1f), Resources.Load<Sprite>("Square"));
-        this.enter = new Button(this, new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"));
+        this.rectTransform = canvas.NewRectTransform(position, size, anchor);
+        rectTransform.AddComponent<UI.Image>().sprite = sprite;
     }
+    public bool Hit(Vector2 point)
+    {
+        if (point.x > this.rectTransform.localPosition.x + this.rectTransform.sizeDelta.x * 0.5f) return false;
+        if (point.x < this.rectTransform.localPosition.x - this.rectTransform.sizeDelta.x * 0.5f) return false;
+        if (point.y > this.rectTransform.localPosition.y + this.rectTransform.sizeDelta.y * 0.5f) return false;
+        if (point.y < this.rectTransform.localPosition.y - this.rectTransform.sizeDelta.y * 0.5f) return false;
+        return true;
+    }
+}
 
 
+public class Camera
+{
+    public Camera(GameObject Parent)
+    {
+        UE.Camera component = new GameObject().AddComponent<UE.Camera>();
+        component.backgroundColor = UE.Color.HSVToRGB(0, 0, 0.5f);
+        component.clearFlags = CameraClearFlags.SolidColor;
+        component.orthographic = true;
+        component.transform.SetParent(Parent.transform);
+    }
+}
+
+public class Canvas
+{
+    private UE.Canvas component;
+    private Vector2 size;
+    public Canvas(GameObject parent, UE.Camera camera)
+    {
+        this.component = new GameObject().AddComponent<UE.Canvas>();
+        this.component.renderMode = UnityEngine.RenderMode.ScreenSpaceCamera;
+        this.component.worldCamera = camera;
+        this.component.AddComponent<UI.CanvasScaler>().referenceResolution = new Vector2(2000, 1000);
+        this.component.GetComponent<UI.CanvasScaler>().uiScaleMode = UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        this.component.transform.SetParent(parent.transform);
+        {
+            this.component.AddComponent<UI.GraphicRaycaster>();
+            this.component.AddComponent<EventSystem>();
+            this.component.AddComponent<StandaloneInputModule>();
+        }
+        this.size = this.component.GetComponent<RectTransform>().sizeDelta;
+    }
     public RectTransform NewRectTransform(Vector2 position, Vector2 size, Vector2 anchor)
     {
         RectTransform rectTransform = new GameObject().AddComponent<RectTransform>();
-        rectTransform.SetParent(this.canvas.component.transform, false);
+        rectTransform.SetParent(this.component.transform, false);
         rectTransform.anchorMax = anchor;
         rectTransform.anchorMin = anchor;
         rectTransform.anchoredPosition = position;
         rectTransform.sizeDelta = size;
         return rectTransform;
     }
-    public void Update()
+
+    public Vector2 ScreenPosition(Vector2 position)
     {
-        if (this.back.Hit(UE.Input.mousePosition, this.canvas.size)) Debug.Log("a");
+        return position / (Screen.width / this.size.x) - this.size * 0.5f;
     }
-}
-public class Button
-{
-    RectTransform rectTransform;
-    public Button(Render render, Vector2 position, Vector2 size, Vector2 anchor, Sprite sprite)
+    public bool Hit(Vector2 point, RectTransform rectTransform)
     {
-        this.rectTransform = render.NewRectTransform(position, size, anchor);
-        rectTransform.AddComponent<UI.Image>().sprite = sprite;
-    }
-    public bool Hit(Vector2 point, Vector2 cS)
-    {
-        float f = Screen.width / cS.x;
-        point = point / f - cS * 0.5f;
+        point = this.ScreenPosition(point);
         if (point.x > rectTransform.localPosition.x + rectTransform.sizeDelta.x * 0.5f) return false;
         if (point.x < rectTransform.localPosition.x - rectTransform.sizeDelta.x * 0.5f) return false;
         if (point.y > rectTransform.localPosition.y + rectTransform.sizeDelta.y * 0.5f) return false;
         if (point.y < rectTransform.localPosition.y - rectTransform.sizeDelta.y * 0.5f) return false;
         return true;
-    }
-
-}
-
-
-public class Camera
-{
-    public UE.Camera component;
-    public Camera(Render render)
-    {
-        this.component = new GameObject().AddComponent<UE.Camera>();
-        this.component.backgroundColor = UE.Color.HSVToRGB(0, 0, 0.5f);
-        this.component.clearFlags = CameraClearFlags.SolidColor;
-        this.component.orthographic = true;
-        this.component.transform.SetParent(render.gameObject.transform);
-    }
-}
-
-public class Canvas
-{
-    public UE.Canvas component;
-    public Vector2 size;
-    public Canvas(Render render)
-    {
-        this.component = new GameObject().AddComponent<UE.Canvas>();
-        this.component.renderMode = UnityEngine.RenderMode.ScreenSpaceCamera;
-        this.component.worldCamera = render.camera.component;
-        this.component.AddComponent<UI.CanvasScaler>().referenceResolution = new Vector2(2000, 1000);
-        this.component.GetComponent<UI.CanvasScaler>().uiScaleMode = UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        this.component.transform.SetParent(render.gameObject.transform);
-
-        this.size = this.component.GetComponent<RectTransform>().sizeDelta;
     }
 }
 
