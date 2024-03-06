@@ -1,4 +1,3 @@
-using System;
 using Unity.VisualScripting;
 using UE = UnityEngine;
 using UI = UnityEngine.UI;
@@ -9,9 +8,22 @@ using TMPro;
 public class RenderPlay
 {
     private Render render = new Render();
+    private RectTransform puyo;
     public RenderPlay()
     {
-        this.render.NewSlider(new Vector2(0, 0), new Vector2(300, 100), new Vector2(0.5f, 0.5f), 25, 75);
+        this.puyo = this.render.NewRectTransform(Vector2.zero, new Vector2(100, 100), Vector2.zero);
+        this.puyo.AddComponent<UI.Image>().sprite = Resources.Load<Sprite>("Circle"); ;
+
+        RectTransform rT = this.render.NewRectTransform(Vector2.zero, new Vector2(100, 100), Vector2.zero);
+
+        rT.AddComponent<UI.Image>().sprite = Resources.Load<Sprite>("Puyo");
+
+        rT.transform.SetParent(this.puyo.transform);
+    }
+    public void Puyo(Puyo puyo)
+    {
+        this.puyo.transform.localPosition = puyo.Position();
+
     }
     public void Update()
     {
@@ -39,6 +51,19 @@ public class Render
     {
         if (this.back.Hit(this.canvas.ScreenPosition(UE.Input.mousePosition))) Debug.Log("a");
     }
+
+    public GameObject NewGameObject()
+    {
+        GameObject gameObject = new GameObject();
+        gameObject.transform.SetParent(this.gameObject.transform);
+        return gameObject;
+    }
+    public RectTransform NewRectTransform(Vector2 position, Vector2 size, Vector2 anchor)
+    {
+        return this.canvas.NewRectTransform(position, size, anchor);
+
+    }
+
 
     public Slider NewSlider(Vector2 position, Vector2 size, Vector2 anchor, int min, int max)
     {
