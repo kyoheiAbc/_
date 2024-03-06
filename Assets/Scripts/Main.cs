@@ -34,7 +34,7 @@ public class RenderPlay
     private Render render = new Render();
     public RenderPlay()
     {
-
+        this.render.NewSlider(new Vector2(0, 0), new Vector2(300, 100), new Vector2(0.5f, 0.5f), 25, 75);
 
 
     }
@@ -66,9 +66,9 @@ public class Render
         if (this.back.Hit(this.canvas.ScreenPosition(UE.Input.mousePosition))) Debug.Log("a");
     }
 
-    public Slider NewSlider()
+    public Slider NewSlider(Vector2 position, Vector2 size, Vector2 anchor, int min, int max)
     {
-        return new Slider(this.canvas, new Vector2(0, 0), new Vector2(300, 50), new Vector2(0.5f, 0.5f), 25, 75);
+        return new Slider(this.canvas, position, size, anchor, min, max);
     }
 }
 
