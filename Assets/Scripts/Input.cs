@@ -38,6 +38,7 @@ class Input
     {
         for (int i = 0; i < UnityEngine.Input.touchCount; i++)
         {
+            if (UnityEngine.Input.GetTouch(i).position.x > 0.5f * Screen.width) continue;
             return UnityEngine.Input.GetTouch(i).position;
         }
         return Vector2.zero;
