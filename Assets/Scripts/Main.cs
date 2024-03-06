@@ -43,11 +43,7 @@ public class SceneMode : Scene
     {
         this.render = new RenderMode();
     }
-    public override void Update()
-    {
-        base.Update();
-        this.render.Update();
-    }
+
 }
 
 public class RenderMode : Render
@@ -76,10 +72,10 @@ public class RenderMode : Render
         }
 
 
-        this.Destroy(this.rrt.gameObject);
+        this.Destroy(this.back.gameObject);
 
         this.cursor = this.NewSprite(new Vector2(0, 375), new Vector2(500, 100), new Vector2(0, 0), Resources.Load<Sprite>("Cursor"), UnityEngine.Color.HSVToRGB(UnityEngine.Random.Range(0, 1f), 0.5f, 1));
-        Render.Put((Vector2)this.rectTransform[0].localPosition + this.crt.sizeDelta * 0.5f, this.cursor, this.crt.sizeDelta);
+        Render.Put((Vector2)this.rectTransform[0].localPosition + this.canvas.sizeDelta * 0.5f, this.cursor, this.canvas.sizeDelta);
 
     }
     override public void Update()
@@ -88,14 +84,14 @@ public class RenderMode : Render
         {
             for (int i = 0; i < rectTransform.Length; i++)
             {
-                if (Render.Contact(UnityEngine.Input.mousePosition, this.rectTransform[i], this.crt.sizeDelta))
+                if (Render.Contact(UnityEngine.Input.mousePosition, this.rectTransform[i], this.canvas.sizeDelta))
                 {
                     this.i = i;
-                    Render.Put((Vector2)this.rectTransform[i].localPosition + this.crt.sizeDelta * 0.5f, this.cursor, this.crt.sizeDelta);
+                    Render.Put((Vector2)this.rectTransform[i].localPosition + this.canvas.sizeDelta * 0.5f, this.cursor, this.canvas.sizeDelta);
                     return;
                 }
             }
-            if (Render.Contact(UnityEngine.Input.mousePosition, this.ert, this.crt.sizeDelta))
+            if (Render.Contact(UnityEngine.Input.mousePosition, this.enter, this.canvas.sizeDelta))
             {
                 switch (this.i)
                 {
@@ -120,10 +116,7 @@ public class ScenePlay : Scene
     {
         this.render = new RenderPlay();
     }
-    public override void Update()
-    {
-        this.render.Update();
-    }
+
 
 }
 public class RenderPlay : Render
@@ -131,12 +124,12 @@ public class RenderPlay : Render
 
     public RenderPlay()
     {
-        this.Destroy(this.ert.gameObject);
+        this.Destroy(this.enter.gameObject);
     }
 
     public override void Update()
     {
-        if (Render.Contact(UnityEngine.Input.mousePosition, this.rrt, this.crt.sizeDelta))
+        if (Render.Contact(UnityEngine.Input.mousePosition, this.back, this.canvas.sizeDelta))
         {
             if (UnityEngine.Input.GetMouseButtonDown(0))
             {
@@ -152,10 +145,7 @@ public class SceneCharacter : Scene
     {
         this.render = new RenderCharacter();
     }
-    public override void Update()
-    {
-        this.render.Update();
-    }
+
 
 }
 public class RenderCharacter : Render
@@ -184,14 +174,14 @@ public class RenderCharacter : Render
     }
     override public void Update()
     {
-        if (Render.Contact(UnityEngine.Input.mousePosition, this.rrt, this.crt.sizeDelta))
+        if (Render.Contact(UnityEngine.Input.mousePosition, this.back, this.canvas.sizeDelta))
         {
             if (UnityEngine.Input.GetMouseButtonDown(0))
             {
                 Main.NewScene(typeof(SceneMode));
             }
         }
-        if (Render.Contact(UnityEngine.Input.mousePosition, this.ert, this.crt.sizeDelta))
+        if (Render.Contact(UnityEngine.Input.mousePosition, this.enter, this.canvas.sizeDelta))
         {
             if (UnityEngine.Input.GetMouseButtonDown(0))
             {
@@ -200,11 +190,11 @@ public class RenderCharacter : Render
         }
         for (int i = 0; i < this.character.Length; i++)
         {
-            if (Render.Contact(UnityEngine.Input.mousePosition, this.character[i], this.crt.sizeDelta))
+            if (Render.Contact(UnityEngine.Input.mousePosition, this.character[i], this.canvas.sizeDelta))
             {
                 if (UnityEngine.Input.GetMouseButtonDown(0))
                 {
-                    Render.Put((Vector2)this.character[i].localPosition + this.crt.sizeDelta * 0.5f, this.cursor[0], this.crt.sizeDelta);
+                    Render.Put((Vector2)this.character[i].localPosition + this.canvas.sizeDelta * 0.5f, this.cursor[0], this.canvas.sizeDelta);
                 }
             }
         }
@@ -217,10 +207,7 @@ public class SceneOption : Scene
     {
         this.render = new RenderOption();
     }
-    public override void Update()
-    {
-        this.render.Update();
-    }
+
 
 }
 
@@ -234,11 +221,11 @@ public class RenderOption : Render
     {
         this.NewSlider(new Vector2(300, 300), new Vector2(300, 50), new Vector2(0, 0.5f), 25, 75);
 
-        this.crt.AddComponent<GraphicRaycaster>();
-        this.crt.AddComponent<EventSystem>();
-        this.crt.AddComponent<StandaloneInputModule>();
+        this.canvas.AddComponent<GraphicRaycaster>();
+        this.canvas.AddComponent<EventSystem>();
+        this.canvas.AddComponent<StandaloneInputModule>();
 
-        this.Destroy(this.ert.gameObject);
+        this.Destroy(this.enter.gameObject);
     }
     private void NewSlider(Vector2 position, Vector2 size, Vector2 anchor, int min, int max)
     {
@@ -274,7 +261,7 @@ public class RenderOption : Render
     {
         this.textMeshPro.text = slider.value.ToString();
 
-        if (Render.Contact(UnityEngine.Input.mousePosition, this.rrt, this.crt.sizeDelta))
+        if (Render.Contact(UnityEngine.Input.mousePosition, this.back, this.canvas.sizeDelta))
         {
             if (UnityEngine.Input.GetMouseButtonDown(0))
             {
@@ -294,15 +281,16 @@ public class Scene
     }
     virtual public void Update()
     {
+        this.render.Update();
     }
 }
 
 public class Render
 {
     private readonly GameObject gameObject;
-    protected readonly RectTransform crt;
-    protected RectTransform rrt;
-    protected RectTransform ert;
+    protected readonly RectTransform canvas;
+    protected RectTransform back;
+    protected RectTransform enter;
 
     public Render()
     {
@@ -318,10 +306,10 @@ public class Render
         canvas.worldCamera = camera;
         canvas.AddComponent<CanvasScaler>().referenceResolution = new Vector2(2000, 1000);
         canvas.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        this.crt = canvas.GetComponent<RectTransform>();
+        this.canvas = canvas.GetComponent<RectTransform>();
 
-        this.rrt = this.NewSprite(new Vector2(50, -50), new Vector2(100, 100), new Vector2(0f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
-        this.ert = this.NewSprite(new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
+        this.back = this.NewSprite(new Vector2(50, -50), new Vector2(100, 100), new Vector2(0f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
+        this.enter = this.NewSprite(new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
 
     }
 
@@ -334,7 +322,7 @@ public class Render
     protected RectTransform NewSprite(Vector2 position, Vector2 size, Vector2 anchor, Sprite sprite, Color color)
     {
         GameObject gameObject = NewGameObject();
-        gameObject.transform.SetParent(this.crt.transform, false);
+        gameObject.transform.SetParent(this.canvas.transform, false);
         RectTransform rectTransform = gameObject.AddComponent<RectTransform>();
         rectTransform.anchorMax = anchor;
         rectTransform.anchorMin = anchor;
@@ -359,14 +347,8 @@ public class Render
         float f = Screen.width / cs.x;
         rectTransform.localPosition = (Vector3)point / f - (Vector3)cs * 0.5f;
     }
-    public void Destroy(GameObject gameObject)
-    {
-        _monoBehaviour.Destroy(gameObject);
-    }
-    public void Destroy()
-    {
-        _monoBehaviour.Destroy(this.gameObject);
-    }
+    public void Destroy(GameObject gameObject) => _monoBehaviour.Destroy(gameObject);
+    public void Destroy() => _monoBehaviour.Destroy(this.gameObject);
     virtual public void Update()
     {
 
