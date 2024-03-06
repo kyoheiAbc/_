@@ -1,124 +1,175 @@
 using System;
 using Unity.VisualScripting;
+using UE = UnityEngine;
+using UI = UnityEngine.UI;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using TMPro;
+
 public class Main
 {
-    static Scene scene = new SceneMode();
-    private Input input = new Input();
+    Play play = new Play();
     public Main()
     {
-        Application.targetFrameRate = 60;
+        UE.Application.targetFrameRate = 60;
     }
     public void Update()
     {
-        Main.scene.Update();
-    }
-    static public void NewScene(Type t)
-    {
-        if (t == Main.scene.GetType()) return;
-        Main.scene.Destroy();
-        switch (t.Name)
-        {
-            case nameof(ScenePlay):
-                Main.scene = new ScenePlay();
-                break;
-            case nameof(SceneCharacter):
-                Main.scene = new SceneCharacter();
-                break;
-            case nameof(SceneOption):
-                Main.scene = new SceneOption();
-                break;
-            case nameof(SceneMode):
-                Main.scene = new SceneMode();
-                break;
-        }
+        this.play.Update();
     }
 }
 
-
-
-
-
-public class Scene
+public class Play
 {
-    protected Render render;
-    public void Destroy()
+    private RenderPlay renderPlay = new RenderPlay();
+    public void Update()
     {
-        this.render.Destroy();
+        this.renderPlay.Update();
     }
-    virtual public void Update()
+}
+
+public class RenderPlay
+{
+    Render render = new Render();
+    public RenderPlay()
+    {
+        this.render.canvas.component.AddComponent<UI.GraphicRaycaster>();
+        this.render.canvas.component.AddComponent<EventSystem>();
+        this.render.canvas.component.AddComponent<StandaloneInputModule>();
+
+        new Slider(this.render, new Vector2(0, 0), new Vector2(300, 50), new Vector2(0.5f, 0.5f), 25, 75);
+
+    }
+    public void Update()
     {
         this.render.Update();
+
     }
 }
+
+public class Slider
+{
+    UI.Slider component;
+    public Slider(Render render, Vector2 position, Vector2 size, Vector2 anchor, int min, int max)
+    {
+        RectTransform rectTransform = render.NewRectTransform(position, size, anchor);
+        rectTransform.AddComponent<UI.Image>().sprite = Resources.Load<Sprite>("Square");
+        this.component = rectTransform.AddComponent<UI.Slider>();
+
+        RectTransform rT = render.NewRectTransform(Vector2.zero, Vector2.zero, Vector2.zero);
+        rT.AddComponent<UI.Image>().sprite = Resources.Load<Sprite>("Square");
+        rT.GetComponent<UI.Image>().color = UE.Color.green;
+        rT.SetParent(rectTransform, false);
+
+        this.component.fillRect = rectTransform.GetChild(0).GetComponent<RectTransform>();
+        this.component.minValue = min;
+        this.component.maxValue = max;
+        this.component.wholeNumbers = true;
+
+        TextMeshPro textMeshPro;
+        textMeshPro = new GameObject().AddComponent<TextMeshPro>();
+        textMeshPro.transform.SetParent(rectTransform, false);
+        textMeshPro.GetComponent<RectTransform>().localScale = new Vector3(10, 10, 1);
+        textMeshPro.enableWordWrapping = false;
+        textMeshPro.alignment = TextAlignmentOptions.Center;
+        textMeshPro.sortingOrder = 1;
+
+        textMeshPro = new GameObject().AddComponent<TextMeshPro>();
+        textMeshPro.transform.SetParent(rectTransform, false);
+        textMeshPro.GetComponent<RectTransform>().localScale = new Vector3(10, 10, 1);
+        textMeshPro.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 1);
+        textMeshPro.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 1);
+        textMeshPro.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, 50, 1);
+        textMeshPro.enableWordWrapping = false;
+        textMeshPro.alignment = TextAlignmentOptions.Center;
+        textMeshPro.text = "SLIDER SLIDER";
+        textMeshPro.sortingOrder = 1;
+    }
+}
+
+
 
 public class Render
 {
-    private readonly GameObject gameObject;
-    protected readonly RectTransform canvas;
-    protected RectTransform back;
-    protected RectTransform enter;
-
+    public GameObject gameObject;
+    public Camera camera;
+    public Canvas canvas;
+    public Button back, enter;
     public Render()
     {
         this.gameObject = new GameObject();
+        this.camera = new Camera(this);
+        this.canvas = new Canvas(this);
 
-        Camera camera = NewGameObject().AddComponent<Camera>();
-        camera.backgroundColor = UnityEngine.Color.HSVToRGB(0, 0, 0.5f);
-        camera.clearFlags = CameraClearFlags.SolidColor;
-        camera.orthographic = true;
-
-        Canvas canvas = NewGameObject().AddComponent<Canvas>();
-        canvas.renderMode = UnityEngine.RenderMode.ScreenSpaceCamera;
-        canvas.worldCamera = camera;
-        canvas.AddComponent<CanvasScaler>().referenceResolution = new Vector2(2000, 1000);
-        canvas.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        this.canvas = canvas.GetComponent<RectTransform>();
-
-        this.back = this.NewSprite(new Vector2(50, -50), new Vector2(100, 100), new Vector2(0f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
-        this.enter = this.NewSprite(new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
-
+        this.back = new Button(this, new Vector2(50, -50), new Vector2(100, 100), new Vector2(0f, 1f), Resources.Load<Sprite>("Square"));
+        this.enter = new Button(this, new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"));
     }
 
-    protected GameObject NewGameObject()
+
+    public RectTransform NewRectTransform(Vector2 position, Vector2 size, Vector2 anchor)
     {
-        GameObject gameObject = new GameObject();
-        gameObject.transform.SetParent(this.gameObject.transform, false);
-        return gameObject;
-    }
-    protected RectTransform NewSprite(Vector2 position, Vector2 size, Vector2 anchor, Sprite sprite, Color color)
-    {
-        GameObject gameObject = NewGameObject();
-        gameObject.transform.SetParent(this.canvas.transform, false);
-        RectTransform rectTransform = gameObject.AddComponent<RectTransform>();
+        RectTransform rectTransform = new GameObject().AddComponent<RectTransform>();
+        rectTransform.SetParent(this.canvas.component.transform, false);
         rectTransform.anchorMax = anchor;
         rectTransform.anchorMin = anchor;
         rectTransform.anchoredPosition = position;
         rectTransform.sizeDelta = size;
-        gameObject.AddComponent<Image>().sprite = sprite;
-        gameObject.GetComponent<Image>().color = color;
         return rectTransform;
     }
-    static protected bool Contact(Vector2 point, RectTransform rectTransform, Vector2 cs)
+    public void Update()
     {
-        float f = Screen.width / cs.x;
-        point = point / f - cs * 0.5f;
+        if (this.back.Hit(UE.Input.mousePosition, this.canvas.size)) Debug.Log("a");
+    }
+}
+public class Button
+{
+    RectTransform rectTransform;
+    public Button(Render render, Vector2 position, Vector2 size, Vector2 anchor, Sprite sprite)
+    {
+        this.rectTransform = render.NewRectTransform(position, size, anchor);
+        rectTransform.AddComponent<UI.Image>().sprite = sprite;
+    }
+    public bool Hit(Vector2 point, Vector2 cS)
+    {
+        float f = Screen.width / cS.x;
+        point = point / f - cS * 0.5f;
         if (point.x > rectTransform.localPosition.x + rectTransform.sizeDelta.x * 0.5f) return false;
         if (point.x < rectTransform.localPosition.x - rectTransform.sizeDelta.x * 0.5f) return false;
         if (point.y > rectTransform.localPosition.y + rectTransform.sizeDelta.y * 0.5f) return false;
         if (point.y < rectTransform.localPosition.y - rectTransform.sizeDelta.y * 0.5f) return false;
         return true;
     }
-    static protected void Put(Vector2 point, RectTransform rectTransform, Vector2 cs)
-    {
-        float f = Screen.width / cs.x;
-        rectTransform.localPosition = (Vector3)point / f - (Vector3)cs * 0.5f;
-    }
-    public void Destroy(GameObject gameObject) => _monoBehaviour.Destroy(gameObject);
-    public void Destroy() => _monoBehaviour.Destroy(this.gameObject);
-    virtual public void Update()
-    {
 
+}
+
+
+public class Camera
+{
+    public UE.Camera component;
+    public Camera(Render render)
+    {
+        this.component = new GameObject().AddComponent<UE.Camera>();
+        this.component.backgroundColor = UE.Color.HSVToRGB(0, 0, 0.5f);
+        this.component.clearFlags = CameraClearFlags.SolidColor;
+        this.component.orthographic = true;
+        this.component.transform.SetParent(render.gameObject.transform);
     }
 }
+
+public class Canvas
+{
+    public UE.Canvas component;
+    public Vector2 size;
+    public Canvas(Render render)
+    {
+        this.component = new GameObject().AddComponent<UE.Canvas>();
+        this.component.renderMode = UnityEngine.RenderMode.ScreenSpaceCamera;
+        this.component.worldCamera = render.camera.component;
+        this.component.AddComponent<UI.CanvasScaler>().referenceResolution = new Vector2(2000, 1000);
+        this.component.GetComponent<UI.CanvasScaler>().uiScaleMode = UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        this.component.transform.SetParent(render.gameObject.transform);
+
+        this.size = this.component.GetComponent<RectTransform>().sizeDelta;
+    }
+}
+
