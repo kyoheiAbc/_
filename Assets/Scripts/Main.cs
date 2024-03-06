@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class Main
 {
-    static Scene scene = new SceneCharacter();
+    static Scene scene = new SceneMode();
     private Input input = new Input();
     public Main()
     {
@@ -15,8 +15,6 @@ public class Main
     public void Update()
     {
         Main.scene.Update(this.input.Update());
-
-
     }
     static public void NewScene(Type t)
     {
@@ -36,6 +34,62 @@ public class Main
         }
     }
 }
+public class SceneMode : Scene
+{
+    public int i;
+    public SceneMode()
+    {
+        this.render = new RenderMode(this);
+    }
+
+    public override void Update(Vector2 vector2)
+    {
+        this.i += (int)vector2.y;
+        if (i < 0) i = 0;
+        if (i > 5) i = 5;
+
+        this.Render<RenderMode>().Update();
+
+    }
+}
+
+public class RenderMode : Render
+{
+    RectTransform[] rectTransform = new RectTransform[6];
+    RectTransform cursor;
+
+    public RenderMode(SceneMode parent)
+    {
+        this.parent = parent;
+        for (int i = 0; i < rectTransform.Length; i++)
+        {
+            this.rectTransform[i] = this.NewSprite(new Vector2(0, i * -150 + 375), new Vector2(500, 100), new Vector2(0.5f, 0.5f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
+            TextMeshPro textMeshPro;
+            textMeshPro = this.NewGameObject().AddComponent<TextMeshPro>();
+            textMeshPro.transform.SetParent(this.rectTransform[i], false);
+            textMeshPro.GetComponent<RectTransform>().localScale = new Vector3(10, 10, 1);
+            textMeshPro.enableWordWrapping = false;
+            textMeshPro.alignment = TextAlignmentOptions.Center;
+            textMeshPro.sortingOrder = 1;
+            textMeshPro.text = "MODE " + i.ToString();
+            textMeshPro.color = UnityEngine.Color.black;
+        }
+
+
+
+        this.Destroy(this.rt.gameObject);
+
+        this.cursor = this.NewSprite(new Vector2(0, 375), new Vector2(500, 100), new Vector2(0, 0), Resources.Load<Sprite>("Cursor"), UnityEngine.Color.HSVToRGB(UnityEngine.Random.Range(0, 1f), 0.5f, 1));
+
+    }
+    public void Update()
+    {
+        this.cursor.localPosition = new Vector2(0, this.Parent<SceneMode>().i) * 150 + new Vector2(-this.crt.sizeDelta.x * 0.5f, -this.crt.sizeDelta.y * 0.5f);
+
+    }
+
+
+}
 public class ScenePlay : Scene
 {
     public ScenePlay()
@@ -53,23 +107,21 @@ public class ScenePlay : Scene
 }
 public class RenderPlay : Render
 {
-    RectTransform rt;
 
     public RenderPlay()
     {
-        this.rt = this.NewSprite(new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
     }
 
     public void Update(Vector2 vector2)
     {
-        if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
-        {
-            if (UnityEngine.Input.GetMouseButtonDown(0))
-            {
-                Main.NewScene(typeof(SceneCharacter));
+        // if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
+        // {
+        //     if (UnityEngine.Input.GetMouseButtonDown(0))
+        //     {
+        //         Main.NewScene(typeof(SceneCharacter));
 
-            }
-        }
+        //     }
+        // }
 
     }
 }
@@ -168,7 +220,6 @@ public class RenderOption : Render
 {
     Slider slider;
     TextMeshPro textMeshPro;
-    RectTransform rt;
 
     public RenderOption()
     {
@@ -178,7 +229,6 @@ public class RenderOption : Render
         this.crt.AddComponent<EventSystem>();
         this.crt.AddComponent<StandaloneInputModule>();
 
-        this.rt = this.NewSprite(new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
 
     }
     private void NewSlider(Vector2 position, Vector2 size, Vector2 anchor, int min, int max)
@@ -215,13 +265,13 @@ public class RenderOption : Render
     {
         this.textMeshPro.text = slider.value.ToString();
 
-        if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
-        {
-            if (UnityEngine.Input.GetMouseButtonDown(0))
-            {
-                Main.NewScene(typeof(SceneCharacter));
-            }
-        }
+        // if (Render.Contact(UnityEngine.Input.mousePosition, this.rt, this.crt.sizeDelta))
+        // {
+        //     if (UnityEngine.Input.GetMouseButtonDown(0))
+        //     {
+        //         Main.NewScene(typeof(SceneCharacter));
+        //     }
+        // }
     }
 }
 
@@ -232,7 +282,11 @@ public class Scene
     virtual public void Update(Vector2 v) { }
     public void Destroy()
     {
-        if (this.render != null) this.render.Destroy();
+        this.render.Destroy();
+    }
+    protected T Render<T>()
+    {
+        return (T)(object)this.render;
     }
 }
 
@@ -240,6 +294,9 @@ public class Render
 {
     private readonly GameObject gameObject;
     protected readonly RectTransform crt;
+    protected RectTransform rt;
+    protected Scene parent;
+
     public Render()
     {
         this.gameObject = new GameObject();
@@ -250,11 +307,14 @@ public class Render
         camera.orthographic = true;
 
         Canvas canvas = NewGameObject().AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceCamera;
+        canvas.renderMode = UnityEngine.RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = camera;
         canvas.AddComponent<CanvasScaler>().referenceResolution = new Vector2(2000, 1000);
         canvas.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         this.crt = canvas.GetComponent<RectTransform>();
+
+        this.rt = this.NewSprite(new Vector2(-50, -50), new Vector2(100, 100), new Vector2(1f, 1f), Resources.Load<Sprite>("Square"), UnityEngine.Color.HSVToRGB(0, 0, 1));
+
     }
 
     protected GameObject NewGameObject()
@@ -291,8 +351,21 @@ public class Render
         float f = Screen.width / cs.x;
         rectTransform.localPosition = (Vector3)point / f - (Vector3)cs * 0.5f;
     }
+    public void Destroy(GameObject gameObject)
+    {
+        _monoBehaviour.Destroy(gameObject);
+    }
     public void Destroy()
     {
         _monoBehaviour.Destroy(this.gameObject);
+    }
+    public void Update()
+    {
+
+    }
+
+    protected T Parent<T>()
+    {
+        return (T)(object)this.parent;
     }
 }
