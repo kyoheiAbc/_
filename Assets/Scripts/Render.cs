@@ -20,11 +20,7 @@ public class RenderPlay
 
         rT.transform.SetParent(this.puyo.transform);
     }
-    public void Puyo(Puyo puyo)
-    {
-        this.puyo.transform.localPosition = puyo.Position();
 
-    }
     public void Update()
     {
         this.render.Update();

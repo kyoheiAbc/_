@@ -1,46 +1,42 @@
 using UnityEngine;
 class Input
 {
-    private Vector2 position;
+    private Vector2 anchor;
     public Vector2 Update()
     {
-        if (UnityEngine.Input.GetKeyDown(KeyCode.Return)) return Vector2.right + Vector2.down;
         if (UnityEngine.Input.GetKeyDown(KeyCode.RightArrow)) return Vector2.right;
         if (UnityEngine.Input.GetKeyDown(KeyCode.LeftArrow)) return Vector2.left;
         if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow)) return Vector2.up;
         if (UnityEngine.Input.GetKeyDown(KeyCode.DownArrow)) return Vector2.down;
+        if (UnityEngine.Input.GetKeyDown(KeyCode.Return)) return Vector2.right + Vector2.down;
 
         for (int i = 0; i < UnityEngine.Input.touchCount; i++)
         {
             Touch t = UnityEngine.Input.GetTouch(i);
-            if (t.position.x < 0.5f * Screen.width) break;
-            if (t.phase == TouchPhase.Began) return Vector2.right + Vector2.down;
+            if (t.position.x <= 0.5f * Screen.width) continue;
+            if (t.phase != TouchPhase.Began) continue;
+            return Vector2.right + Vector2.down;
         }
+
         for (int i = 0; i < UnityEngine.Input.touchCount; i++)
         {
             Touch t = UnityEngine.Input.GetTouch(i);
-            if (t.position.x > 0.5f * Screen.width) break;
-            if (t.phase == TouchPhase.Began)
-            {
-                this.position = t.position;
-            }
-            Vector2 v = (Vector2)t.position - this.position;
-            this.position += v;
-            if (v.x > 96) return Vector2.right;
-            if (v.x < -96) return Vector2.left;
-            if (v.y > 96) return Vector2.up;
-            if (v.y < -96) return Vector2.down;
-            this.position -= v;
+            if (t.position.x > 0.5f * Screen.width) continue;
+            if (t.phase == TouchPhase.Began) this.anchor = t.position;
+
+            Vector2 delta = t.position - this.anchor;
+            this.anchor += delta;
+            if (delta.x > 100) return Vector2.right;
+            if (delta.x < -100) return Vector2.left;
+            if (delta.y > 100) return Vector2.up;
+            if (delta.y < -100) return Vector2.down;
+            this.anchor -= delta;
         }
         return Vector2.zero;
     }
-    public static Vector2 GetTouchPosition()
+    static public Vector2 Position()
     {
-        for (int i = 0; i < UnityEngine.Input.touchCount; i++)
-        {
-            if (UnityEngine.Input.GetTouch(i).position.x > 0.5f * Screen.width) continue;
-            return UnityEngine.Input.GetTouch(i).position;
-        }
-        return Vector2.zero;
+        if (UnityEngine.Input.touchCount > 0) return UnityEngine.Input.GetTouch(0).position;
+        return UnityEngine.Input.mousePosition;
     }
 }
