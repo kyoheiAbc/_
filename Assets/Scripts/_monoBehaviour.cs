@@ -1,7 +1,13 @@
-using UnityEngine;
-public class _monoBehaviour : MonoBehaviour
+public class _monoBehaviour : UnityEngine.MonoBehaviour
 {
     private Main main;
-    void Start() => this.main = new Main();
-    void Update() => this.main.Update();
+    void Start()
+    {
+        UnityEngine.Application.targetFrameRate = 60;
+        this.main = new Main();
+    }
+    void Update()
+    {
+        this.main.Update();
+    }
 }

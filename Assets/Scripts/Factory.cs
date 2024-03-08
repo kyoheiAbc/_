@@ -3,5 +3,5 @@ using UnityEngine;
 public class Factory
 {
     private PuyoPuyo puyoPuyo;
-    private List<Puyo> puyoList;
+    private List<Puyo> list;
 }
